@@ -20,7 +20,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import static jdk.nashorn.internal.objects.NativeString.substring;
 import skrypcior.atena.pl.addskrypt.FXMLDocumentController;
 import skrypcior.atena.pl.database.DatabaseConnect;
 
@@ -70,7 +69,7 @@ public class FXMLSkryptListController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         uruchCol();
-        DatabaseConnect databaseConnect = new DatabaseConnect();
+        DatabaseConnect databaseConnect = DatabaseConnect.getInstance();
         
         zaladuj();
     }    
@@ -92,7 +91,7 @@ public class FXMLSkryptListController implements Initializable {
     }
 
     private void zaladuj() {
-        DatabaseConnect databaseConnect = new DatabaseConnect();
+        DatabaseConnect databaseConnect = DatabaseConnect.getInstance();
         String qu = "SELECT * FROM SKRYPTY";
         ResultSet rs = databaseConnect.execQuery(qu);
         try {

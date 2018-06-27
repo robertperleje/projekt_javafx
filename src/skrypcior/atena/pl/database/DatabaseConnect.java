@@ -10,15 +10,22 @@ import javax.swing.JOptionPane;
 
 public class DatabaseConnect {
     
-    private static DatabaseConnect connect;
+    private static DatabaseConnect connect=null;
     
     private static final String DB_URL = "jdbc:mysql://localhost:3306/gtu_dro";
     private static Connection conn = null;
     private static Statement stmt = null;
     
-    public DatabaseConnect() {
+    private DatabaseConnect() {
         createConnection();
     }
+    
+    public static DatabaseConnect getInstance(){
+        if (connect==null) {
+            connect = new DatabaseConnect();
+        }
+        return connect;
+     }
     
     void createConnection(){
         try {

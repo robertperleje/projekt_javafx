@@ -8,7 +8,6 @@ package skrypcior.atena.pl.addskrypt;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -27,7 +26,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javax.naming.spi.DirStateFactory;
 import skrypcior.atena.pl.database.DatabaseConnect;
 import skrypcior.atena.pl.tools.dataToString;
 
@@ -90,7 +88,9 @@ public class FXMLDocumentController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        databaseConnect = new DatabaseConnect();
+        databaseConnect = DatabaseConnect.getInstance();
+        
+        
         test();
         cmb_lp.setItems(lpList);
         cmb_schemat.setItems(schematList);

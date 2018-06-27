@@ -29,7 +29,7 @@ public class FXMLSkryptStatusController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        databaseConnect = new DatabaseConnect();
+        databaseConnect = DatabaseConnect.getInstance();
     }    
 
     @FXML

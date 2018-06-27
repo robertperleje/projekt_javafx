@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
@@ -75,11 +76,20 @@
                            <children>
                               <HBox alignment="CENTER" layoutX="52.0" layoutY="101.0" prefHeight="299.0" prefWidth="742.0" AnchorPane.bottomAnchor="308.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <TextField alignment="CENTER" prefHeight="25.0" prefWidth="270.0" promptText="Nazwa Skryptu">
-                                       <HBox.margin>
-                                          <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                       </HBox.margin>
-                                    </TextField>
+                                    <VBox alignment="CENTER" prefHeight="299.0" prefWidth="280.0">
+                                       <children>
+                                          <TextField alignment="CENTER" prefHeight="25.0" prefWidth="270.0" promptText="Nazwa Skryptu">
+                                             <VBox.margin>
+                                                <Insets left="10.0" right="10.0" top="10.0" />
+                                             </VBox.margin>
+                                          </TextField>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                             <children>
+                                                <JFXButton text="Wczytaj" />
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
                                     <VBox alignment="CENTER" prefHeight="299.0" prefWidth="465.0">
                                        <children>
                                           <Text fx:id="nazwa" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwa Skryptu" textAlignment="CENTER" wrappingWidth="447.802734375" />
@@ -94,6 +104,41 @@
                                              </VBox.margin>
                                           </Text>
                                           <Text fx:id="nazwa111" layoutX="10.0" layoutY="186.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Operator" textAlignment="CENTER" wrappingWidth="452.802734375">
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                          </Text>
+                                          <Text fx:id="nazwa2" layoutX="13.0" layoutY="125.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data Wysłania" textAlignment="CENTER" wrappingWidth="447.802734375">
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                          </Text>
+                                          <Text fx:id="nazwa112" layoutX="11.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status" textAlignment="CENTER" wrappingWidth="450.802734375">
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                          </Text>
+                                          <Text fx:id="nazwa12" layoutX="12.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Przeładowanie" textAlignment="CENTER" wrappingWidth="448.802734375">
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                          </Text>
+                                          <Text fx:id="nazwa1111" layoutX="10.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zależny od wersji" textAlignment="CENTER" wrappingWidth="452.802734375">
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                          </Text>
+                                          <Text fx:id="nazwa121" layoutX="12.0" layoutY="230.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Folder" textAlignment="CENTER" wrappingWidth="448.802734375">
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                          </Text>
+                                          <Text fx:id="nazwa1121" layoutX="11.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jira" textAlignment="CENTER" wrappingWidth="450.802734375">
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                          </Text>
+                                          <Text fx:id="nazwa11111" layoutX="10.0" layoutY="256.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Odpowiedzialny" textAlignment="CENTER" wrappingWidth="452.802734375">
                                              <VBox.margin>
                                                 <Insets top="10.0" />
                                              </VBox.margin>

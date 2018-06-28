@@ -11,9 +11,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="661.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="665.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="skrypcior.atena.pl.menu.FXMLMenuController">
    <children>
-      <BorderPane prefHeight="200.0" prefWidth="200.0">
+      <BorderPane prefHeight="468.0" prefWidth="912.0">
          <top>
             <MenuBar BorderPane.alignment="CENTER">
               <menus>
@@ -36,117 +36,50 @@
             </MenuBar>
          </top>
          <right>
-            <VBox prefHeight="200.0" prefWidth="170.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Button contentDisplay="TOP" mnemonicParsing="false" prefHeight="102.0" prefWidth="173.0" text="Dodanie Skryptu">
-                     <graphic>
-                        <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../../../../../../../Program%20Files/NetBeans%208.0.2/icon/icons8-add-list-50.png" />
-                           </image></ImageView>
-                     </graphic>
-                  </Button>
-                  <Button contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="102.0" prefWidth="173.0" text="Skrypty">
-                     <graphic>
-                        <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../../../../../../../Program%20Files/NetBeans%208.0.2/icon/icons8-list-50.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button contentDisplay="TOP" layoutX="10.0" layoutY="112.0" mnemonicParsing="false" prefHeight="102.0" prefWidth="173.0" text="Ustawienia">
-                     <graphic>
-                        <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../../../../../../../Program%20Files/NetBeans%208.0.2/icon/icons8-settings-filled-50.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-               </children>
-            </VBox>
+            <VBox prefHeight="636.0" prefWidth="3.0" BorderPane.alignment="CENTER" />
          </right>
          <center>
-            <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <TabPane prefHeight="433.0" prefWidth="909.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
               <tabs>
                 <Tab text="Skrypty">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="381.0" prefWidth="909.0" stylesheets="@fxmlmenu.css">
                            <children>
-                              <HBox alignment="CENTER" layoutX="52.0" layoutY="101.0" prefHeight="299.0" prefWidth="742.0" AnchorPane.bottomAnchor="308.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <TextField alignment="TOP_CENTER" layoutX="33.0" layoutY="31.0" prefHeight="25.0" prefWidth="380.0" promptText="Nazwa Skryptu" />
+                              <JFXButton layoutX="426.0" layoutY="31.0" prefHeight="15.0" prefWidth="64.0" styleClass="setup-button" stylesheets="@fxmlmenu.css" text="Wczytaj" />
+                              <Text fx:id="nazwa" layoutX="33.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwa Skryptu" textAlignment="CENTER" wrappingWidth="380.802734375" />
+                              <Text fx:id="status" layoutX="33.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status" textAlignment="CENTER" wrappingWidth="387.802734375" />
+                              <VBox alignment="TOP_RIGHT" layoutX="688.0" prefHeight="373.0" prefWidth="226.0">
                                  <children>
-                                    <VBox alignment="CENTER" prefHeight="299.0" prefWidth="280.0">
-                                       <children>
-                                          <TextField alignment="CENTER" prefHeight="25.0" prefWidth="270.0" promptText="Nazwa Skryptu">
-                                             <VBox.margin>
-                                                <Insets left="10.0" right="10.0" top="10.0" />
-                                             </VBox.margin>
-                                          </TextField>
-                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                                             <children>
-                                                <JFXButton text="Wczytaj" />
-                                             </children>
-                                          </HBox>
-                                       </children>
-                                    </VBox>
-                                    <VBox alignment="CENTER" prefHeight="299.0" prefWidth="465.0">
-                                       <children>
-                                          <Text fx:id="nazwa" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwa Skryptu" textAlignment="CENTER" wrappingWidth="447.802734375" />
-                                          <Text fx:id="nazwa1" layoutX="10.0" layoutY="165.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Środowisko" textAlignment="CENTER" wrappingWidth="448.802734375">
-                                             <VBox.margin>
-                                                <Insets top="10.0" />
-                                             </VBox.margin>
-                                          </Text>
-                                          <Text fx:id="nazwa11" layoutX="10.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data Utworzenia" textAlignment="CENTER" wrappingWidth="450.802734375">
-                                             <VBox.margin>
-                                                <Insets top="10.0" />
-                                             </VBox.margin>
-                                          </Text>
-                                          <Text fx:id="nazwa111" layoutX="10.0" layoutY="186.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Operator" textAlignment="CENTER" wrappingWidth="452.802734375">
-                                             <VBox.margin>
-                                                <Insets top="10.0" />
-                                             </VBox.margin>
-                                          </Text>
-                                          <Text fx:id="nazwa2" layoutX="13.0" layoutY="125.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data Wysłania" textAlignment="CENTER" wrappingWidth="447.802734375">
-                                             <VBox.margin>
-                                                <Insets top="10.0" />
-                                             </VBox.margin>
-                                          </Text>
-                                          <Text fx:id="nazwa112" layoutX="11.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status" textAlignment="CENTER" wrappingWidth="450.802734375">
-                                             <VBox.margin>
-                                                <Insets top="10.0" />
-                                             </VBox.margin>
-                                          </Text>
-                                          <Text fx:id="nazwa12" layoutX="12.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Przeładowanie" textAlignment="CENTER" wrappingWidth="448.802734375">
-                                             <VBox.margin>
-                                                <Insets top="10.0" />
-                                             </VBox.margin>
-                                          </Text>
-                                          <Text fx:id="nazwa1111" layoutX="10.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zależny od wersji" textAlignment="CENTER" wrappingWidth="452.802734375">
-                                             <VBox.margin>
-                                                <Insets top="10.0" />
-                                             </VBox.margin>
-                                          </Text>
-                                          <Text fx:id="nazwa121" layoutX="12.0" layoutY="230.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Folder" textAlignment="CENTER" wrappingWidth="448.802734375">
-                                             <VBox.margin>
-                                                <Insets top="10.0" />
-                                             </VBox.margin>
-                                          </Text>
-                                          <Text fx:id="nazwa1121" layoutX="11.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jira" textAlignment="CENTER" wrappingWidth="450.802734375">
-                                             <VBox.margin>
-                                                <Insets top="10.0" />
-                                             </VBox.margin>
-                                          </Text>
-                                          <Text fx:id="nazwa11111" layoutX="10.0" layoutY="256.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Odpowiedzialny" textAlignment="CENTER" wrappingWidth="452.802734375">
-                                             <VBox.margin>
-                                                <Insets top="10.0" />
-                                             </VBox.margin>
-                                          </Text>
-                                       </children>
-                                    </VBox>
+                                    <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#loadAddSkrypt" prefHeight="150.0" prefWidth="173.0" text="Dodanie Skryptu">
+                                       <graphic>
+                                          <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@icons8addlist50.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                    <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#loadSkryptTable" prefHeight="150.0" prefWidth="173.0" text="Skrypty">
+                                       <graphic>
+                                          <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@icons8list50.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                    <Button contentDisplay="TOP" mnemonicParsing="false" prefHeight="150.0" prefWidth="173.0" text="Ustawienia">
+                                       <graphic>
+                                          <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@icons8settingsfilled50.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
                                  </children>
-                              </HBox>
+                              </VBox>
                            </children></AnchorPane>
                   </content>
                 </Tab>

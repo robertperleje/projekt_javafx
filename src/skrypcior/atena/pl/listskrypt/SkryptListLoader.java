@@ -14,7 +14,7 @@ import javafx.stage.Stage;
  *
  * @author perlro1
  */
-public class FXMLSkryptListLoader extends Application {
+public class SkryptListLoader extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {

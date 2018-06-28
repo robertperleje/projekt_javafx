@@ -4,6 +4,7 @@ package skrypcior.atena.pl.database;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 
@@ -36,6 +37,7 @@ public class DatabaseConnect {
             }
     }
     
+    
     public ResultSet execQuery(String query){
         ResultSet result;
         try {
@@ -61,6 +63,12 @@ public class DatabaseConnect {
             return false;                    
         } finally {
         }
+    }
+    
+    
+    
+    public PreparedStatement getInstance(String qu) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
      
 }

@@ -7,11 +7,16 @@ package skrypcior.atena.pl.addskrypt;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.sql.Blob;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -23,11 +28,18 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import skrypcior.atena.pl.database.DatabaseConnect;
+import skrypcior.atena.pl.tools.convertToBlob;
 import skrypcior.atena.pl.tools.dataToString;
+
+
 
 
 /**
@@ -63,23 +75,25 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private JFXTextField jira;
     @FXML
-    private JFXTextField tresc;
-    
+    private JFXTextArea uwagi;
     @FXML
     private JFXComboBox cmb_test;
     ObservableList<String> testList = FXCollections.observableArrayList();
-    
     @FXML
     private JFXButton zapiszButton;
     @FXML
     private JFXButton anulujButton;
-    
-    
+    @FXML
+    private AnchorPane rootPane;
+    @FXML
+    private Button btn_plik;
+    @FXML
+    private TextField sciezkaDoPliku;
+     
     private DatabaseConnect databaseConnect;
     //private Date data;
     
-    @FXML
-    private AnchorPane rootPane;
+
     
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
@@ -106,7 +120,7 @@ public class FXMLDocumentController implements Initializable {
     }    
 
     @FXML
-    private void addSkrypt(ActionEvent event) {
+    private void addSkrypt(ActionEvent event) throws IOException {
         
                
         String skryptlp = (String) cmb_lp.getSelectionModel().getSelectedItem();
@@ -116,11 +130,29 @@ public class FXMLDocumentController implements Initializable {
         String skryptOdpowiedzialny = (String) cmb_odpowiedzialny.getSelectionModel().getSelectedItem();
         String skryptPrzeladowanie = (String) cmb_przeladowac.getSelectionModel().getSelectedItem();
         String skryptCzyWersja = (String) cmb_odwersji.getSelectionModel().getSelectedItem();
+         
         
-        String skryptTresc = tresc.getText();
+        String skryptUwagi = uwagi.getText();
         String skryptJira = jira.getText();
+        String sciezka = sciezkaDoPliku.getText();
+        System.out.println(sciezka);
         
-        if(skryptlp.isEmpty() || skryptSchemat.isEmpty() || skryptZatrzymac.isEmpty() || skryptSrodowisko.isEmpty() ||  skryptOdpowiedzialny.isEmpty() || skryptTresc.isEmpty() || skryptJira.isEmpty()
+        byte[] plik = convertToBlob.convertFileContentToBlob(sciezka);
+        
+        
+       /*
+        try {
+            FileInputStream plik = new FileInputStream(new File(sciezka));
+            OutputBlob
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         */
+        
+        
+        
+        
+        if(skryptlp.isEmpty() || skryptSchemat.isEmpty() || skryptZatrzymac.isEmpty() || skryptSrodowisko.isEmpty() ||  skryptOdpowiedzialny.isEmpty() || skryptUwagi.isEmpty() || skryptJira.isEmpty()
                 || skryptPrzeladowanie.isEmpty() || skryptCzyWersja.isEmpty() ){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(null);
@@ -149,7 +181,7 @@ public class FXMLDocumentController implements Initializable {
         String skryptOperator = "ROBERT1";
         Date sqlDataWys = null;
         
-        String qu = "INSERT INTO SKRYPTY (nazwa,srodowisko,data_utw,operator,data_wysl,status,przeladowanie,od_wersji,folder,tresc,jira,odpowiedzialny) VALUES ("+
+        String qu = "INSERT INTO SKRYPTY (nazwa,srodowisko,data_utw,operator,data_wysl,status,przeladowanie,od_wersji,folder,jira,odpowiedzialny,uwagi,plik) VALUES ("+
                 //"'" + skryptId + "'," +
                 "'" + skryptNazwa + "' ," +
                 "'" + skryptSrodowisko + "' ," +
@@ -160,9 +192,10 @@ public class FXMLDocumentController implements Initializable {
                 "'" + skryptPrzeladowanie + "' ," +
                 "'" + skryptCzyWersja + "' ," +
                 "'" + skryptFolder + "_" + skryptSrodowisko + "/' ," +
-                "'" + skryptTresc + "' ," +
                 "'" + skryptJira + "' ," +
-                "'" + skryptOdpowiedzialny + "'" +
+                "'" + skryptOdpowiedzialny + "' ," +
+                "'" + skryptUwagi + "' ," +
+                "'" +  plik + "'" +
                 ")";
         System.out.println(qu);
         if (databaseConnect.execAction(qu)){
@@ -177,7 +210,7 @@ public class FXMLDocumentController implements Initializable {
             alert.showAndWait();
         }
     
-        
+
     }
 
     
@@ -216,6 +249,38 @@ public class FXMLDocumentController implements Initializable {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE,null,ex);
         }
     }
+        
+        @FXML
+        private void loadWindowsFile(ActionEvent event) {
+        
+            FileChooser fileChooser = new FileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Skrypty","txt");
+        File selecFile = fileChooser.showOpenDialog(null);
+            if (selecFile != null) {
+                sciezkaDoPliku.setText(selecFile.getAbsolutePath());
+                
+            } else {
+                System.out.println("Nie znaleziono pliku"); 
+            }
+            /*    
+            JFileChooser  file = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("SK","txt");
+            file.addChoosableFileFilter(filter);
+            
+            int result = file.showSaveDialog( null);
+            if (result==JFileChooser.APPROVE_OPTION){
+                File selectedFile = file.getSelectedFile();
+                String path = selectedFile.getAbsolutePath();
+                sciezkaDoPliku.setText(selectedFile.getAbsolutePath());
+            }
+            */
+        }
+
+    private Blob dataToString(String sciezka) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
 }
 
     

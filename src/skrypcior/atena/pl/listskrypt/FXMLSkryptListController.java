@@ -57,7 +57,7 @@ public class FXMLSkryptListController implements Initializable {
     @FXML
     private TableColumn<Skrypt, String> folderCol;
     @FXML
-    private TableColumn<Skrypt, String> trescCol;
+    private TableColumn<Skrypt, String> uwagiCol;
     @FXML
     private TableColumn<Skrypt, String> jiraCol;
     @FXML
@@ -85,9 +85,9 @@ public class FXMLSkryptListController implements Initializable {
         przeladowanieCol.setCellValueFactory(new PropertyValueFactory<>("przeladowanie"));
         zalezy_od_wersjiCol.setCellValueFactory(new PropertyValueFactory<>("zalezy_od_wersji"));
         folderCol.setCellValueFactory(new PropertyValueFactory<>("folder"));
-        trescCol.setCellValueFactory(new PropertyValueFactory<>("tresc"));
         jiraCol.setCellValueFactory(new PropertyValueFactory<>("jira"));
         odpowiedzialnyCol.setCellValueFactory(new PropertyValueFactory<>("odpowiedzialny"));
+        uwagiCol.setCellValueFactory(new PropertyValueFactory<>("uwagi"));
     }
 
     private void zaladuj() {
@@ -106,11 +106,11 @@ public class FXMLSkryptListController implements Initializable {
                 String przeladowanie = rs.getString("przeladowanie"); 
                 String zalezy_od_wersji = rs.getString("od_wersji");
                 String folder = rs.getString("folder");
-                String tresc = rs.getString("tresc");
                 String jira = rs.getString("jira");
                 String odpowiedzialny = rs.getString("odpowiedzialny");
+                String uwagi = rs.getString("uwagi");
                 
-                list.add(new Skrypt(id, nazwa, srodowisko, data_utw, operator, data_wysl, status, przeladowanie, zalezy_od_wersji, folder, tresc, jira, odpowiedzialny));
+                list.add(new Skrypt(id, nazwa, srodowisko, data_utw, operator, data_wysl, status, przeladowanie, zalezy_od_wersji, folder, jira, odpowiedzialny, uwagi));
                 
                 System.out.println(nazwa);
             }
@@ -133,11 +133,11 @@ public class FXMLSkryptListController implements Initializable {
         private final SimpleStringProperty przeladowanie;
         private final SimpleStringProperty zalezy_od_wersji;
         private final SimpleStringProperty folder;
-        private final SimpleStringProperty tresc;
         private final SimpleStringProperty jira;
         private final SimpleStringProperty odpowiedzialny;
+        private final SimpleStringProperty uwagi;
         
-        Skrypt(Integer id, String nazwa, String srodowisko, String data_utw, String operator,String data_wysl, String status, String przeladowanie, String zalezy_od_wersji, String folder, String tresc, String jira, String odpowiedzialny){
+        Skrypt(Integer id, String nazwa, String srodowisko, String data_utw, String operator,String data_wysl, String status, String przeladowanie, String zalezy_od_wersji, String folder, String jira, String odpowiedzialny, String uwagi){
             this.id = new SimpleIntegerProperty(id);
             this.nazwa = new SimpleStringProperty(nazwa); 
             this.srodowisko = new SimpleStringProperty(srodowisko);  
@@ -148,9 +148,9 @@ public class FXMLSkryptListController implements Initializable {
             this.przeladowanie = new SimpleStringProperty(przeladowanie);
             this.zalezy_od_wersji = new SimpleStringProperty(zalezy_od_wersji);
             this.folder = new SimpleStringProperty(folder);
-            this.tresc = new SimpleStringProperty(tresc);
             this.jira = new SimpleStringProperty(jira);
             this.odpowiedzialny = new SimpleStringProperty(odpowiedzialny);  
+            this.uwagi = new SimpleStringProperty(uwagi);
         }
 
         public Integer getId() {
@@ -193,8 +193,8 @@ public class FXMLSkryptListController implements Initializable {
             return folder.get();
         }
 
-        public String getTresc() {
-            return tresc.get();
+        public String getUwagi() {
+            return uwagi.get();
         }
 
         public String getJira() {

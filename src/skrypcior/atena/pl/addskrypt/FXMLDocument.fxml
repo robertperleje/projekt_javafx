@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.geometry.*?>
 <?import com.jfoenix.controls.*?>
@@ -9,39 +10,61 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" fx:id="rootPane" prefHeight="646.0" prefWidth="488.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="skrypcior.atena.pl.addskrypt.FXMLDocumentController">
+<AnchorPane id="AnchorPane" fx:id="rootPane" prefHeight="421.0" prefWidth="519.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="skrypcior.atena.pl.addskrypt.FXMLDocumentController">
    <children>
-      <VBox layoutX="88.0" layoutY="56.0" prefHeight="450.0" prefWidth="488.0" AnchorPane.bottomAnchor="196.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox layoutX="-1.0" layoutY="369.0" prefHeight="38.0" prefWidth="520.0">
          <children>
-            <JFXComboBox fx:id="cmb_lp" promptText="Lp">
+            <JFXButton fx:id="zapiszButton" onAction="#addSkrypt" prefHeight="38.0" prefWidth="266.0" stylesheets="@addskrypt.css" text="Zapisz">
 
-            </JFXComboBox>
-            <JFXComboBox fx:id="cmb_schemat" promptText="Schemat">
+                  </JFXButton>
+            <JFXButton fx:id="anulujButton" layoutX="10.0" layoutY="10.0" onAction="#anuluj" prefHeight="38.0" prefWidth="270.0" stylesheets="@addskrypt.css" text="Anuluj" />
+         </children>
 
-            </JFXComboBox>
-            <JFXComboBox fx:id="cmb_czy_zatrzymac" layoutX="10.0" layoutY="35.0" promptText="Czy zatrzymać system" />
-            <JFXComboBox fx:id="cmb_srodowisko" promptText="Środowisko">
-
-            </JFXComboBox>
-            <JFXComboBox fx:id="cmb_odpowiedzialny" promptText="Odpowiedzialny">
-
-            </JFXComboBox>
-            <JFXComboBox fx:id="cmb_przeladowac" layoutX="10.0" layoutY="110.0" promptText="Czy przeładować hurtownie" />
-            <JFXComboBox fx:id="cmb_odwersji" layoutX="10.0" layoutY="110.0" promptText="Czy zależy od wersji " />
-            <JFXTextField fx:id="jira" labelFloat="true" layoutX="10.0" layoutY="180.0" promptText="Jira">
-
-            </JFXTextField>
-            <JFXTextField fx:id="tresc" labelFloat="true" layoutX="10.0" layoutY="205.0" promptText="Treść">
-
-            </JFXTextField>
-            <HBox prefHeight="41.0" prefWidth="493.0">
+                        </HBox>
+      <HBox prefHeight="363.0" prefWidth="250.0">
+         <children>
+            <VBox prefHeight="284.0" prefWidth="250.0">
                <children>
-                  <JFXButton fx:id="zapiszButton" onAction="#addSkrypt" prefHeight="47.0" prefWidth="243.0" stylesheets="@addskrypt.css" text="Zapisz" />
-                  <JFXButton fx:id="anulujButton" layoutX="10.0" layoutY="10.0" onAction="#anuluj" prefHeight="71.0" prefWidth="250.0" stylesheets="@addskrypt.css" text="Anuluj" />
-               </children>
+                  <JFXComboBox fx:id="cmb_lp" prefWidth="250.0" promptText="Lp">
 
-            </HBox>
-            <JFXComboBox fx:id="cmb_test" layoutX="10.0" layoutY="160.0" promptText="Test" />
+            </JFXComboBox>
+                  <JFXComboBox fx:id="cmb_schemat" prefWidth="250.0" promptText="Schemat">
+
+            </JFXComboBox>
+                  <JFXComboBox fx:id="cmb_czy_zatrzymac" prefWidth="250.0" promptText="Czy zatrzymać system">
+
+            </JFXComboBox>
+                  <JFXComboBox fx:id="cmb_srodowisko" prefWidth="250.0" promptText="Środowisko">
+
+            </JFXComboBox>
+                  <JFXComboBox fx:id="cmb_odpowiedzialny" prefHeight="25.0" prefWidth="250.0" promptText="Odpowiedzialny">
+
+            </JFXComboBox>
+                  <JFXComboBox fx:id="cmb_przeladowac" prefWidth="250.0" promptText="Czy przeładować hurtownie">
+
+            </JFXComboBox>
+                  <JFXComboBox fx:id="cmb_odwersji" prefWidth="250.0" promptText="Czy zależy od wersji ">
+
+            </JFXComboBox>
+                  <JFXTextField fx:id="jira" labelFloat="true" prefWidth="250.0" promptText="Jira">
+
+            </JFXTextField>
+                  <JFXTextArea fx:id="uwagi" prefHeight="77.0" prefWidth="250.0" promptText="Uwagi">
+
+            </JFXTextArea>
+                  <JFXComboBox fx:id="cmb_test" prefWidth="250.0" promptText="Test" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <VBox alignment="TOP_CENTER" layoutX="268.0" prefHeight="363.0" prefWidth="242.0">
+         <children>
+            <TextField fx:id="sciezkaDoPliku" editable="false" />
+            <Button fx:id="btn_plik" alignment="CENTER" mnemonicParsing="false" onAction="#loadWindowsFile" text="Button">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Button>
          </children>
       </VBox>
    </children>

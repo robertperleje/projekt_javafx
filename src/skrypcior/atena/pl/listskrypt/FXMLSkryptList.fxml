@@ -24,9 +24,9 @@
             <TableColumn fx:id="przeladowanieCol" prefWidth="75.0" text="Przeładowanie hurtowni" />
             <TableColumn fx:id="zalezy_od_wersjiCol" prefWidth="75.0" text="Zależy od wersji" />
             <TableColumn fx:id="folderCol" prefWidth="75.0" text="Folder" />
-            <TableColumn fx:id="trescCol" prefWidth="75.0" text="Treść" />
             <TableColumn fx:id="jiraCol" prefWidth="75.0" text="Jira" />
             <TableColumn fx:id="odpowiedzialnyCol" prefWidth="75.0" text="Odpowiedzialny" />
+            <TableColumn fx:id="uwagiCol" prefWidth="75.0" text="Uwagi" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

@@ -6,7 +6,10 @@
 package skrypcior.atena.pl.tools;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import javafx.scene.control.DatePicker;
 
 /**
  *
@@ -19,14 +22,34 @@ public class dataToString {
         Date currentDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String dateString = dateFormat.format(currentDate);
-        return dateString;
+        if (dateString != null && dateString.isEmpty()) {
+            return dateString;
+            } else {
+            return "";
+            }
+        
     }
     
     public static String dataBezMysln(){
         Date currentDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         String dateString = dateFormat.format(currentDate);
-        return dateString;
+        if (dateString != null && dateString.isEmpty()) {
+            return dateString;
+            } else {
+            return "";
+            }
     }
+
+public static String toString(LocalDate date) {
+        String pattern = "yyyy-MM-dd";
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+
+         if (date != null) {
+             return dateFormatter.format(date);
+         } else {
+             return "";
+         }
     
+}
 }

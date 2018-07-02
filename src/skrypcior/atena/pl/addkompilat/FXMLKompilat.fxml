@@ -112,7 +112,22 @@
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#zamknijOkno" prefHeight="83.0" prefWidth="101.0" text="Anuluj">
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#usunWiersz" prefHeight="83.0" prefWidth="101.0" text="Usuń">
+                     <graphic>
+                        <ImageView fitHeight="39.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons8-delete-column-26.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button contentDisplay="TOP" layoutX="10.0" layoutY="94.0" mnemonicParsing="false" onAction="#zamknijOkno" prefHeight="83.0" prefWidth="101.0" text="Anuluj">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
                      <graphic>
                         <ImageView fitHeight="39.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -120,9 +135,6 @@
                            </image>
                         </ImageView>
                      </graphic>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
                   </Button>
                </children>
             </VBox>

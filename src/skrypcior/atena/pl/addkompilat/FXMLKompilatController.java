@@ -13,7 +13,8 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +31,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import skrypcior.atena.pl.database2.DbConnect;
+import skrypcior.atena.pl.tools.dataToString;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
 
 
@@ -103,6 +105,7 @@ public class FXMLKompilatController implements Initializable {
     private void zaladuj(){
         try {
             //DatabaseConnect databaseConnect = DatabaseConnect.getInstance();
+            
 
             ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM KOMPILAT");
             while (rs.next()) {
@@ -124,13 +127,19 @@ public class FXMLKompilatController implements Initializable {
         
         String nKompilat = (String) nazwaKompilat.getText();
         String satelita = (String) satelitaKompilat.getText();
-        String dateWmain = dateMain.getValue().toString();
-        String dateWprep = datePrep.getValue().toString();
-        String dateWrel = dateRel.getValue().toString();
-        String dateWfaza3 = dateFaza3.getValue().toString();
-        String dateWprepg = datePrepG.getValue().toString();
-        String dateWprod = dateProd.getValue().toString();
+        
+        
+        
+        
+        /*
+        String dateWmain =  dataToString.toString(dateMain.getValue());
+        LocalDate  dateWprep = datePrep.getValue();
+        String dateWrel = dataToString.toString(dateRel.getValue());
+        String dateWfaza3 = dataToString.toString(dateFaza3.getValue());
+        String dateWprepg = dataToString.toString(datePrepG.getValue());
+        String dateWprod = dataToString.toString(dateProd.getValue());
        
+        */
        if(nKompilat.isEmpty() || satelita.isEmpty() ){
             showInfoAlertBox.showInformationAlertBox("Wypełnij wszystkie pola");
             return;
@@ -145,14 +154,54 @@ public class FXMLKompilatController implements Initializable {
             
             preparedStatement.setString(1, nKompilat);
             preparedStatement.setString(2, satelita);
-            preparedStatement.setString(3, dateWmain );
-            preparedStatement.setString(4, dateWprep );
-            preparedStatement.setString(5, dateWrel );
-            preparedStatement.setString(6, dateWfaza3 );
-            preparedStatement.setString(7, dateWprepg );
-            preparedStatement.setString(8, dateWprod );
             
+            if (dateMain.getValue() == null) {
+                preparedStatement.setNull(3, java.sql.Types.NULL);
+            } else {                
+                preparedStatement.setDate(3,Date.valueOf(dateMain.getValue()));
+            }
+            //preparedStatement.setDate(3, Objects.nonNull(dateMain) ? Date.valueOf(dateMain.getValue()): preparedStatement.setNull(3, java.sql.Types.DATE));
             
+            if (datePrep.getValue() == null) {
+                preparedStatement.setNull(4, java.sql.Types.NULL);
+            } else {
+                preparedStatement.setDate(4,Date.valueOf(datePrep.getValue()));
+            }
+            
+            //preparedStatement.setDate(4, Objects.nonNull(datePrep) ? Date.valueOf(datePrep.getValue()): preparedStatement.setNull(4, java.sql.Types.DATE) );                
+            
+            if (dateRel.getValue() == null) {                  
+                preparedStatement.setNull(5, java.sql.Types.NULL);
+            } else {
+               preparedStatement.setDate(5,Date.valueOf(dateRel.getValue()));  
+            }
+            
+            //preparedStatement.setDate(5, Objects.nonNull(dateRel) ? Date.valueOf(dateRel.getValue()): preparedStatement.setNull(5, java.sql.Types.DATE));
+           
+            if (dateFaza3.getValue() ==null) {                
+                preparedStatement.setNull(6, java.sql.Types.NULL);
+            } else {
+                preparedStatement.setDate(6,Date.valueOf(dateFaza3.getValue())); 
+            }
+            
+            //preparedStatement.setDate(6, Objects.nonNull(dateFaza3) ? Date.valueOf(dateFaza3.getValue()): preparedStatement.setNull(6, java.sql.Types.DATE));
+            
+            if (datePrepG.getValue() ==null) {                
+                preparedStatement.setNull(7, java.sql.Types.NULL);                
+            } else {
+               preparedStatement.setDate(7,Date.valueOf(datePrepG.getValue())); 
+            }
+            
+            //preparedStatement.setDate(7, Objects.nonNull(datePrepG) ? Date.valueOf(datePrepG.getValue()): preparedStatement.setNull(7, java.sql.Types.DATE) );
+            
+            if (dateProd.getValue() ==null) {                
+                preparedStatement.setNull(8, java.sql.Types.NULL);
+            } else {
+                preparedStatement.setDate(8,Date.valueOf(dateProd.getValue()));
+            }
+           // preparedStatement.setDate(8, Objects.nonNull(dateProd) ? Date.valueOf(dateProd.getValue()): preparedStatement.setNull(8, java.sql.Types.DATE));
+            
+            System.out.println(qu);
             
         } catch (SQLException ex) {
             Logger.getLogger(FXMLKompilatController.class.getName()).log(Level.SEVERE, null, ex);
@@ -162,13 +211,32 @@ public class FXMLKompilatController implements Initializable {
         preparedStatement.close();
             showInfoAlertBox.showInformationAlertBox("Kompilat dopisano");
         }
-        tableView.getItems().clear();
-         zaladuj();   
+           
     }
 
     @FXML
     private void zamknijOkno(ActionEvent event) {
         ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
+    }
+
+    @FXML
+    private void usunWiersz(ActionEvent event) {
+        PreparedStatement preparedStatement = null;
+        ResultSet rs=null;
+        
+        Kompilat kompilat = (Kompilat) tableView.getSelectionModel().getSelectedItem();
+        String qu = "DELETE FROM kompilat where kompilat = ?";
+        try {
+            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
+            preparedStatement.setString(1, kompilat.getKompilat());
+            System.out.println(kompilat.getKompilat());
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLKompilatController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        showInfoAlertBox.showInformationAlertBox("Rekord usunięto");
     }
 
         

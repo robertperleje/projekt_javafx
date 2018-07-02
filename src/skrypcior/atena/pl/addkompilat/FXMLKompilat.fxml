@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="534.0" prefWidth="638.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="skrypcior.atena.pl.addkompilat.FXMLKompilatController">
+    <stylesheets>
+        <URL value="@fxmlkompilat.css" />
+    </stylesheets>
+   <children>
+      <BorderPane prefHeight="246.0" prefWidth="396.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+            <VBox prefHeight="376.0" prefWidth="516.0" BorderPane.alignment="CENTER">
+               <children>
+                  <JFXTextField fx:id="nazwaKompilat" labelFloat="true" promptText="Oznaczenie kompilatu">
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" top="20.0" />
+                     </VBox.margin>
+                  </JFXTextField>
+                  <JFXTextField fx:id="satelitaKompilat" labelFloat="true" layoutX="20.0" layoutY="30.0" promptText="Satelita">
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" top="15.0" />
+                     </VBox.margin>
+                  </JFXTextField>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="100.0" prefWidth="282.0">
+                           <children>
+                              <DatePicker fx:id="dateMain" promptText="MAIN">
+                                 <VBox.margin>
+                                    <Insets top="15.0" />
+                                 </VBox.margin>
+                              </DatePicker>
+                              <DatePicker fx:id="datePrep" promptText="PREP">
+                                 <VBox.margin>
+                                    <Insets top="15.0" />
+                                 </VBox.margin>
+                              </DatePicker>
+                              <DatePicker fx:id="dateRel" promptText="REL">
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" top="15.0" />
+                                 </VBox.margin>
+                              </DatePicker>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="100.0" prefWidth="306.0">
+                           <children>
+                              <DatePicker fx:id="dateFaza3" promptText="FAZA3">
+                                 <VBox.margin>
+                                    <Insets top="15.0" />
+                                 </VBox.margin>
+                              </DatePicker>
+                              <DatePicker fx:id="datePrepG" promptText="PREP">
+                                 <VBox.margin>
+                                    <Insets top="15.0" />
+                                 </VBox.margin>
+                              </DatePicker>
+                              <DatePicker fx:id="dateProd" promptText="PROD">
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" top="15.0" />
+                                 </VBox.margin>
+                              </DatePicker>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <TableView fx:id="tableView" prefHeight="315.0" prefWidth="538.0">
+                    <columns>
+                        <TableColumn fx:id="tabDateId" prefWidth="75.0" text="Id" />
+                      <TableColumn fx:id="tabNazwaKompilat" prefWidth="75.0" text="Nazwa" />
+                      <TableColumn fx:id="tabSatelita" prefWidth="75.0" text="Satelita" />
+                        <TableColumn fx:id="tabDateMain" prefWidth="75.0" text="Main" />
+                        <TableColumn fx:id="tabDatePrep" prefWidth="75.0" text="Prep" />
+                        <TableColumn fx:id="tabDateRel" prefWidth="75.0" text="Rel" />
+                        <TableColumn fx:id="tabDateFaza3" prefWidth="75.0" text="Faza3" />
+                        <TableColumn fx:id="tabDatePrepG" prefWidth="75.0" text="Prep" />
+                        <TableColumn fx:id="tabDateProd" prefWidth="75.0" text="Prod" />
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+               </children>
+            </VBox>
+         </center>
+         <right>
+            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#dodajKompilat" prefHeight="84.0" prefWidth="101.0" text="Zapisz">
+                     <graphic>
+                        <ImageView fitHeight="31.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons8-data-recovery-26.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#zamknijOkno" prefHeight="83.0" prefWidth="101.0" text="Anuluj">
+                     <graphic>
+                        <ImageView fitHeight="39.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons8-delete-26.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </VBox>
+         </right>
+      </BorderPane>
+   </children>
+</AnchorPane>

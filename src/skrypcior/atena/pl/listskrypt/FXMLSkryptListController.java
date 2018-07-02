@@ -69,8 +69,6 @@ public class FXMLSkryptListController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         uruchCol();
-        DatabaseConnect databaseConnect = DatabaseConnect.getInstance();
-        
         zaladuj();
     }    
 

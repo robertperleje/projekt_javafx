@@ -17,7 +17,7 @@ public class DatabaseConnect {
     private static Connection conn = null;
     private static Statement stmt = null;
     
-    private DatabaseConnect() {
+    public DatabaseConnect() {
         createConnection();
     }
     

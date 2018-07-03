@@ -208,6 +208,7 @@ public class FXMLMenuController implements Initializable {
 
     @FXML
     private void listaKompilat(ActionEvent event) {
+        loadWindows("/skrypcior/atena/pl/listkompilat/FXMLKompilatList.fxml", "Lista Kompilatów");
     }
 
     @FXML

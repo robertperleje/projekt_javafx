@@ -7,7 +7,6 @@ package skrypcior.atena.pl.addskrypt;
 
 
 import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
@@ -46,7 +45,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import skrypcior.atena.pl.database2.DbConnect;
 import skrypcior.atena.pl.tools.dataToString;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
-import skrypcior.atena.pl.addskrypt.Skrypt;
+
 
 
 
@@ -139,9 +138,9 @@ public class FXMLDocumentController implements Initializable {
         przypiszCol();
         zaladuj();
         
-        //test();
+        
         cmb_lp.setItems(lpList);
-        //cmb_schemat.setItems(schematList);
+        
         zaladujSchemat();
         cmb_czy_zatrzymac.setItems(zatrzymacList);
         cmb_srodowisko.setItems(srodowiskoList);
@@ -150,7 +149,7 @@ public class FXMLDocumentController implements Initializable {
         cmb_odwersji.setItems(odWersjiList);
         
         cmb_test.setItems(list);
-        //sprawdzNazwe();
+       
         
     }    
 

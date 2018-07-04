@@ -220,6 +220,11 @@ public class FXMLMenuController implements Initializable {
         loadWindows("/skrypcior/atena/pl/skrypty/schemat/FXMLSkryptySchemat.fxml", "Słownik - Schematy");
     }
 
+    @FXML
+    private void menuKonta(ActionEvent event) {
+        loadWindows("/skrypcior/atena/pl/konta/FXMLKonta.fxml", "Słownik - Konta Użytkowników");
+    }
+
     
     
 }

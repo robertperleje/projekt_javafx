@@ -113,6 +113,9 @@
                      </font>
                   </Button>
                   <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#usunWiersz" prefHeight="83.0" prefWidth="101.0" text="Usuń">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
                      <graphic>
                         <ImageView fitHeight="39.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -120,11 +123,8 @@
                            </image>
                         </ImageView>
                      </graphic>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
                   </Button>
-                  <Button contentDisplay="TOP" layoutX="10.0" layoutY="94.0" mnemonicParsing="false" onAction="#zamknijOkno" prefHeight="83.0" prefWidth="101.0" text="Anuluj">
+                  <Button cancelButton="true" contentDisplay="TOP" layoutX="10.0" layoutY="94.0" mnemonicParsing="false" onAction="#zamknijOkno" prefHeight="83.0" prefWidth="101.0" text="Anuluj">
                      <font>
                         <Font size="14.0" />
                      </font>

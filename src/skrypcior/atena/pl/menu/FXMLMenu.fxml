@@ -24,13 +24,13 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Dodaj">
                   <items>
-                    <MenuItem mnemonicParsing="false" onAction="#menuDodanieSkryptu" text="Dodaj Skrypt" />
-                        <MenuItem mnemonicParsing="false" onAction="#menuDodanieKompilatu" text="Dodaj Kompilat" />
+                    <MenuItem mnemonicParsing="false" onAction="#menuDodanieSkryptu" text="Skrypty" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuDodanieKompilatu" text="Kompilaty" />
                   </items>
                 </Menu>
-                  <Menu mnemonicParsing="false" text="Wyświetl">
+                  <Menu mnemonicParsing="false" text="Słowniki">
                      <items>
-                        <MenuItem mnemonicParsing="false" onAction="#menuWczytajTabeleSkryptow" text="Skrypty" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuStatusSkryptow" text="Statusy Skryptów" />
                      </items>
                   </Menu>
                 <Menu mnemonicParsing="false" text="Help">
@@ -42,7 +42,7 @@
             </MenuBar>
          </top>
          <center>
-            <TabPane prefHeight="603.0" prefWidth="651.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <TabPane prefHeight="860.0" prefWidth="732.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
               <tabs>
                 <Tab text="Info">
                   <content>
@@ -233,101 +233,44 @@
             </TabPane>
          </center>
          <right>
-            <VBox alignment="TOP_RIGHT" prefHeight="860.0" prefWidth="199.0" BorderPane.alignment="CENTER">
+            <VBox alignment="TOP_RIGHT" prefHeight="860.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                <children>
-                  <HBox prefHeight="503.0" prefWidth="210.0">
-                     <children>
-                        <VBox prefHeight="200.0" prefWidth="100.0">
-                           <children>
-                              <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#loadAddSkrypt" prefHeight="100.0" prefWidth="100.0" text="Dodaj Skrypt">
-                                 <graphic>
-                                    <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@icons8addlist50.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                              <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#dodajKompilat" prefHeight="100.0" prefWidth="100.0" text="Dodaj Kompilat">
-                                 <graphic>
-                                    <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@icons8addlist50.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                              <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#dodajMediacje" prefHeight="100.0" prefWidth="100.0" text="Dodaj Mediacje">
-                                 <graphic>
-                                    <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@icons8addlist50.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                              <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#dodajPW" prefHeight="100.0" prefWidth="100.0" text="Dodaj PW">
-                                 <graphic>
-                                    <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@icons8addlist50.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0">
-                           <children>
-                              <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#loadSkryptTable" prefHeight="100.0" prefWidth="100.0" text="Skrypty">
-                                 <graphic>
-                                    <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@icons8list50.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                              <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#listaKompilat" prefHeight="100.0" prefWidth="100.0" text="Kompilaty">
-                                 <graphic>
-                                    <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@icons8list50.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                              <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#listaMediacja" prefHeight="100.0" prefWidth="100.0" text="Mediacje">
-                                 <graphic>
-                                    <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@icons8list50.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                              <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#listaPW" prefHeight="100.0" prefWidth="100.0" text="PW">
-                                 <graphic>
-                                    <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@icons8list50.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                              <Button contentDisplay="TOP" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Ustawienia">
-                                 <graphic>
-                                    <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@icons8settingsfilled50.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#loadAddSkrypt" prefHeight="100.0" prefWidth="100.0" text="Skrypty">
+                     <graphic>
+                        <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons8addlist50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#dodajKompilat" prefHeight="100.0" prefWidth="100.0" text="Kompilaty">
+                     <graphic>
+                        <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons8addlist50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#dodajPW" prefHeight="100.0" prefWidth="100.0" text="Dodaj PW">
+                     <graphic>
+                        <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons8addlist50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#dodajMediacje" prefHeight="100.0" prefWidth="100.0" text="Dodaj Mediacje">
+                     <graphic>
+                        <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons8addlist50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
             </VBox>
          </right>

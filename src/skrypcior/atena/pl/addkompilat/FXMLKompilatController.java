@@ -43,8 +43,7 @@ import skrypcior.atena.pl.tools.showInfoAlertBox;
 public class FXMLKompilatController implements Initializable {
     
     ObservableList<Kompilat> list = FXCollections.observableArrayList();
-    DbConnect dbConnect = new DbConnect();
-    Connection conn = dbConnect.createConnection();
+    Connection conn = DbConnect.createConnection();
     
     @FXML
     private JFXTextField nazwaKompilat;
@@ -104,19 +103,14 @@ public class FXMLKompilatController implements Initializable {
 }
     private void zaladuj(){
         try {
-            //DatabaseConnect databaseConnect = DatabaseConnect.getInstance();
-            
-
+            list.clear();
             ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM KOMPILAT");
-            
-            
             while (rs.next()) {
              list.add(new Kompilat(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
             }
             } catch (SQLException ex) {
             Logger.getLogger(FXMLKompilatController.class.getName()).log(Level.SEVERE, null, ex);
             }
-       
        tableView.getItems().setAll(list); 
     }
     
@@ -129,28 +123,14 @@ public class FXMLKompilatController implements Initializable {
         
         String nKompilat = (String) nazwaKompilat.getText();
         String satelita = (String) satelitaKompilat.getText();
-        
-        
-        
-        
-        /*
-        String dateWmain =  dataToString.toString(dateMain.getValue());
-        LocalDate  dateWprep = datePrep.getValue();
-        String dateWrel = dataToString.toString(dateRel.getValue());
-        String dateWfaza3 = dataToString.toString(dateFaza3.getValue());
-        String dateWprepg = dataToString.toString(datePrepG.getValue());
-        String dateWprod = dataToString.toString(dateProd.getValue());
        
-        */
        if(nKompilat.isEmpty() || satelita.isEmpty() ){
             showInfoAlertBox.showInformationAlertBox("Wypełnij wszystkie pola");
             return;
         }
        
-       //String qu = "INSERT INTO kompilat (nazwa, satelita, data_main /*, data_prep, data_rel, data_faza3_g, data_prep_g, data_prod_g) VALUES (?,?,?,?,?,?,?,?)";
        String qu = "INSERT INTO kompilat (kompilat, satelita, main, prep, rel, faza3, prepg, prod ) VALUES (?,?,?,?,?,?,?,?)";
 
-       
         try {
             preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
             
@@ -213,7 +193,7 @@ public class FXMLKompilatController implements Initializable {
         preparedStatement.close();
             showInfoAlertBox.showInformationAlertBox("Kompilat dopisano");
         }
-        
+        zaladuj();
     }
 
     @FXML
@@ -239,6 +219,8 @@ public class FXMLKompilatController implements Initializable {
             Logger.getLogger(FXMLKompilatController.class.getName()).log(Level.SEVERE, null, ex);
         }
         showInfoAlertBox.showInformationAlertBox("Rekord usunięto");
+        
+        zaladuj();
     }
 
         

@@ -17,9 +17,14 @@ import java.util.logging.Logger;
  */
 public class DbConnect {
     
-public Connection connection;  
+    static Connection conn = null;
+    
+    private DbConnect(){
+        
+    }
+//public Connection connection;  
 
-    public Connection createConnection(){
+    public static Connection createConnection(){
         try {
             Class.forName("com.mysql.jdbc.Driver");
              Connection conn = null;

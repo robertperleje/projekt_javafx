@@ -5,18 +5,22 @@
  */
 package skrypcior.atena.pl.addskrypt;
 
-import com.jfoenix.controls.JFXButton;
+
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Blob;
+
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.time.LocalDate;
+
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -30,14 +34,19 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import skrypcior.atena.pl.database.DatabaseConnect;
-import skrypcior.atena.pl.tools.convertToBlob;
+import skrypcior.atena.pl.database2.DbConnect;
 import skrypcior.atena.pl.tools.dataToString;
+import skrypcior.atena.pl.tools.showInfoAlertBox;
+import skrypcior.atena.pl.addskrypt.Skrypt;
 
 
 
@@ -48,9 +57,11 @@ import skrypcior.atena.pl.tools.dataToString;
  */
 public class FXMLDocumentController implements Initializable {
    
-    
+    ObservableList<Skrypt> list = FXCollections.observableArrayList();
+    Connection conn = DbConnect.createConnection();
     
     private Label label;
+    
     @FXML
     private JFXComboBox cmb_lp;
     ObservableList<String> lpList = FXCollections.observableArrayList("01","02","03");
@@ -72,40 +83,63 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private JFXComboBox cmb_odpowiedzialny;
     ObservableList<String> odpowiedzialnyList = FXCollections.observableArrayList("J. Sztokinger","","K. Derkowski","K. Bławat");
+    
     @FXML
     private JFXTextField jira;
-    @FXML
-    private JFXTextArea uwagi;
+    
+    
     @FXML
     private JFXComboBox cmb_test;
-    ObservableList<String> testList = FXCollections.observableArrayList();
     @FXML
-    private JFXButton zapiszButton;
+    private Button zapiszButton;
     @FXML
-    private JFXButton anulujButton;
+    private Button anulujButton;
     @FXML
     private AnchorPane rootPane;
     @FXML
     private Button btn_plik;
     @FXML
     private TextField sciezkaDoPliku;
-     
-    private DatabaseConnect databaseConnect;
-    //private Date data;
+    @FXML
+    private TableView<Skrypt> table_skrypty;
+    @FXML
+    private TableColumn<Skrypt, Integer> col_id;
+    @FXML
+    private TableColumn<Skrypt, String> col_nazwa;
+    @FXML
+    private TableColumn<Skrypt, String> col_srodowisko;
+    @FXML
+    private TableColumn<Skrypt, String> col_date_utw;
+    @FXML
+    private TableColumn<Skrypt, String> col_operator;
+    @FXML
+    private TableColumn<Skrypt, String> col_date_wysl;
+    @FXML
+    private TableColumn<Skrypt, String> col_status;
+    @FXML
+    private TableColumn<Skrypt, String> col_przelad;
+    @FXML
+    private TableColumn<Skrypt, String> col_wersja;
+    @FXML
+    private TableColumn<Skrypt, String> col_folder;
+    @FXML
+    private TableColumn<Skrypt, String> col_jira;
+    @FXML
+    private TableColumn<Skrypt, String> col_odp;
+    @FXML
+    private TableColumn<Skrypt, String> col_uwagi;
+    @FXML
+    private TextArea text_uwaga;
     
 
     
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        databaseConnect = DatabaseConnect.getInstance();
         
+        przypiszCol();
+        zaladuj();
         
-        test();
+        //test();
         cmb_lp.setItems(lpList);
         cmb_schemat.setItems(schematList);
         cmb_czy_zatrzymac.setItems(zatrzymacList);
@@ -114,15 +148,47 @@ public class FXMLDocumentController implements Initializable {
         cmb_przeladowac.setItems(przeladowacList);
         cmb_odwersji.setItems(odWersjiList);
         
-        cmb_test.setItems(testList);
-        sprawdzNazwe();
+        cmb_test.setItems(list);
+        //sprawdzNazwe();
         
     }    
 
+    private void przypiszCol() {
+        col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        col_nazwa.setCellValueFactory(new PropertyValueFactory<>("nazwa"));
+        col_srodowisko.setCellValueFactory(new PropertyValueFactory<>("srodowisko"));
+        col_date_utw.setCellValueFactory(new PropertyValueFactory<>("data_utw"));
+        col_operator.setCellValueFactory(new PropertyValueFactory<>("operator"));
+        col_date_wysl.setCellValueFactory(new PropertyValueFactory<>("data_wysl"));
+        col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+        col_przelad.setCellValueFactory(new PropertyValueFactory<>("przeladowanie"));
+        col_wersja.setCellValueFactory(new PropertyValueFactory<>("zalezy_od_wersji"));
+        col_folder.setCellValueFactory(new PropertyValueFactory<>("folder"));
+        col_jira.setCellValueFactory(new PropertyValueFactory<>("jira"));
+        col_odp.setCellValueFactory(new PropertyValueFactory<>("odpowiedzialny"));
+        col_uwagi.setCellValueFactory(new PropertyValueFactory<>("uwagi"));
+    }
+    
+    
+    private void zaladuj(){
+        try {
+            list.clear();
+            ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM SKRYPTY");
+            while (rs.next()) {
+             list.add(new Skrypt(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9),rs.getString(10),rs.getString(11),rs.getString(12),rs.getString(13)));
+            }
+            } catch (SQLException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        table_skrypty.getItems().setAll(list); 
+    }
+    
     @FXML
-    private void addSkrypt(ActionEvent event) throws IOException {
+    private void addSkrypt(ActionEvent event) throws IOException, SQLException {
         
-               
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        
         String skryptlp = (String) cmb_lp.getSelectionModel().getSelectedItem();
         String skryptSchemat = (String) cmb_schemat.getSelectionModel().getSelectedItem();
         String skryptZatrzymac = (String) cmb_czy_zatrzymac.getSelectionModel().getSelectedItem();
@@ -132,22 +198,12 @@ public class FXMLDocumentController implements Initializable {
         String skryptCzyWersja = (String) cmb_odwersji.getSelectionModel().getSelectedItem();
          
         
-        String skryptUwagi = uwagi.getText();
+        String skryptUwagi = text_uwaga.getText();
         String skryptJira = jira.getText();
         String sciezka = sciezkaDoPliku.getText();
         System.out.println(sciezka);
         
-        byte[] plik = convertToBlob.convertFileContentToBlob(sciezka);
-        
-        
-       /*
-        try {
-            FileInputStream plik = new FileInputStream(new File(sciezka));
-            OutputBlob
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-         */
+        //byte[] plik = convertToBlob.convertFileContentToBlob(sciezka);
         
         
         
@@ -167,12 +223,12 @@ public class FXMLDocumentController implements Initializable {
             skryptZatrzymac = "N";
         }
         
+       
         String skryptDataUtw = dataToString.dataBezMysln();
         String skryptFolder = dataToString.dataZMysln();
         String skryptNazwa = skryptlp + "-" + skryptSchemat + "-" + skryptZatrzymac + "-" + skryptDataUtw + "_" + skryptJira ;
         
-       // Date sqlDateUtw = new Date(data.getDate());
-        Calendar calendar = Calendar.getInstance(Locale.getDefault());
+           Calendar calendar = Calendar.getInstance(Locale.getDefault());
         String sqlDateUtw = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(calendar.getTime());
         
         
@@ -181,36 +237,37 @@ public class FXMLDocumentController implements Initializable {
         String skryptOperator = "ROBERT1";
         Date sqlDataWys = null;
         
-        String qu = "INSERT INTO SKRYPTY (nazwa,srodowisko,data_utw,operator,data_wysl,status,przeladowanie,od_wersji,folder,jira,odpowiedzialny,uwagi,plik) VALUES ("+
-                //"'" + skryptId + "'," +
-                "'" + skryptNazwa + "' ," +
-                "'" + skryptSrodowisko + "' ," +
-                "'" + sqlDateUtw + "' ," +
-                "'" + skryptOperator + "'" +
-                "," + sqlDataWys + "," +
-                "'" + "Utworzony" + "' ," +
-                "'" + skryptPrzeladowanie + "' ," +
-                "'" + skryptCzyWersja + "' ," +
-                "'" + skryptFolder + "_" + skryptSrodowisko + "/' ," +
-                "'" + skryptJira + "' ," +
-                "'" + skryptOdpowiedzialny + "' ," +
-                "'" + skryptUwagi + "' ," +
-                "'" +  plik + "'" +
-                ")";
-        System.out.println(qu);
-        if (databaseConnect.execAction(qu)){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText(null);
-            alert.setContentText("Zapisano");
-            alert.showAndWait();
-        }else{
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setContentText("Błąd");
-            alert.showAndWait();
+        
+       
+        String qu = "INSERT INTO SKRYPTY (nazwa,srodowisko,data_utw,operator,data_wysl,status,przeladowanie,od_wersji,folder,jira,odpowiedzialny,uwagi /*,plik*/) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        try {
+                       
+            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
+            
+            preparedStatement.setString(1, skryptNazwa);
+            preparedStatement.setString(2, skryptSrodowisko);
+            preparedStatement.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
+            preparedStatement.setString(4, skryptOperator);
+            preparedStatement.setNull(5, java.sql.Types.DATE);
+            preparedStatement.setString(6, "Utworzony");
+            preparedStatement.setString(7, skryptPrzeladowanie);
+            preparedStatement.setString(8, skryptCzyWersja);
+            preparedStatement.setString(9, skryptFolder + "_" + skryptSrodowisko + "/' ,");
+            preparedStatement.setString(10, skryptJira);
+            preparedStatement.setString(11, skryptOdpowiedzialny);
+            preparedStatement.setString(12, skryptUwagi);
+            //preparedStatement.setString(13, skryptUwagi);
+            
+            System.out.println(qu);
+            
+        } catch (Exception ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
-
+        finally{
+        preparedStatement.execute();
+        preparedStatement.close();
+            showInfoAlertBox.showInformationAlertBox("Skrypt zapisano");
+        }
     }
 
     
@@ -223,33 +280,7 @@ public class FXMLDocumentController implements Initializable {
     }
     
    
-
-    private void sprawdzNazwe() {
-      String qu = "SELECT nazwa FROM SKRYPTY";
-        ResultSet rs = databaseConnect.execQuery(qu);
-        try {
-            while (rs.next()) {
-                String nazwa = rs.getString("nazwa");
-                System.out.println(nazwa);
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE,null,ex);
-        }
-    }
-
-    private void test() {
-       String qu = "SELECT status FROM SKRYPTY_STATUS";
-       ResultSet rs = databaseConnect.execQuery(qu);
-       try {
-            while (rs.next()) {
-                testList.add(rs.getString("status"));
-                System.out.println(testList);
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE,null,ex);
-        }
-    }
-        
+     
         @FXML
         private void loadWindowsFile(ActionEvent event) {
         
@@ -276,8 +307,24 @@ public class FXMLDocumentController implements Initializable {
             */
         }
 
-    private Blob dataToString(String sciezka) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    @FXML
+    private void usunWiersz(ActionEvent event) {
+        PreparedStatement preparedStatement = null;
+        ResultSet rs=null;        
+        Skrypt skrypt = (Skrypt) table_skrypty.getSelectionModel().getSelectedItem();
+        String qu = "DELETE FROM SKRYPTY where id = ?";
+        try {
+            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
+            preparedStatement.setInt(1, skrypt.getId());
+            System.out.println(skrypt.getNazwa());
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        showInfoAlertBox.showInformationAlertBox("Rekord usunięto");
+        zaladuj();
     }
 
 

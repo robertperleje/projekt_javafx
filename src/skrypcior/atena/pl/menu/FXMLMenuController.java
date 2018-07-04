@@ -101,10 +101,6 @@ public class FXMLMenuController implements Initializable {
         loadWindows("/skrypcior/atena/pl/addskrypt/FXMLDocument.fxml", "Dodanie Skryptu");
     }
 
-    @FXML
-    private void loadSkryptTable(ActionEvent event) {
-        loadWindows("/skrypcior/atena/pl/listskrypt/FXMLSkryptList.fxml", "Lista Skryptów");
-    }    
      
     void loadWindows(String loc, String title){
         
@@ -196,7 +192,6 @@ public class FXMLMenuController implements Initializable {
         loadWindows("/skrypcior/atena/pl/addkompilat/FXMLKompilat.fxml", "Dodanie Kompilatu");
     }
 
-    @FXML
     private void menuWczytajTabeleSkryptow(ActionEvent event) {
         loadWindows("/skrypcior/atena/pl/listskrypt/FXMLSkryptList.fxml", "Lista Skryptów");
     }
@@ -207,25 +202,19 @@ public class FXMLMenuController implements Initializable {
     }
 
     @FXML
-    private void listaKompilat(ActionEvent event) {
-        loadWindows("/skrypcior/atena/pl/listkompilat/FXMLKompilatList.fxml", "Lista Kompilatów");
-    }
-
-    @FXML
     private void dodajMediacje(ActionEvent event) {
     }
 
-    @FXML
-    private void listaMediacja(ActionEvent event) {
-    }
 
     @FXML
     private void dodajPW(ActionEvent event) {
     }
 
     @FXML
-    private void listaPW(ActionEvent event) {
+    private void menuStatusSkryptow(ActionEvent event) {
+        loadWindows("/skrypcior/atena/pl/skrypty/status/FXMLSkryptyStatus.fxml", "Słownik - Status Skryptów");
     }
+
     
     
 }

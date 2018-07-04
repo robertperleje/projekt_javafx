@@ -67,7 +67,7 @@ public class FXMLDocumentController implements Initializable {
     ObservableList<String> lpList = FXCollections.observableArrayList("01","02","03");
     @FXML
     private JFXComboBox cmb_schemat;
-    ObservableList<String> schematList = FXCollections.observableArrayList("PART","OLIMP","DBM","DWHARCHITECT","HURT","APEX_REPORTS_APP");
+    ObservableList<String> schematList = FXCollections.observableArrayList();
     @FXML
     private JFXComboBox cmb_przeladowac;
     ObservableList<String> przeladowacList = FXCollections.observableArrayList("Nie","Tak");
@@ -141,7 +141,8 @@ public class FXMLDocumentController implements Initializable {
         
         //test();
         cmb_lp.setItems(lpList);
-        cmb_schemat.setItems(schematList);
+        //cmb_schemat.setItems(schematList);
+        zaladujSchemat();
         cmb_czy_zatrzymac.setItems(zatrzymacList);
         cmb_srodowisko.setItems(srodowiskoList);
         cmb_odpowiedzialny.setItems(odpowiedzialnyList);
@@ -327,6 +328,19 @@ public class FXMLDocumentController implements Initializable {
         zaladuj();
     }
 
+    private void zaladujSchemat(){
+       try {
+            ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM SKRYPTY_SCHEMAT");
+            while (rs.next()) {
+             
+                schematList.add(rs.getString(2));
+            }
+            } catch (SQLException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        cmb_schemat.getItems().setAll(schematList); 
+    } 
+    
 
 }
 

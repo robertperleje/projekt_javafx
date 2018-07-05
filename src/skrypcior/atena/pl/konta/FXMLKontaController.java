@@ -6,6 +6,7 @@
 package skrypcior.atena.pl.konta;
 
 
+import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,12 +25,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.converter.IntegerStringConverter;
 import skrypcior.atena.pl.database2.DbConnect;
 import skrypcior.atena.pl.tools.MD5;
+import skrypcior.atena.pl.tools.RestrictiveTextField;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
 
 
@@ -50,8 +57,9 @@ public class FXMLKontaController implements Initializable {
     private Button btn_anuluj;
     @FXML
     private JFXTextField tf_login;
+    
     @FXML
-    private JFXTextField tf_haslo;
+    private JFXPasswordField tf_haslo;
     @FXML
     private JFXTextField tf_imie;
     @FXML
@@ -80,16 +88,29 @@ public class FXMLKontaController implements Initializable {
     private TableColumn<Konta, String> col_date;
     @FXML
     private TableColumn<Konta, String> col_operator;
-    
-    
+     
+    //obsługa wyjatków sprawdzanie ilości znaków 
+    @FXML
+    private Label lb_login;
+    @FXML
+    private Label lb_haslo;
+    @FXML
+    private Label lb_imie;
+    @FXML
+    private Label lb_nazwisko;
+    @FXML
+    private Label lb_email;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        
         przypcol();
         zaladuj();
+       
     }    
     
     
@@ -151,6 +172,12 @@ public class FXMLKontaController implements Initializable {
         PreparedStatement preparedStatement = null;
         ResultSet rs=null;
         
+        boolean loginLenght = RestrictiveTextField.dataLenght(tf_login, lb_login, "Maksymalna ilość znaków 25", "25");
+        boolean hasloLenght = RestrictiveTextField.dataLenght(tf_haslo, lb_haslo, "Maksymalna ilość znaków 25", "25");
+        boolean imieLenght = RestrictiveTextField.dataLenght(tf_imie, lb_imie, "Maksymalna ilość znaków 25", "25");
+        boolean nazwLenght = RestrictiveTextField.dataLenght(tf_nazwisko, lb_nazwisko, "Maksymalna ilość znaków 50", "50");
+        boolean emailLenght = RestrictiveTextField.dataLenght(tf_email, lb_email, "Maksymalna ilość znaków 50", "50");
+        
         String login = (String) tf_login.getText();
         String haslo = (String) tf_haslo.getText();
         String imie = (String) tf_imie.getText();
@@ -163,6 +190,12 @@ public class FXMLKontaController implements Initializable {
             showInfoAlertBox.showInformationAlertBox("Wypełnij wszystkie pola");
             return;
         }
+       
+       if (!loginLenght || !hasloLenght || !imieLenght || !nazwLenght || !emailLenght){
+           return;
+       }
+         
+       
        //hash hasła
        String md5hasło = MD5.PasswordToMD5(haslo);
                
@@ -195,8 +228,7 @@ public class FXMLKontaController implements Initializable {
         }
         zaladuj();
     }
+  
     
-    
-
-    
+   
 }

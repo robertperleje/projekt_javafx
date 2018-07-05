@@ -25,29 +25,54 @@
                         <Insets left="15.0" right="15.0" top="25.0" />
                      </VBox.margin>
                   </JFXTextField>
-                  <JFXTextField fx:id="tf_haslo" labelFloat="true" layoutX="10.0" layoutY="60.0" prefHeight="25.0" prefWidth="362.0" promptText="Hasło">
+                  <Label fx:id="lb_login">
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <JFXPasswordField fx:id="tf_haslo" promptText="Hasło">
                      <VBox.margin>
                         <Insets left="15.0" right="15.0" top="15.0" />
                      </VBox.margin>
-                  </JFXTextField>
+                  </JFXPasswordField>
+                  <Label fx:id="lb_haslo" layoutX="25.0" layoutY="60.0">
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin>
+                  </Label>
                   <JFXTextField fx:id="tf_imie" labelFloat="true" layoutX="25.0" layoutY="35.0" prefHeight="25.0" prefWidth="362.0" promptText="Imie">
                      <VBox.margin>
                         <Insets left="15.0" right="15.0" top="15.0" />
                      </VBox.margin>
                   </JFXTextField>
+                  <Label fx:id="lb_imie" layoutX="10.0" layoutY="117.0">
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin>
+                  </Label>
                   <JFXTextField fx:id="tf_nazwisko" labelFloat="true" layoutX="10.0" layoutY="85.0" prefHeight="25.0" prefWidth="362.0" promptText="Nazwisko">
                      <VBox.margin>
                         <Insets left="15.0" right="15.0" top="15.0" />
                      </VBox.margin>
                   </JFXTextField>
+                  <Label fx:id="lb_nazwisko" layoutX="10.0" layoutY="174.0">
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin>
+                  </Label>
                   <JFXTextField fx:id="tf_email" labelFloat="true" layoutX="25.0" layoutY="155.0" prefHeight="25.0" prefWidth="362.0" promptText="Email">
                      <VBox.margin>
                         <Insets left="15.0" right="15.0" top="15.0" />
                      </VBox.margin>
                   </JFXTextField>
+                  <Label fx:id="lb_email" layoutX="10.0" layoutY="231.0">
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin>
+                  </Label>
                   <CheckBox fx:id="cb_zablokowane" mnemonicParsing="false" text="Zablokowane">
                      <VBox.margin>
-                        <Insets left="15.0" top="15.0" />
+                        <Insets left="15.0" top="20.0" />
                      </VBox.margin>
                   </CheckBox>
                   <TableView fx:id="tabela_konta" prefHeight="397.0" prefWidth="424.0">

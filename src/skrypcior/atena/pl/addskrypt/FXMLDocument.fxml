@@ -86,11 +86,6 @@
                               <Insets left="25.0" right="45.0" top="15.0" />
                            </VBox.margin>
                         </TextArea>
-                        <JFXComboBox fx:id="cmb_test" promptText="Test">
-                           <VBox.margin>
-                              <Insets bottom="15.0" />
-                           </VBox.margin>
-                        </JFXComboBox>
                      </children>
                   </VBox>
                   <VBox alignment="TOP_CENTER" prefHeight="336.0" prefWidth="500.0">
@@ -112,7 +107,7 @@
                         </JFXComboBox>
                         <JFXTextField fx:id="jira" labelFloat="true" promptText="Jira">
                            <VBox.margin>
-                              <Insets bottom="15.0" left="35.0" right="35.0" />
+                              <Insets bottom="15.0" />
                            </VBox.margin>
                         </JFXTextField>
                         <TextField fx:id="sciezkaDoPliku" editable="false">

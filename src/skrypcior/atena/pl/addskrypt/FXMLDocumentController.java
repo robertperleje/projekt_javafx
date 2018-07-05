@@ -81,13 +81,12 @@ public class FXMLDocumentController implements Initializable {
     ObservableList<String> srodowiskoList = FXCollections.observableArrayList("FAZA3","PREP","PROD");
     @FXML
     private JFXComboBox cmb_odpowiedzialny;
-    ObservableList<String> odpowiedzialnyList = FXCollections.observableArrayList("J. Sztokinger","","K. Derkowski","K. Bławat");
+    ObservableList<String> odpowiedzialnyList = FXCollections.observableArrayList();
     
     @FXML
     private JFXTextField jira;
     
     
-    @FXML
     private JFXComboBox cmb_test;
     @FXML
     private Button zapiszButton;
@@ -137,18 +136,18 @@ public class FXMLDocumentController implements Initializable {
         
         przypiszCol();
         zaladuj();
-        
-        
+                
         cmb_lp.setItems(lpList);
         
-        zaladujSchemat();
+        wczytajSchemat();
+        
         cmb_czy_zatrzymac.setItems(zatrzymacList);
         cmb_srodowisko.setItems(srodowiskoList);
-        cmb_odpowiedzialny.setItems(odpowiedzialnyList);
+        wczytajUżyt();
         cmb_przeladowac.setItems(przeladowacList);
         cmb_odwersji.setItems(odWersjiList);
         
-        cmb_test.setItems(list);
+        
        
         
     }    
@@ -173,7 +172,9 @@ public class FXMLDocumentController implements Initializable {
     private void zaladuj(){
         try {
             list.clear();
-            ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM SKRYPTY");
+            ResultSet rs = conn.createStatement().executeQuery("SELECT sk.Id,sk.Nazwa, sk.Srodowisko, sk.Data_utw, sk.Operator, sk.Data_wysl, sks.nazwa, sk.Przeladowanie, sk.Od_wersji, sk.Folder, sk.Jira, sk.Odpowiedzialny, sk.Uwagi " +
+                            " FROM skrypty sk, skrypty_status sks " +
+                            " WHERE sk.Status = sks.id" );
             while (rs.next()) {
              list.add(new Skrypt(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9),rs.getString(10),rs.getString(11),rs.getString(12),rs.getString(13)));
             }
@@ -327,7 +328,7 @@ public class FXMLDocumentController implements Initializable {
         zaladuj();
     }
 
-    private void zaladujSchemat(){
+    private void wczytajSchemat(){
        try {
             ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM SKRYPTY_SCHEMAT");
             while (rs.next()) {
@@ -340,7 +341,18 @@ public class FXMLDocumentController implements Initializable {
         cmb_schemat.getItems().setAll(schematList); 
     } 
     
-
+    private void wczytajUżyt(){
+       try {
+            ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM KONTA");
+            while (rs.next()) {
+             
+                odpowiedzialnyList.add(rs.getString(2));
+            }
+            } catch (SQLException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        cmb_odpowiedzialny.getItems().setAll(odpowiedzialnyList); 
+    }
 }
 
     

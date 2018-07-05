@@ -5,15 +5,12 @@
  */
 package skrypcior.atena.pl.skrypty.status;
 
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import java.net.URL;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -29,8 +26,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import skrypcior.atena.pl.addkompilat.FXMLKompilatController;
-import skrypcior.atena.pl.addkompilat.Kompilat;
 import skrypcior.atena.pl.database2.DbConnect;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
 
@@ -115,7 +110,6 @@ public class FXMLSkryptyStatusController implements Initializable {
             preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
             
             preparedStatement.setString(1, ozn_status);
-//            preparedStatement.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
             preparedStatement.setTimestamp(2, java.sql.Timestamp.valueOf(LocalDateTime.now()));
             preparedStatement.setString(3, skryptOperator);
             
@@ -127,30 +121,46 @@ public class FXMLSkryptyStatusController implements Initializable {
         finally{
         preparedStatement.execute();
         preparedStatement.close();
-            showInfoAlertBox.showInformationAlertBox("Słowniki - Status skryptu dopisano");
+        showInfoAlertBox.showInformationAlertBox("Słowniki - Status skryptu dopisano");
         }
         zaladuj();
     }
 
     @FXML
-    private void usunWiersz(ActionEvent event) {
+    private void usunWiersz(ActionEvent event) throws SQLException {
         PreparedStatement preparedStatement = null;
         ResultSet rs=null;
         
         Status status = (Status) tabela_status.getSelectionModel().getSelectedItem();
-        String qu = "DELETE FROM SKRYPTY_STATUS where nazwa = ?";
-        try {
-            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
-            preparedStatement.setString(1, status.getNazwa());
-            preparedStatement.executeUpdate();
-            preparedStatement.close();
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(FXMLSkryptyStatusController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        showInfoAlertBox.showInformationAlertBox("Rekord usunięto");
         
-        zaladuj();
+        String ls = "SELECT count(*) FROM SKRYPTY where status = " + status.getId();
+        System.out.println(status.getId());
+        preparedStatement = (PreparedStatement) conn.prepareStatement(ls);
+        rs = preparedStatement.executeQuery(ls);
+        
+        System.out.println(rs);
+         
+        if (rs.next()) {
+             showInfoAlertBox.showInformationAlertBox("Status jest używany, usunięcie niemożliwe");
+        } else {
+            
+            String qu = "DELETE FROM SKRYPTY_STATUS where nazwa = ?";
+                try {
+                    preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
+                    preparedStatement.setString(1, status.getNazwa());
+                    preparedStatement.executeUpdate();
+                    preparedStatement.close();
+            
+                } catch (SQLException ex) {
+                    Logger.getLogger(FXMLSkryptyStatusController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                    showInfoAlertBox.showInformationAlertBox("Rekord usunięto");
+        
+                zaladuj();   
+        }
+        
+        
+        
     }
 
     @FXML

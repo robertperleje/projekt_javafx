@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,11 +27,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.converter.IntegerStringConverter;
 import skrypcior.atena.pl.database2.DbConnect;
 import skrypcior.atena.pl.tools.MD5;
 import skrypcior.atena.pl.tools.RestrictiveTextField;
@@ -106,8 +102,7 @@ public class FXMLKontaController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        
+               
         przypcol();
         zaladuj();
        
@@ -172,11 +167,12 @@ public class FXMLKontaController implements Initializable {
         PreparedStatement preparedStatement = null;
         ResultSet rs=null;
         
-        boolean loginLenght = RestrictiveTextField.dataLenght(tf_login, lb_login, "Maksymalna ilość znaków 25", "25");
-        boolean hasloLenght = RestrictiveTextField.dataLenght(tf_haslo, lb_haslo, "Maksymalna ilość znaków 25", "25");
-        boolean imieLenght = RestrictiveTextField.dataLenght(tf_imie, lb_imie, "Maksymalna ilość znaków 25", "25");
-        boolean nazwLenght = RestrictiveTextField.dataLenght(tf_nazwisko, lb_nazwisko, "Maksymalna ilość znaków 50", "50");
-        boolean emailLenght = RestrictiveTextField.dataLenght(tf_email, lb_email, "Maksymalna ilość znaków 50", "50");
+        boolean loginLenght = RestrictiveTextField.textLenght(tf_login.getText(), lb_login, "Maksymalna ilość znaków 25", "25");
+        boolean hasloLenght = RestrictiveTextField.textLenght(tf_haslo.getText(), lb_haslo, "Maksymalna ilość znaków 25", "25");
+        boolean imieLenght = RestrictiveTextField.textLenght(tf_imie.getText(), lb_imie, "Maksymalna ilość znaków 25", "25");
+        boolean nazwLenght = RestrictiveTextField.textLenght(tf_nazwisko.getText(), lb_nazwisko, "Maksymalna ilość znaków 50", "50");
+        boolean emailLenght = RestrictiveTextField.textLenght(tf_email.getText(), lb_email, "Maksymalna ilość znaków 50", "50");
+        //boolean emailRfc = RestrictiveTextField.emailFormat(tf_email.getText(), lb_email, "Wymagany format imie.nazwisko@atena.pl");
         
         String login = (String) tf_login.getText();
         String haslo = (String) tf_haslo.getText();
@@ -191,7 +187,7 @@ public class FXMLKontaController implements Initializable {
             return;
         }
        
-       if (!loginLenght || !hasloLenght || !imieLenght || !nazwLenght || !emailLenght){
+       if (!loginLenght || !hasloLenght || !imieLenght || !nazwLenght || !emailLenght /*|| !emailRfc */ ){
            return;
        }
          

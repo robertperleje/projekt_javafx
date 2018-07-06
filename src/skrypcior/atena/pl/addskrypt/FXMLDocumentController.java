@@ -79,7 +79,7 @@ public class FXMLDocumentController implements Initializable {
     ObservableList<String> zatrzymacList = FXCollections.observableArrayList("Nie","Tak");
     @FXML
     private JFXComboBox cmb_srodowisko;
-    ObservableList<String> srodowiskoList = FXCollections.observableArrayList("FAZA3","PREP","PROD");
+    ObservableList<String> srodowiskoList = FXCollections.observableArrayList();
     @FXML
     private JFXComboBox cmb_odpowiedzialny;
     ObservableList<String> odpowiedzialnyList = FXCollections.observableArrayList();
@@ -145,8 +145,8 @@ public class FXMLDocumentController implements Initializable {
         wczytajSchemat();
         
         cmb_czy_zatrzymac.setItems(zatrzymacList);
-        cmb_srodowisko.setItems(srodowiskoList);
-        wczytajUżyt();
+        wczytajSrod();
+        wczytajUzyt();
         cmb_przeladowac.setItems(przeladowacList);
         cmb_odwersji.setItems(odWersjiList);
         
@@ -175,9 +175,9 @@ public class FXMLDocumentController implements Initializable {
     private void zaladuj(){
         try {
             list.clear();
-            ResultSet rs = conn.createStatement().executeQuery("SELECT sk.Id,sk.Nazwa, sk.Srodowisko, sk.Data_utw, sk.Operator, sk.Data_wysl, sks.nazwa, sk.Przeladowanie, sk.Od_wersji, sk.Folder, sk.Jira, sk.Odpowiedzialny, sk.Uwagi " +
-                            " FROM skrypty sk, skrypty_status sks " +
-                            " WHERE sk.Status = sks.id" );
+            ResultSet rs = conn.createStatement().executeQuery("SELECT sk.Id,sk.Nazwa, w.nazwa, sk.Data_utw, sk.Operator, sk.Data_wysl, sks.nazwa, sk.Przeladowanie, sk.Od_wersji, sk.Folder, sk.Jira, sk.Odpowiedzialny, sk.Uwagi " +
+                            " FROM skrypty sk, skrypty_status sks, srodowisko w " +
+                            " WHERE sk.Status = sks.id and sk.srodowisko = w.id " );
             while (rs.next()) {
              list.add(new Skrypt(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9),rs.getString(10),rs.getString(11),rs.getString(12),rs.getString(13)));
             }
@@ -349,7 +349,7 @@ public class FXMLDocumentController implements Initializable {
         cmb_schemat.getItems().setAll(schematList); 
     } 
     
-    private void wczytajUżyt(){
+    private void wczytajUzyt(){
        try {
             ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM KONTA");
             while (rs.next()) {
@@ -360,6 +360,19 @@ public class FXMLDocumentController implements Initializable {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
         cmb_odpowiedzialny.getItems().setAll(odpowiedzialnyList); 
+    }
+    
+    private void wczytajSrod(){
+       try {
+            ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM SRODOWISKO");
+            while (rs.next()) {
+             
+                srodowiskoList.add(rs.getString(2));
+            }
+            } catch (SQLException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        cmb_srodowisko.getItems().setAll(srodowiskoList); 
     }
 }
 

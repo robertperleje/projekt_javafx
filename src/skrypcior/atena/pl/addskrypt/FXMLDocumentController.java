@@ -39,11 +39,13 @@ import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.converter.DefaultStringConverter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import skrypcior.atena.pl.database2.DbConnect;
 import skrypcior.atena.pl.skrypty.status.Status;
@@ -129,6 +131,7 @@ public class FXMLDocumentController implements Initializable
     @FXML
     private Label l_jira;
     
+    private ObservableList<String> listaStatus = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
@@ -146,6 +149,7 @@ public class FXMLDocumentController implements Initializable
         wczytajUzyt();
         cmb_przeladowac.setItems(przeladowacList);
         cmb_odwersji.setItems(odWersjiList);
+        wczytajStatus();
 
     }
 
@@ -167,7 +171,7 @@ public class FXMLDocumentController implements Initializable
         
         
         table_skrypty.setEditable(true);
-        col_status.setCellFactory(TextFieldTableCell.forTableColumn());
+        col_status.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),listaStatus));
         
     }
 
@@ -375,6 +379,21 @@ public class FXMLDocumentController implements Initializable
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
         cmb_srodowisko.getItems().setAll(srodowiskoList);
+    }
+    
+    private void wczytajStatus()
+    {
+        try
+        {
+            ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM SKRYPTY_STATUS");
+            while (rs.next())
+            {
+                listaStatus.add(rs.getString(2));
+            }
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private Integer pobierzIdSrod(String oznSrod) throws SQLException

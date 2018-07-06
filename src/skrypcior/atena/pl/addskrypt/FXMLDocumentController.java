@@ -43,6 +43,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import skrypcior.atena.pl.database2.DbConnect;
+import skrypcior.atena.pl.tools.RestrictiveTextField;
 import skrypcior.atena.pl.tools.dataToString;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
 
@@ -128,6 +129,8 @@ public class FXMLDocumentController implements Initializable {
     private TableColumn<Skrypt, String> col_uwagi;
     @FXML
     private TextArea text_uwaga;
+    @FXML
+    private Label l_jira;
     
 
     
@@ -204,12 +207,13 @@ public class FXMLDocumentController implements Initializable {
         String sciezka = sciezkaDoPliku.getText();
         System.out.println(sciezka);
         
+        boolean nazwJira = RestrictiveTextField.textLenght(jira.getText(), l_jira, "Maksymalna ilość znaków 50", "50");
         //byte[] plik = convertToBlob.convertFileContentToBlob(sciezka);
         
         
         
         
-        if(skryptlp.isEmpty() || skryptSchemat.isEmpty() || skryptZatrzymac.isEmpty() || skryptSrodowisko.isEmpty() ||  skryptOdpowiedzialny.isEmpty() || skryptUwagi.isEmpty() || skryptJira.isEmpty()
+        if(skryptlp.isEmpty() || skryptSchemat.isEmpty() || skryptZatrzymac.isEmpty() || skryptSrodowisko.isEmpty() ||  skryptOdpowiedzialny.isEmpty() || skryptJira.isEmpty()
                 || skryptPrzeladowanie.isEmpty() || skryptCzyWersja.isEmpty() ){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(null);
@@ -217,6 +221,10 @@ public class FXMLDocumentController implements Initializable {
             alert.showAndWait();
             return;
         }
+        
+        if (!nazwJira ){
+           return;
+       }
         
         if (skryptZatrzymac.equals("Tak")) {
             skryptZatrzymac = "T";
@@ -229,7 +237,7 @@ public class FXMLDocumentController implements Initializable {
         String skryptFolder = dataToString.dataZMysln();
         String skryptNazwa = skryptlp + "-" + skryptSchemat + "-" + skryptZatrzymac + "-" + skryptDataUtw + "_" + skryptJira ;
         
-           Calendar calendar = Calendar.getInstance(Locale.getDefault());
+        Calendar calendar = Calendar.getInstance(Locale.getDefault());
         String sqlDateUtw = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(calendar.getTime());
         
         

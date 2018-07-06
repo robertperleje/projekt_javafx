@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package skrypcior.atena.pl.skrypty.status;
+package skrypcior.atena.pl.srodowiska;
+
 
 import com.jfoenix.controls.JFXTextField;
 import com.mysql.jdbc.Connection;
@@ -22,11 +23,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import skrypcior.atena.pl.database2.DbConnect;
+import skrypcior.atena.pl.tools.RestrictiveTextField;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
 
 /**
@@ -34,29 +37,31 @@ import skrypcior.atena.pl.tools.showInfoAlertBox;
  *
  * @author perlro1
  */
-public class FXMLSkryptyStatusController implements Initializable {
+public class FXMLSrodowiskoController implements Initializable {
     
-    ObservableList<Status> list = FXCollections.observableArrayList();
+    ObservableList<Srodowisko> list = FXCollections.observableArrayList();
     Connection conn = DbConnect.createConnection();
     
     @FXML
     private JFXTextField tf_nazwa;
     @FXML
-    private TableView<Status> tabela_status;
+    private TableView<Srodowisko> tabela_status;
     @FXML
-    private TableColumn<Status, Integer> col_id;
+    private TableColumn<Srodowisko, Integer> col_id;
     @FXML
-    private TableColumn<Status, String> col_nazwa;
+    private TableColumn<Srodowisko, String> col_nazwa;
     @FXML
-    private TableColumn<Status, String> col_data;
+    private TableColumn<Srodowisko, String> col_data;
     @FXML
-    private TableColumn<Status, String> col_operator;
+    private TableColumn<Srodowisko, String> col_operator;
     @FXML
     private Button btn_zapisz;
     @FXML
     private Button btn_usun;
     @FXML
     private Button btn_anuluj;
+    @FXML
+    private Label lb_nazwa;
 
     /**
      * Initializes the controller class.
@@ -78,12 +83,12 @@ public class FXMLSkryptyStatusController implements Initializable {
     private void zaladuj(){
         try {
             list.clear();
-            ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM SKRYPTY_STATUS");
+            ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM SRODOWISKO");
             while (rs.next()) {
-             list.add(new Status(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4)));
+             list.add(new Srodowisko(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4)));
             }
             } catch (SQLException ex) {
-            Logger.getLogger(FXMLSkryptyStatusController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FXMLSrodowiskoController.class.getName()).log(Level.SEVERE, null, ex);
             }
        tabela_status.getItems().setAll(list); 
     }
@@ -96,15 +101,20 @@ public class FXMLSkryptyStatusController implements Initializable {
         ResultSet rs=null;
         
         String ozn_status = (String) tf_nazwa.getText();
-               
-       if(ozn_status.isEmpty() || ozn_status.isEmpty() ){
+        boolean nazwaLenght = RestrictiveTextField.textLenght(tf_nazwa.getText(), lb_nazwa, "Maksymalna ilość znaków 25", "25");       
+       
+        if(ozn_status.isEmpty() || ozn_status.isEmpty() ){
             showInfoAlertBox.showInformationAlertBox("Wypełnij wszystkie pola");
             return;
         }
+        
+        if (!nazwaLenght ){
+           return;
+       }
        
        String skryptOperator = "ROBERT1";
        
-       String qu = "INSERT INTO SKRYPTY_STATUS (nazwa, data_utw, operator ) VALUES (?,?,?)";
+       String qu = "INSERT INTO SRODOWISKO (nazwa, data_utw, operator ) VALUES (?,?,?)";
 
         try {
             preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
@@ -116,12 +126,12 @@ public class FXMLSkryptyStatusController implements Initializable {
             System.out.println(qu);
             
         } catch (SQLException ex) {
-            Logger.getLogger(FXMLSkryptyStatusController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FXMLSrodowiskoController.class.getName()).log(Level.SEVERE, null, ex);
         }
         finally{
         preparedStatement.execute();
         preparedStatement.close();
-        showInfoAlertBox.showInformationAlertBox("Słowniki - Status skryptu dopisano");
+        showInfoAlertBox.showInformationAlertBox("Słowniki - Środowisko zostało dopisano");
         }
         zaladuj();
     }
@@ -131,9 +141,9 @@ public class FXMLSkryptyStatusController implements Initializable {
         PreparedStatement preparedStatement = null;
         ResultSet rs=null;
         
-        Status status = (Status) tabela_status.getSelectionModel().getSelectedItem();
+        Srodowisko status = (Srodowisko) tabela_status.getSelectionModel().getSelectedItem();
         
-        String ls = "SELECT count(*) FROM SKRYPTY where status = " + status.getId();
+        String ls = "SELECT count(*) FROM SKRYPTY where srodowisko = " + status.getId();
         System.out.println(status.getId());
         preparedStatement = (PreparedStatement) conn.prepareStatement(ls);
         rs = preparedStatement.executeQuery(ls);
@@ -142,10 +152,10 @@ public class FXMLSkryptyStatusController implements Initializable {
         rs.next();
         int j = rs.getInt(1);
         if (j>0) {
-             showInfoAlertBox.showInformationAlertBox("Status jest używany, usunięcie niemożliwe");
+             showInfoAlertBox.showInformationAlertBox("Nazwa środowiska jest używana, usunięcie niemożliwe");
         } else {
             
-            String qu = "DELETE FROM SKRYPTY_STATUS where nazwa = ?";
+            String qu = "DELETE FROM SRODOWISKO where nazwa = ?";
                 try {
                     preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
                     preparedStatement.setString(1, status.getNazwa());
@@ -153,20 +163,15 @@ public class FXMLSkryptyStatusController implements Initializable {
                     preparedStatement.close();
             
                 } catch (SQLException ex) {
-                    Logger.getLogger(FXMLSkryptyStatusController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(FXMLSrodowiskoController.class.getName()).log(Level.SEVERE, null, ex);
                 }
                     showInfoAlertBox.showInformationAlertBox("Rekord usunięto");
-        
-                zaladuj();   
+                    zaladuj();   
         }
-        
-        
-        
     }
 
     @FXML
     private void zamknijOkno(ActionEvent event) {
         ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
     }
-    
 }

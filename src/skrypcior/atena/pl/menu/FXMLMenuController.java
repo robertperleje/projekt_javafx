@@ -225,6 +225,12 @@ public class FXMLMenuController implements Initializable {
         loadWindows("/skrypcior/atena/pl/konta/FXMLKonta.fxml", "Słownik - Konta Użytkowników");
     }
 
+    @FXML
+    private void menuSrodowiska(ActionEvent event) {
+        loadWindows("/skrypcior/atena/pl/srodowiska/FXMLSrodowisko.fxml", "Słownik - Środowiska");
+
+    }
+
     
     
 }

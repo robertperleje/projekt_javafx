@@ -33,6 +33,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#menuStatusSkryptow" text="Statusy Skryptów" />
                         <MenuItem mnemonicParsing="false" onAction="#menuSchematy" text="Schematy" />
                         <MenuItem mnemonicParsing="false" onAction="#menuKonta" text="Konta Użytkowników" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuSrodowiska" text="Środowiska" />
                      </items>
                   </Menu>
                 <Menu mnemonicParsing="false" text="Help">

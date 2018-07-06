@@ -29,7 +29,7 @@ public class DbConnect {
             Class.forName("com.mysql.jdbc.Driver");
              Connection conn = null;
             try {
-                conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/gtu_dro","dupa","");
+                conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/gtu_dro?useUnicode=yes&characterEncoding=UTF-8","dupa","");
             } catch (SQLException ex) {
                 Logger.getLogger(DbConnect.class.getName()).log(Level.SEVERE, null, ex);
             }

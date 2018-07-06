@@ -26,6 +26,7 @@ public class Skrypt {
         private final SimpleStringProperty jira;
         private final SimpleStringProperty odpowiedzialny;
         private final SimpleStringProperty uwagi;
+        
 
     Skrypt(Integer id, String nazwa, String srodowisko, String data_utw, String operator, String data_wysl, String status, String przeladowanie, String zalezy_od_wersji, String folder, String jira, String odpowiedzialny, String uwagi) {
         this.id = new SimpleIntegerProperty(id);
@@ -69,6 +70,10 @@ public class Skrypt {
 
     public String getStatus() {
         return status.get();
+    }
+    
+    public void setStatus(String strStatus){
+        status.set(strStatus); 
     }
 
     public String getPrzeladowanie() {

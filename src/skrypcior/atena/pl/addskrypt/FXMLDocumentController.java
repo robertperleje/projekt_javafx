@@ -35,15 +35,18 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import skrypcior.atena.pl.database2.DbConnect;
+import skrypcior.atena.pl.skrypty.status.Status;
 import skrypcior.atena.pl.tools.RestrictiveTextField;
 import skrypcior.atena.pl.tools.dataToString;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
@@ -80,12 +83,9 @@ public class FXMLDocumentController implements Initializable
     ObservableList<String> srodowiskoList = FXCollections.observableArrayList();
     @FXML
     private JFXComboBox cmb_odpowiedzialny;
-    ObservableList<String> odpowiedzialnyList = FXCollections.observableArrayList();
-
+    ObservableList<String> odpList = FXCollections.observableArrayList();
     @FXML
     private JFXTextField jira;
-
-    private JFXComboBox cmb_test;
     @FXML
     private Button zapiszButton;
     @FXML
@@ -128,6 +128,7 @@ public class FXMLDocumentController implements Initializable
     private TextArea text_uwaga;
     @FXML
     private Label l_jira;
+    
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
@@ -163,6 +164,11 @@ public class FXMLDocumentController implements Initializable
         col_jira.setCellValueFactory(new PropertyValueFactory<>("jira"));
         col_odp.setCellValueFactory(new PropertyValueFactory<>("odpowiedzialny"));
         col_uwagi.setCellValueFactory(new PropertyValueFactory<>("uwagi"));
+        
+        
+        table_skrypty.setEditable(true);
+        col_status.setCellFactory(TextFieldTableCell.forTableColumn());
+        
     }
 
     private void zaladuj()
@@ -170,9 +176,9 @@ public class FXMLDocumentController implements Initializable
         try
         {
             list.clear();
-            ResultSet rs = conn.createStatement().executeQuery("SELECT sk.Id,sk.Nazwa, w.nazwa, sk.Data_utw, sk.Operator, sk.Data_wysl, sks.nazwa, sk.Przeladowanie, sk.Od_wersji, sk.Folder, sk.Jira, sk.Odpowiedzialny, sk.Uwagi "
-                    + " FROM skrypty sk, skrypty_status sks, srodowisko w "
-                    + " WHERE sk.Status = sks.id and sk.srodowisko = w.id ");
+            ResultSet rs = conn.createStatement().executeQuery("SELECT sk.Id,sk.Nazwa, w.nazwa, sk.Data_utw, sk.Operator, sk.Data_wysl, sks.nazwa, sk.Przeladowanie, sk.Od_wersji, sk.Folder, sk.Jira, k.login, sk.Uwagi "
+                    + " FROM skrypty sk, skrypty_status sks, srodowisko w, konta k "
+                    + " WHERE sk.Status = sks.id and sk.srodowisko = w.id and sk.odpowiedzialny = k.id ");
             while (rs.next())
             {
                 list.add(new Skrypt(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10), rs.getString(11), rs.getString(12), rs.getString(13)));
@@ -191,32 +197,31 @@ public class FXMLDocumentController implements Initializable
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
 
+        //Z czytujemy wszytskie wartości z formatki
         String skryptlp = (String) cmb_lp.getSelectionModel().getSelectedItem();
         String skryptSchemat = (String) cmb_schemat.getSelectionModel().getSelectedItem();
         String skryptZatrzymac = (String) cmb_czy_zatrzymac.getSelectionModel().getSelectedItem();
-
         String oznSrod = (String) cmb_srodowisko.getSelectionModel().getSelectedItem();
-        String skryptOdpowiedzialny = (String) cmb_odpowiedzialny.getSelectionModel().getSelectedItem();
+        String osobaOdp = (String) cmb_odpowiedzialny.getSelectionModel().getSelectedItem();
         String skryptPrzeladowanie = (String) cmb_przeladowac.getSelectionModel().getSelectedItem();
         String skryptCzyWersja = (String) cmb_odwersji.getSelectionModel().getSelectedItem();
-
-        int idSrod = pobierzIdSrod(oznSrod);
-
         String skryptUwagi = text_uwaga.getText();
         String skryptJira = jira.getText();
         String sciezka = sciezkaDoPliku.getText();
-        System.out.println(sciezka);
+        
 
+        //Pobieramy id na potrzeby insertu do bazy
+        int idSrod = pobierzIdSrod(oznSrod);
+        int idOsobaOdp = pobierzIdOpekuna(osobaOdp);
+
+        //Weryfikacja pobranego stringa względem ilości znaków(ograniczenie kolumny na bazie)
         boolean nazwJira = RestrictiveTextField.textLenght(jira.getText(), l_jira, "Maksymalna ilość znaków 50", "50");
-        //byte[] plik = convertToBlob.convertFileContentToBlob(sciezka);
 
-        if (skryptlp.isEmpty() || skryptSchemat.isEmpty() || skryptZatrzymac.isEmpty() || oznSrod.isEmpty() || skryptOdpowiedzialny.isEmpty() || skryptJira.isEmpty()
+        //Sprawdzamy czy wszystkie pola wymagane sa wypełnione
+        if (skryptlp.isEmpty() || skryptSchemat.isEmpty() || skryptZatrzymac.isEmpty() || oznSrod.isEmpty() || osobaOdp.isEmpty() || skryptJira.isEmpty()
                 || skryptPrzeladowanie.isEmpty() || skryptCzyWersja.isEmpty())
         {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setContentText("Wypełnij wszystkie pola");
-            alert.showAndWait();
+            showInfoAlertBox.showInformationAlertBox("Wypełnij wszystkie pola");
             return;
         }
 
@@ -255,16 +260,15 @@ public class FXMLDocumentController implements Initializable
             preparedStatement.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
             preparedStatement.setString(4, skryptOperator);
             preparedStatement.setNull(5, java.sql.Types.DATE);
-            preparedStatement.setString(6, "Utworzony");
+            preparedStatement.setString(6, "1");
             preparedStatement.setString(7, skryptPrzeladowanie);
             preparedStatement.setString(8, skryptCzyWersja);
             preparedStatement.setString(9, skryptFolder + "_" + oznSrod + "/' ,");
             preparedStatement.setString(10, skryptJira);
-            preparedStatement.setString(11, skryptOdpowiedzialny);
+            preparedStatement.setInt(11, idOsobaOdp);
             preparedStatement.setString(12, skryptUwagi);
             InputStream inputStream = new FileInputStream(new File(sciezka));
             preparedStatement.setBlob(13, inputStream);
-//preparedStatement.setString(13, skryptUwagi);
 
             System.out.println(qu);
 
@@ -332,7 +336,6 @@ public class FXMLDocumentController implements Initializable
             ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM SKRYPTY_SCHEMAT");
             while (rs.next())
             {
-
                 schematList.add(rs.getString(2));
             }
         } catch (SQLException ex)
@@ -349,14 +352,13 @@ public class FXMLDocumentController implements Initializable
             ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM KONTA");
             while (rs.next())
             {
-
-                odpowiedzialnyList.add(rs.getString(2));
+                odpList.add(rs.getString(2));
             }
         } catch (SQLException ex)
         {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        cmb_odpowiedzialny.getItems().setAll(odpowiedzialnyList);
+        cmb_odpowiedzialny.getItems().setAll(odpList);
     }
 
     private void wczytajSrod()
@@ -366,7 +368,6 @@ public class FXMLDocumentController implements Initializable
             ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM SRODOWISKO");
             while (rs.next())
             {
-
                 srodowiskoList.add(rs.getString(2));
             }
         } catch (SQLException ex)
@@ -376,7 +377,7 @@ public class FXMLDocumentController implements Initializable
         cmb_srodowisko.getItems().setAll(srodowiskoList);
     }
 
-    private Integer pobierzIdSrod(String skryptSrodowisko) throws SQLException
+    private Integer pobierzIdSrod(String oznSrod) throws SQLException
     {
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -384,22 +385,48 @@ public class FXMLDocumentController implements Initializable
         {
             String qu = ("SELECT * FROM SRODOWISKO WHERE NAZWA = ?");
             preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
-            preparedStatement.setString(1, skryptSrodowisko);
+            preparedStatement.setString(1, oznSrod);
             System.out.println(qu);
             rs = preparedStatement.executeQuery();
 
             while (rs.next())
             {
                 return rs.getInt(1);
-
             }
             preparedStatement.close();
         } catch (SQLException ex)
         {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return null;
     }
 
+    private Integer pobierzIdOpekuna(String osobaOdp) throws SQLException
+    {
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        try
+        {
+            String qu = ("SELECT * FROM KONTA WHERE login = ?");
+            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
+            preparedStatement.setString(1, osobaOdp);
+            System.out.println(qu);
+            rs = preparedStatement.executeQuery();
+
+            while (rs.next())
+            {
+                return rs.getInt(1);
+            }
+            preparedStatement.close();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public void zmienStatus(CellEditEvent edittedCell){
+            Skrypt skrypt = (Skrypt) table_skrypty.getSelectionModel().getSelectedItems();
+            skrypt.setStatus(edittedCell.getNewValue().toString());
+    }    
 }

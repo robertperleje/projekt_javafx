@@ -139,7 +139,7 @@
                   <TableColumn fx:id="col_date_utw" prefWidth="75.0" text="Data Utworzenia" />
                   <TableColumn fx:id="col_operator" prefWidth="75.0" text="Operator" />
                   <TableColumn fx:id="col_date_wysl" prefWidth="75.0" text="Data Wysłania" />
-                  <TableColumn fx:id="col_status" prefWidth="75.0" text="Status" />
+                  <TableColumn fx:id="col_status" onEditCommit="#zmienStatus" prefWidth="75.0" text="Status" />
                   <TableColumn fx:id="col_przelad" prefWidth="75.0" text="Przeładowanie" />
                   <TableColumn fx:id="col_wersja" prefWidth="75.0" text="Od Wersji" />
                   <TableColumn fx:id="col_folder" prefWidth="75.0" text="Folder" />

@@ -20,7 +20,8 @@ public class RestrictiveTextField extends PlainDocument {
       boolean isDataLenght = true;
       String validationString = null;
       
-        if (!inputTextField.matches("^[a-z0-9_-]{0," + reqiredLenght + "}$")) {
+        if (!inputTextField.matches("^[a-z A-Z 0-9_-]{0," + reqiredLenght + "}$")) {
+            
             isDataLenght = false;
             validationString = validationText;            
             inputLabel.setText(validationString);

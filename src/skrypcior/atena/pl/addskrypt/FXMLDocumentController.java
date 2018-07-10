@@ -220,13 +220,19 @@ public class FXMLDocumentController implements Initializable
                             setText(obj.getStatus());                        
                             switch (obj.getStatus()) {
                                 case "Utworzony":
-                                    setStyle("-fx-background-color: rgba(71, 209, 71, .7)");
+                                    setStyle("-fx-background-color: #b6c5a3");
                                     break;
-                                case "problem":
-                                    setStyle("-fx-background-color: rgba(255, 51, 51, .7)");
+                                case "Przygotowany":
+                                    setStyle("-fx-background-color: #eab30b");
                                     break;
-                                case "ViP":
-                                    setStyle("-fx-background-color: rgba(255, 219, 25 .7)");
+                                case "Wysłany":
+                                    setStyle("-fx-background-color: #6786da");
+                                    break;
+                                case "Wdrożony":
+                                    setStyle("-fx-background-color: #07e74e");
+                                    break;
+                                case "Błąd":
+                                    setStyle("-fx-background-color: #ea1c3e");
                                     break;
                                 default:  
                                     break;

@@ -38,6 +38,13 @@
                      <VBox.margin>
                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                      </VBox.margin>
+                     <contextMenu>
+                        <ContextMenu>
+                          <items>
+                              <MenuItem mnemonicParsing="false" onAction="#usunWiersz" text="Usuń Status" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
                   </TableView>
                </children></VBox>
          </center>

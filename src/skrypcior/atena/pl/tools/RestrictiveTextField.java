@@ -67,4 +67,19 @@ public class RestrictiveTextField extends PlainDocument {
         }
         return isEmail;
     }
+    
+    public static boolean StringIsEmpty(String inputTextField, Label inputLabel, String validationText ){
+        boolean isStringEmpty = true;
+        String validationString = null;
+        
+        if (inputTextField == null || inputTextField.isEmpty())
+        {
+            isStringEmpty = false;
+            validationString = validationText;
+            inputLabel.setText(validationString);
+            inputLabel.setTextFill(Color.RED);
+        }
+        return isStringEmpty;
+    }
+    
 }

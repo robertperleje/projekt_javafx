@@ -104,7 +104,7 @@ public class FXMLMenuController implements Initializable {
      
     void loadWindows(String loc, String title){
         
-            try {
+            try { 
                 Parent parent = FXMLLoader.load(getClass().getResource(loc));
                 Stage stage = new Stage(StageStyle.DECORATED);
                 stage.setTitle(title);

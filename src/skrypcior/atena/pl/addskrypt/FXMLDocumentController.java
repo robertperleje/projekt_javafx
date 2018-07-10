@@ -20,22 +20,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.PieChart.Data;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -130,8 +136,27 @@ public class FXMLDocumentController implements Initializable
     private TextArea text_uwaga;
     @FXML
     private Label l_jira;
-    
+
     private ObservableList<String> listaStatus = FXCollections.observableArrayList();
+
+    @FXML
+    private Label label_lp;
+    @FXML
+    private Label label_czy_zatrzymac;
+    @FXML
+    private Label label_odpowiedzialny;
+    @FXML
+    private Label label_od_wersji;
+    @FXML
+    private Label label_schemat;
+    @FXML
+    private Label label_srodowisko;
+    @FXML
+    private Label label_przeladowanie;
+    @FXML
+    private Label label_jira;
+    @FXML
+    private Label label_sciezka;
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
@@ -168,11 +193,51 @@ public class FXMLDocumentController implements Initializable
         col_jira.setCellValueFactory(new PropertyValueFactory<>("jira"));
         col_odp.setCellValueFactory(new PropertyValueFactory<>("odpowiedzialny"));
         col_uwagi.setCellValueFactory(new PropertyValueFactory<>("uwagi"));
-        
-        
+
         table_skrypty.setEditable(true);
-        col_status.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),listaStatus));
-        
+        //edycja 
+        col_status.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), listaStatus));
+        col_status.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Skrypt, String>>()
+        {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Skrypt, String> event)
+            {
+                System.out.println("tak");
+            }
+
+        });
+        //Dodanie koloru do wiersza
+        table_skrypty.setRowFactory(row -> new TableRow<Skrypt>()
+        {
+            @Override
+            public void updateItem(Skrypt item, boolean empty)
+            {
+                super.updateItem(item, empty);
+                
+             if (!empty) {
+                            Skrypt obj = this.getTableView().getItems().get(getIndex());    
+
+                            setText(obj.getStatus());                        
+                            switch (obj.getStatus()) {
+                                case "Utworzony":
+                                    setStyle("-fx-background-color: rgba(71, 209, 71, .7)");
+                                    break;
+                                case "problem":
+                                    setStyle("-fx-background-color: rgba(255, 51, 51, .7)");
+                                    break;
+                                case "ViP":
+                                    setStyle("-fx-background-color: rgba(255, 219, 25 .7)");
+                                    break;
+                                default:  
+                                    break;
+                            }
+
+                        } else {
+                            setText(null);
+                        }
+            }
+        });
+
     }
 
     private void zaladuj()
@@ -210,29 +275,34 @@ public class FXMLDocumentController implements Initializable
         String skryptPrzeladowanie = (String) cmb_przeladowac.getSelectionModel().getSelectedItem();
         String skryptCzyWersja = (String) cmb_odwersji.getSelectionModel().getSelectedItem();
         String skryptUwagi = text_uwaga.getText();
-        String skryptJira = jira.getText();
+        String skryptJira = jira.getText().toUpperCase();
         String sciezka = sciezkaDoPliku.getText();
-        
 
-        //Pobieramy id na potrzeby insertu do bazy
-        int idSrod = pobierzIdSrod(oznSrod);
-        int idOsobaOdp = pobierzIdOpekuna(osobaOdp);
+        boolean lpIsEmpty = RestrictiveTextField.StringIsEmpty(skryptlp, label_lp, "Wypełnij pole");
+        boolean zatrzymacIsEmpty = RestrictiveTextField.StringIsEmpty(skryptZatrzymac, label_czy_zatrzymac, "Wypełnij pole");
+        boolean odpIsEmpty = RestrictiveTextField.StringIsEmpty(osobaOdp, label_odpowiedzialny, "Wypełnij pole");
+        boolean wersjaIsEmpty = RestrictiveTextField.StringIsEmpty(skryptCzyWersja, label_od_wersji, "Wypełnij pole");
+        boolean schematIsEmpty = RestrictiveTextField.StringIsEmpty(skryptSchemat, label_schemat, "Wypełnij pole");
+        boolean srodtIsEmpty = RestrictiveTextField.StringIsEmpty(oznSrod, label_srodowisko, "Wypełnij pole");
+        boolean przeladIsEmpty = RestrictiveTextField.StringIsEmpty(skryptPrzeladowanie, label_przeladowanie, "Wypełnij pole");
+        boolean jiraIsEmpty = RestrictiveTextField.StringIsEmpty(skryptJira, label_jira, "Wypełnij pole");
+        boolean sciezkaIsEmpty = RestrictiveTextField.StringIsEmpty(sciezka, label_sciezka, "Wypełnij pole");
 
-        //Weryfikacja pobranego stringa względem ilości znaków(ograniczenie kolumny na bazie)
-        boolean nazwJira = RestrictiveTextField.textLenght(jira.getText(), l_jira, "Maksymalna ilość znaków 50", "50");
-
-        //Sprawdzamy czy wszystkie pola wymagane sa wypełnione
-        if (skryptlp.isEmpty() || skryptSchemat.isEmpty() || skryptZatrzymac.isEmpty() || oznSrod.isEmpty() || osobaOdp.isEmpty() || skryptJira.isEmpty()
-                || skryptPrzeladowanie.isEmpty() || skryptCzyWersja.isEmpty())
+        if (!lpIsEmpty || !zatrzymacIsEmpty || !odpIsEmpty || !wersjaIsEmpty || !schematIsEmpty || !srodtIsEmpty || !przeladIsEmpty || !jiraIsEmpty || !sciezkaIsEmpty)
         {
-            showInfoAlertBox.showInformationAlertBox("Wypełnij wszystkie pola");
             return;
         }
 
+        //Weryfikacja pobranego stringa względem ilości znaków(ograniczenie kolumny na bazie)
+        boolean nazwJira = RestrictiveTextField.textLenght(jira.getText(), l_jira, "Maksymalna ilość znaków 50", "50");
         if (!nazwJira)
         {
             return;
         }
+
+        //Pobieramy id na potrzeby insertu do bazy
+        int idSrod = pobierzIdSrod(oznSrod);
+        int idOsobaOdp = pobierzIdOpekuna(osobaOdp);
 
         if (skryptZatrzymac.equals("Tak"))
         {
@@ -246,12 +316,8 @@ public class FXMLDocumentController implements Initializable
         String skryptFolder = dataToString.dataZMysln();
         String skryptNazwa = skryptlp + "-" + skryptSchemat + "-" + skryptZatrzymac + "-" + skryptDataUtw + "_" + skryptJira;
 
-        Calendar calendar = Calendar.getInstance(Locale.getDefault());
-        String sqlDateUtw = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(calendar.getTime());
-
         //Operator chwilowo jeden póxniej z tego kto się zalogojue
         String skryptOperator = "ROBERT1";
-        Date sqlDataWys = null;
 
         String qu = "INSERT INTO SKRYPTY (nazwa,srodowisko,data_utw,operator,data_wysl,status,przeladowanie,od_wersji,folder,jira,odpowiedzialny,uwagi ,plik) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try
@@ -261,7 +327,7 @@ public class FXMLDocumentController implements Initializable
 
             preparedStatement.setString(1, skryptNazwa);
             preparedStatement.setInt(2, idSrod);
-            preparedStatement.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
+            preparedStatement.setTimestamp(3, java.sql.Timestamp.valueOf(LocalDateTime.now()));
             preparedStatement.setString(4, skryptOperator);
             preparedStatement.setNull(5, java.sql.Types.DATE);
             preparedStatement.setString(6, "1");
@@ -285,6 +351,8 @@ public class FXMLDocumentController implements Initializable
             preparedStatement.close();
             showInfoAlertBox.showInformationAlertBox("Skrypt zapisano");
         }
+
+        zaladuj();
     }
 
     @FXML
@@ -380,7 +448,7 @@ public class FXMLDocumentController implements Initializable
         }
         cmb_srodowisko.getItems().setAll(srodowiskoList);
     }
-    
+
     private void wczytajStatus()
     {
         try
@@ -443,9 +511,11 @@ public class FXMLDocumentController implements Initializable
         }
         return null;
     }
-    
-    public void zmienStatus(CellEditEvent edittedCell){
-            Skrypt skrypt = (Skrypt) table_skrypty.getSelectionModel().getSelectedItems();
-            skrypt.setStatus(edittedCell.getNewValue().toString());
-    }    
+
+    @FXML
+    public void zmienStatus(CellEditEvent edittedCell)
+    {
+        Skrypt skrypt = (Skrypt) table_skrypty.getSelectionModel().getSelectedItems();
+        skrypt.setStatus(edittedCell.getNewValue().toString());
+    }
 }

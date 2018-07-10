@@ -22,7 +22,7 @@ public class dataToString {
         Date currentDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String dateString = dateFormat.format(currentDate);
-        if (dateString != null && dateString.isEmpty()) {
+        if (dateString != null ) {
             return dateString;
             } else {
             return "";
@@ -34,7 +34,7 @@ public class dataToString {
         Date currentDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         String dateString = dateFormat.format(currentDate);
-        if (dateString != null && dateString.isEmpty()) {
+        if (dateString != null ) {
             return dateString;
             } else {
             return "";

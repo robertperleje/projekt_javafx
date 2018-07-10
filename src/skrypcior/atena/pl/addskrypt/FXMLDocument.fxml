@@ -63,24 +63,44 @@
                      <children>
                         <JFXComboBox fx:id="cmb_lp" prefWidth="250.0" promptText="Lp">
                            <VBox.margin>
-                              <Insets bottom="15.0" left="25.0" right="15.0" top="25.0" />
+                              <Insets left="25.0" right="15.0" top="25.0" />
                            </VBox.margin>
                         </JFXComboBox>
+                        <Label fx:id="label_lp">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </Label>
                         <JFXComboBox fx:id="cmb_czy_zatrzymac" prefWidth="250.0" promptText="Czy zatrzymać system">
                            <VBox.margin>
-                              <Insets bottom="15.0" left="25.0" right="15.0" />
+                              <Insets left="25.0" right="15.0" />
                            </VBox.margin>
                         </JFXComboBox>
+                        <Label fx:id="label_czy_zatrzymac" layoutX="35.0" layoutY="60.0">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </Label>
                         <JFXComboBox fx:id="cmb_odpowiedzialny" prefHeight="25.0" prefWidth="250.0" promptText="Odpowiedzialny">
                            <VBox.margin>
-                              <Insets bottom="15.0" left="25.0" />
+                              <Insets left="25.0" />
                            </VBox.margin>
                         </JFXComboBox>
+                        <Label fx:id="label_odpowiedzialny">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </Label>
                         <JFXComboBox fx:id="cmb_odwersji" prefWidth="250.0" promptText="Czy zależy od wersji ">
                            <VBox.margin>
-                              <Insets bottom="15.0" left="25.0" />
+                              <Insets left="25.0" />
                            </VBox.margin>
                         </JFXComboBox>
+                        <Label fx:id="label_od_wersji">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </Label>
                         <TextArea fx:id="text_uwaga" promptText="Uwagi">
                            <VBox.margin>
                               <Insets left="25.0" right="45.0" top="15.0" />
@@ -92,24 +112,44 @@
                      <children>
                         <JFXComboBox fx:id="cmb_schemat" prefWidth="250.0" promptText="Schemat">
                            <VBox.margin>
-                              <Insets bottom="15.0" left="25.0" top="25.0" />
+                              <Insets left="25.0" top="25.0" />
                            </VBox.margin>
                         </JFXComboBox>
+                        <Label fx:id="label_schemat">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </Label>
                         <JFXComboBox fx:id="cmb_srodowisko" prefWidth="250.0" promptText="Środowisko">
                            <VBox.margin>
-                              <Insets bottom="15.0" left="25.0" />
+                              <Insets left="25.0" />
                            </VBox.margin>
                         </JFXComboBox>
+                        <Label fx:id="label_srodowisko">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </Label>
                         <JFXComboBox fx:id="cmb_przeladowac" prefWidth="250.0" promptText="Czy przeładować hurtownie">
                            <VBox.margin>
-                              <Insets bottom="15.0" left="25.0" />
+                              <Insets left="25.0" />
                            </VBox.margin>
                         </JFXComboBox>
+                        <Label fx:id="label_przeladowanie">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </Label>
                         <JFXTextField fx:id="jira" labelFloat="true" promptText="Jira">
                            <VBox.margin>
                               <Insets left="25.0" right="25.0" />
                            </VBox.margin>
                         </JFXTextField>
+                        <Label fx:id="label_jira">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </Label>
                         <Label fx:id="l_jira" alignment="CENTER">
                            <VBox.margin>
                               <Insets left="25.0" />
@@ -120,9 +160,14 @@
                               <Insets left="25.0" right="35.0" top="15.0" />
                            </VBox.margin>
                         </TextField>
+                        <Label fx:id="label_sciezka">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </Label>
                         <Button fx:id="btn_plik" alignment="CENTER" mnemonicParsing="false" onAction="#loadWindowsFile" text="Button">
                            <VBox.margin>
-                              <Insets left="25.0" top="20.0" />
+                              <Insets left="25.0" top="10.0" />
                            </VBox.margin>
                         </Button>
                      </children>
@@ -153,6 +198,24 @@
                <BorderPane.margin>
                   <Insets />
                </BorderPane.margin>
+               <contextMenu>
+                  <ContextMenu>
+                    <items>
+                        <Menu mnemonicParsing="false" text="Zmień Status">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Action 1" />
+                            <MenuItem mnemonicParsing="false" text="Usuń" />
+                          </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Unspecified Menu">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Usuń" />
+                              <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                           </items>
+                        </Menu>
+                    </items>
+                  </ContextMenu>
+               </contextMenu>
             </TableView>
          </bottom>
       </BorderPane>

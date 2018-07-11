@@ -1,4 +1,4 @@
-package skrypcior.atena.pl.addkompilat;
+package skrypcior.atena.pl.kompilat;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

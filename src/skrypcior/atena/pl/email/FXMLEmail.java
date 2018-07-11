@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package skrypcior.atena.pl.addkompilat;
+package skrypcior.atena.pl.email;
 
 import javafx.application.Application;
-import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,10 +15,11 @@ import javafx.stage.Stage;
  *
  * @author perlro1
  */
-public class kompilatAdd extends Application{
+public class FXMLEmail extends Application{
     
+    @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLKompilat.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("FXMLEmail.fxml"));
         
         Scene scene = new Scene(root);
         
@@ -33,4 +33,6 @@ public class kompilatAdd extends Application{
     public static void main(String[] args) {
         launch(args);
     }
+
+  
 }

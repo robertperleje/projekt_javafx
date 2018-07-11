@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package skrypcior.atena.pl.addskrypt;
+package skrypcior.atena.pl.skrypt;
 
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
@@ -26,7 +26,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
@@ -177,57 +180,77 @@ public class FXMLDocumentController implements Initializable
 
         table_skrypty.setEditable(true);
         //edycja 
+
         col_status.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), listaStatus));
         col_status.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Skrypt, String>>()
         {
+
+            private String selection;
+
             @Override
             public void handle(TableColumn.CellEditEvent<Skrypt, String> event)
             {
-                System.out.println("tak");
-                
-                ((Skrypt) event.getTableView().getItems().get(event.getTablePosition().getRow())).setStatus(event.getNewValue());
-                //tu chyba update 
-                //Skrypt skrypt = (Skrypt) table_skrypty.getSelectionModel().getSelectedItem();
-                //SkryptyStany.SkryptUpdate(skrypt.getId());
-                SkryptUpdate(event.getNewValue(),event.getRowValue().getId());
-                
+                ButtonType yesButtonType = new ButtonType("Tak");
+                ButtonType noButtonType = new ButtonType("Nie");
+
+                //czy napewno zmieniamy status
+                Alert alert = new Alert(AlertType.CONFIRMATION, selection, yesButtonType, noButtonType);
+                alert.setTitle("Zmiana statusu");
+                alert.setHeaderText("Czy napewno chcesz zmienić status skryptu?");
+                alert.showAndWait();
+
+                if (alert.getResult() == ButtonType.YES)
+                {
+                    ((Skrypt) event.getTableView().getItems().get(event.getTablePosition().getRow())).setStatus(event.getNewValue());
+                    event.getTableView().getColumns().get(0).setVisible(false);
+                    event.getTableView().getColumns().get(0).setVisible(true);
+
+                    SkryptUpdate(event.getNewValue(), event.getRowValue().getId());
+                    
+                }
+                //Przywrócenie starych
+                event.getTableView().refresh();
             }
 
         });
         //Dodanie koloru do wiersza
+        
         table_skrypty.setRowFactory(row -> new TableRow<Skrypt>()
         {
             @Override
             public void updateItem(Skrypt item, boolean empty)
             {
                 super.updateItem(item, empty);
-                
-             if (!empty) {
-                            Skrypt obj = this.getTableView().getItems().get(getIndex());    
 
-                            setText(obj.getStatus());                        
-                            switch (obj.getStatus()) {
-                                case "Utworzony":
-                                    setStyle("-fx-background-color: #b6c5a3");
-                                    break;
-                                case "Przygotowany":
-                                    setStyle("-fx-background-color: #eab30b");
-                                    break;
-                                case "Wysłany":
-                                    setStyle("-fx-background-color: #6786da");
-                                    break;
-                                case "Wdrożony":
-                                    setStyle("-fx-background-color: #07e74e");
-                                    break;
-                                case "Błąd":
-                                    setStyle("-fx-background-color: #ea1c3e");
-                                    break;
-                                default:  
-                                    break;
-                            }
-                        } else {
-                            setText(null);
-                        }
+                if (!empty)
+                {
+                    Skrypt obj = this.getTableView().getItems().get(getIndex());
+
+                    setText(obj.getStatus());
+                    switch (obj.getStatus())
+                    {
+                        case "Utworzony":
+                            setStyle("-fx-background-color: #b6c5a3");
+                            break;
+                        case "Przygotowany":
+                            setStyle("-fx-background-color: #eab30b");
+                            break;
+                        case "Wysłany":
+                            setStyle("-fx-background-color: #6786da");
+                            break;
+                        case "Wdrożony":
+                            setStyle("-fx-background-color: #07e74e");
+                            break;
+                        case "Błąd":
+                            setStyle("-fx-background-color: #ea1c3e");
+                            break;
+                        default:
+                            break;
+                    }
+                } else
+                {
+                    setText(null);
+                }
             }
         });
 
@@ -240,7 +263,7 @@ public class FXMLDocumentController implements Initializable
             list.clear();
             ResultSet rs = conn.createStatement().executeQuery("SELECT sk.Id,sk.Nazwa, w.nazwa, sk.Data_utw, sk.Operator, sk.Data_wysl, sks.nazwa, sk.Przeladowanie, sk.Od_wersji, sk.Folder, sk.Jira, k.login, sk.Uwagi "
                     + " FROM skrypty sk, skrypty_status sks, srodowisko w, konta k "
-                    + " WHERE sk.Status = sks.id and sk.srodowisko = w.id and sk.odpowiedzialny = k.id ");
+                    + " WHERE sk.Status = sks.id and sk.srodowisko = w.id and sk.odpowiedzialny = k.id order by sk.id asc");
             while (rs.next())
             {
                 list.add(new Skrypt(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10), rs.getString(11), rs.getString(12), rs.getString(13)));
@@ -516,12 +539,12 @@ public class FXMLDocumentController implements Initializable
         
         
     }
-    */
-    
-    public void SkryptUpdate(String newStatus, Integer idStatus){
+     */
+    public void SkryptUpdate(String newStatus, Integer idStatus)
+    {
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
-        
+
         String qu = "UPDATE SKRYPTY SET STATUS = (SELECT id FROM SKRYPTY_STATUS WHERE NAZWA = ? ) where id = ?";
         try
         {
@@ -535,7 +558,28 @@ public class FXMLDocumentController implements Initializable
         {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        showInfoAlertBox.showInformationAlertBox("Status Zminiono");
-        
+        showInfoAlertBox.showInformationAlertBox("Status Zmieniono");
+        //Tu wywołamy w przypadku zmiany rózne przypadki
+            switch (newStatus)
+                    {
+                        case "Utworzony":
+                            //
+                            break;
+                        case "Przygotowany":
+                            //
+                            break;
+                        case "Wysłany":
+                            //
+                            break;
+                        case "Wdrożony":
+                            //
+                            break;
+                        case "Błąd":
+                            //
+                            break;
+                        default:
+                            break;
+                    }
+
     }
 }

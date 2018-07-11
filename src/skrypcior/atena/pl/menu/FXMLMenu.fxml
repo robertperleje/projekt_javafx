@@ -34,6 +34,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#menuSchematy" text="Schematy" />
                         <MenuItem mnemonicParsing="false" onAction="#menuKonta" text="Konta Użytkowników" />
                         <MenuItem mnemonicParsing="false" onAction="#menuSrodowiska" text="Środowiska" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuEmail" text="Email" />
                      </items>
                   </Menu>
                 <Menu mnemonicParsing="false" text="Help">

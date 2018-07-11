@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package skrypcior.atena.pl.addskrypt;
+package skrypcior.atena.pl.skrypt;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;

@@ -36,7 +36,9 @@ import skrypcior.atena.pl.database.DatabaseConnect;
  *
  * @author perlro1
  */
-public class FXMLMenuController implements Initializable {
+public class FXMLMenuController implements Initializable
+{
+
     @FXML
     private HBox skrypt_info;
     @FXML
@@ -61,7 +63,7 @@ public class FXMLMenuController implements Initializable {
     private Text skryptJira;
     @FXML
     private Text skryptOdpowiedzialny;
-        
+
     DatabaseConnect databaseConnect;
     @FXML
     private StackPane rootPane;
@@ -89,59 +91,68 @@ public class FXMLMenuController implements Initializable {
     private Text skryptJira1;
     @FXML
     private Text skryptOdpowiedzialny1;
-    
+
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb)
+    {
         JFXDepthManager.setDepth(skrypt_info, 1);
         databaseConnect = DatabaseConnect.getInstance();
-    }    
+    }
 
     @FXML
-    private void loadAddSkrypt(ActionEvent event) {
+    private void loadAddSkrypt(ActionEvent event)
+    {
         loadWindows("/skrypcior/atena/pl/addskrypt/FXMLDocument.fxml", "Dodanie Skryptu");
     }
 
-     
-    void loadWindows(String loc, String title){
-        
-            try { 
-                Parent parent = FXMLLoader.load(getClass().getResource(loc));
-                Stage stage = new Stage(StageStyle.DECORATED);
-                stage.setTitle(title);
-                stage.setScene(new Scene(parent));
-                stage.show();
-            } catch (IOException ex) {
-                Logger.getLogger(FXMLMenuController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        
+    void loadWindows(String loc, String title)
+    {
+
+        try
+        {
+            Parent parent = FXMLLoader.load(getClass().getResource(loc));
+            Stage stage = new Stage(StageStyle.DECORATED);
+            stage.setTitle(title);
+            stage.setScene(new Scene(parent));
+            stage.show();
+        } catch (IOException ex)
+        {
+            Logger.getLogger(FXMLMenuController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
     @FXML
-    private void loadSkryptInfo(ActionEvent event) {
+    private void loadSkryptInfo(ActionEvent event)
+    {
         wyczyscInfoOSkrypt();
         String nazwa = skryptNazwaInput.getText();
         String qu = "SELECT * FROM SKRYPTY WHERE nazwa = '" + nazwa + "'";
         ResultSet rs = databaseConnect.execQuery(qu);
         boolean flag = false;
-        
-        try {
-            while (rs.next()) {
-                 skryptNazwa.setText(rs.getString("nazwa"));
-                 skryptStatus.setText(rs.getString("status"));
-                 skryptId.setText(rs.getString("id"));
-                 skryptSrodowisko.setText(rs.getString("srodowisko"));
-                 skryptDataUtw.setText(rs.getString("data_utw"));
-                 String datawysl = rs.getString("data_wysl");
-                 if (datawysl==null) {
-                     skryptDataWysl.setText("Nie Wysłany");
-                } else {
-                     skryptDataWysl.setText(rs.getString("data_wysl"));
+
+        try
+        {
+            while (rs.next())
+            {
+                skryptNazwa.setText(rs.getString("nazwa"));
+                skryptStatus.setText(rs.getString("status"));
+                skryptId.setText(rs.getString("id"));
+                skryptSrodowisko.setText(rs.getString("srodowisko"));
+                skryptDataUtw.setText(rs.getString("data_utw"));
+                String datawysl = rs.getString("data_wysl");
+                if (datawysl == null)
+                {
+                    skryptDataWysl.setText("Nie Wysłany");
+                } else
+                {
+                    skryptDataWysl.setText(rs.getString("data_wysl"));
                 }
-                 skryptPrzelad.setText(rs.getString("przeladowanie"));
-                 skryptFolder.setText(rs.getString("folder"));
-                 skryptJira.setText(rs.getString("jira"));
-                 skryptOdpowiedzialny.setText(rs.getString("odpowiedzialny"));
-                 /*
+                skryptPrzelad.setText(rs.getString("przeladowanie"));
+                skryptFolder.setText(rs.getString("folder"));
+                skryptJira.setText(rs.getString("jira"));
+                skryptOdpowiedzialny.setText(rs.getString("odpowiedzialny"));
+                /*
                  Blob blob = rs.getBlob("plik");
                  InputStream inputStream = blob.getBinaryStream();
                  FileOutputStream fileOutputStream = new FileOutputStream("C:\\test.txt");
@@ -153,84 +164,101 @@ public class FXMLMenuController implements Initializable {
                     //inputStream.close();
                 }
                  */
-                 flag = true;
+                flag = true;
             }
-            if (!flag) {
-                 skryptNazwa.setText("Brak skryptu o takiej nazwie"); 
-                 wyczyscInfoOSkrypt();
+            if (!flag)
+            {
+                skryptNazwa.setText("Brak skryptu o takiej nazwie");
+                wyczyscInfoOSkrypt();
             }
-            
-        } catch (Exception ex) {
+
+        } catch (Exception ex)
+        {
             Logger.getLogger(FXMLMenuController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    void wyczyscInfoOSkrypt(){
-                 skryptStatus.setText("");
-                 skryptId.setText("");
-                 skryptSrodowisko.setText("");
-                 skryptDataUtw.setText("");
-                 skryptDataWysl.setText("");
-                 skryptPrzelad.setText("");
-                 skryptFolder.setText("");
-                 skryptJira.setText("");
-                 skryptOdpowiedzialny.setText("");
+
+    void wyczyscInfoOSkrypt()
+    {
+        skryptStatus.setText("");
+        skryptId.setText("");
+        skryptSrodowisko.setText("");
+        skryptDataUtw.setText("");
+        skryptDataWysl.setText("");
+        skryptPrzelad.setText("");
+        skryptFolder.setText("");
+        skryptJira.setText("");
+        skryptOdpowiedzialny.setText("");
     }
 
     @FXML
-    private void menuZamknij(ActionEvent event) {
-        ((Stage)rootPane.getScene().getWindow()).close();
+    private void menuZamknij(ActionEvent event)
+    {
+        ((Stage) rootPane.getScene().getWindow()).close();
     }
 
     @FXML
-    private void menuDodanieSkryptu(ActionEvent event) {
+    private void menuDodanieSkryptu(ActionEvent event)
+    {
         loadWindows("/skrypcior/atena/pl/addskrypt/FXMLDocument.fxml", "Dodanie Skryptu");
     }
 
     @FXML
-    private void menuDodanieKompilatu(ActionEvent event) {
+    private void menuDodanieKompilatu(ActionEvent event)
+    {
         loadWindows("/skrypcior/atena/pl/addkompilat/FXMLKompilat.fxml", "Dodanie Kompilatu");
     }
 
-    private void menuWczytajTabeleSkryptow(ActionEvent event) {
+    private void menuWczytajTabeleSkryptow(ActionEvent event)
+    {
         loadWindows("/skrypcior/atena/pl/listskrypt/FXMLSkryptList.fxml", "Lista Skryptów");
     }
 
     @FXML
-    private void dodajKompilat(ActionEvent event) {
+    private void dodajKompilat(ActionEvent event)
+    {
         loadWindows("/skrypcior/atena/pl/addkompilat/FXMLKompilat.fxml", "Dodanie Kompilatu");
     }
 
     @FXML
-    private void dodajMediacje(ActionEvent event) {
-    }
-
-
-    @FXML
-    private void dodajPW(ActionEvent event) {
+    private void dodajMediacje(ActionEvent event)
+    {
     }
 
     @FXML
-    private void menuStatusSkryptow(ActionEvent event) {
+    private void dodajPW(ActionEvent event)
+    {
+    }
+
+    @FXML
+    private void menuStatusSkryptow(ActionEvent event)
+    {
         loadWindows("/skrypcior/atena/pl/skrypty/status/FXMLSkryptyStatus.fxml", "Słownik - Status Skryptów");
     }
 
     @FXML
-    private void menuSchematy(ActionEvent event) {
+    private void menuSchematy(ActionEvent event)
+    {
         loadWindows("/skrypcior/atena/pl/skrypty/schemat/FXMLSkryptySchemat.fxml", "Słownik - Schematy");
     }
 
     @FXML
-    private void menuKonta(ActionEvent event) {
+    private void menuKonta(ActionEvent event)
+    {
         loadWindows("/skrypcior/atena/pl/konta/FXMLKonta.fxml", "Słownik - Konta Użytkowników");
     }
 
     @FXML
-    private void menuSrodowiska(ActionEvent event) {
+    private void menuSrodowiska(ActionEvent event)
+    {
         loadWindows("/skrypcior/atena/pl/srodowiska/FXMLSrodowisko.fxml", "Słownik - Środowiska");
 
     }
 
-    
-    
+    @FXML
+    private void menuEmail(ActionEvent event)
+    {
+        loadWindows("/skrypcior/atena/pl/email/FXMLEmail.fxml", "Słownik - Email");
+    }
+
 }

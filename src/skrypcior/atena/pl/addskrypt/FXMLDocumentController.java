@@ -14,29 +14,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import java.util.Calendar;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.PieChart.Data;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -47,14 +36,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.DefaultStringConverter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import skrypcior.atena.pl.database2.DbConnect;
-import skrypcior.atena.pl.skrypty.status.Status;
 import skrypcior.atena.pl.tools.RestrictiveTextField;
 import skrypcior.atena.pl.tools.dataToString;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
@@ -68,8 +55,6 @@ public class FXMLDocumentController implements Initializable
 
     ObservableList<Skrypt> list = FXCollections.observableArrayList();
     Connection conn = DbConnect.createConnection();
-
-    private Label label;
 
     @FXML
     private JFXComboBox cmb_lp;
@@ -94,10 +79,6 @@ public class FXMLDocumentController implements Initializable
     ObservableList<String> odpList = FXCollections.observableArrayList();
     @FXML
     private JFXTextField jira;
-    @FXML
-    private Button zapiszButton;
-    @FXML
-    private Button anulujButton;
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -203,6 +184,13 @@ public class FXMLDocumentController implements Initializable
             public void handle(TableColumn.CellEditEvent<Skrypt, String> event)
             {
                 System.out.println("tak");
+                
+                ((Skrypt) event.getTableView().getItems().get(event.getTablePosition().getRow())).setStatus(event.getNewValue());
+                //tu chyba update 
+                //Skrypt skrypt = (Skrypt) table_skrypty.getSelectionModel().getSelectedItem();
+                //SkryptyStany.SkryptUpdate(skrypt.getId());
+                SkryptUpdate(event.getNewValue(),event.getRowValue().getId());
+                
             }
 
         });
@@ -237,7 +225,6 @@ public class FXMLDocumentController implements Initializable
                                 default:  
                                     break;
                             }
-
                         } else {
                             setText(null);
                         }
@@ -518,10 +505,37 @@ public class FXMLDocumentController implements Initializable
         return null;
     }
 
-    @FXML
+    /*@FXML
     public void zmienStatus(CellEditEvent edittedCell)
     {
         Skrypt skrypt = (Skrypt) table_skrypty.getSelectionModel().getSelectedItems();
         skrypt.setStatus(edittedCell.getNewValue().toString());
+        SkryptUpdate((String) edittedCell.getNewValue(), skrypt.getId());
+        showInfoAlertBox.showInformationAlertBox("Wchodzi?");
+        
+        
+        
+    }
+    */
+    
+    public void SkryptUpdate(String newStatus, Integer idStatus){
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        
+        String qu = "UPDATE SKRYPTY SET STATUS = (SELECT id FROM SKRYPTY_STATUS WHERE NAZWA = ? ) where id = ?";
+        try
+        {
+            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
+            preparedStatement.setString(1, newStatus);
+            preparedStatement.setInt(2, idStatus);
+            System.out.println(qu);
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        showInfoAlertBox.showInformationAlertBox("Status Zminiono");
+        
     }
 }

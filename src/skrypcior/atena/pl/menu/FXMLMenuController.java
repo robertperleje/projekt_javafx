@@ -102,7 +102,7 @@ public class FXMLMenuController implements Initializable
     @FXML
     private void loadAddSkrypt(ActionEvent event)
     {
-        loadWindows("/skrypcior/atena/pl/addskrypt/FXMLDocument.fxml", "Dodanie Skryptu");
+        loadWindows("/skrypcior/atena/pl/skrypt/FXMLDocument.fxml", "Dodanie Skryptu");
     }
 
     void loadWindows(String loc, String title)
@@ -258,7 +258,7 @@ public class FXMLMenuController implements Initializable
     @FXML
     private void menuEmail(ActionEvent event)
     {
-        loadWindows("/skrypcior/atena/pl/email/FXMLEmail.fxml", "Słownik - Email");
+        loadWindows("/skrypcior/atena/pl/skrypty/email/FXMLSkryptyEmail.fxml", "Słownik - Email");
     }
 
 }

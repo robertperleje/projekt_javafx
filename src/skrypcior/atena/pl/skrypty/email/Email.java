@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package skrypcior.atena.pl.email;
+package skrypcior.atena.pl.skrypty.email;
+
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -15,13 +16,15 @@ import javafx.beans.property.SimpleStringProperty;
 public class Email {
     
     private final SimpleIntegerProperty id;
-    private final SimpleStringProperty nazwa;
+    private final SimpleStringProperty emailDo;
+    private final SimpleStringProperty emailDw;
     private final SimpleStringProperty data_utw;
     private final SimpleStringProperty operator;
 
-    public Email(Integer id, String nazwa, String data_utw, String operator) {
+    public Email(Integer id, String emailDo, String emailDw, String data_utw, String operator) {
         this.id = new SimpleIntegerProperty(id);
-        this.nazwa = new SimpleStringProperty(nazwa);
+        this.emailDo = new SimpleStringProperty(emailDo);
+        this.emailDw = new SimpleStringProperty(emailDw);
         this.data_utw = new SimpleStringProperty(data_utw);
         this.operator = new SimpleStringProperty(operator);
     }
@@ -30,10 +33,14 @@ public class Email {
         return id.get();
     }
 
-    public String getNazwa() {
-        return nazwa.get();
+    public String getEmailDo() {
+        return emailDo.get();
     }
 
+    public String getEmailDw() {
+        return emailDw.get();
+    }
+    
     public String getData_utw() {
         return data_utw.get();
     }

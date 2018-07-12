@@ -59,7 +59,7 @@ public class RestrictiveTextField extends PlainDocument {
         boolean isEmail = true;
         String validationString = null;
         
-        if (!inputTextField.matches("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$")) {
+        if (!inputTextField.matches("^[0-9a-zA-Z_.-]+@[0-9a-zA-Z.-]+\\.[a-zA-Z]{2,3}$")) {
             isEmail = false;
             validationString = validationText;
             inputLabel.setText(validationString);

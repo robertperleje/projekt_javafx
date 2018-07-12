@@ -318,7 +318,7 @@ public class FXMLDocumentController implements Initializable
 
         //Pobieramy id na potrzeby insertu do bazy
         int idSrod = pobierzIdSrod(oznSrod);
-        int idOsobaOdp = pobierzIdOpekuna(osobaOdp);
+        int idOsobaOdp =  pobierzIdOpekuna(osobaOdp);
 
         if (skryptZatrzymac.equals("Tak"))
         {

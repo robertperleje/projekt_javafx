@@ -225,6 +225,29 @@ public class FXMLKontaController implements Initializable {
         zaladuj();
     }
   
-    
+    /*public static Integer pobierzIdOpekuna(String osobaOdp) throws SQLException
+    {
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        try
+        {
+            String qu = ("SELECT * FROM KONTA WHERE login = ?");
+            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
+            preparedStatement.setString(1, osobaOdp);
+            System.out.println(qu);
+            rs = preparedStatement.executeQuery();
+
+            while (rs.next())
+            {
+                return rs.getInt(1);
+            }
+            preparedStatement.close();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+*/
    
 }

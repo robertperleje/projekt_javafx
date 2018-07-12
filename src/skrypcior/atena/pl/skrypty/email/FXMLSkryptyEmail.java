@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package skrypcior.atena.pl.email;
+package skrypcior.atena.pl.skrypty.email;
 
+import skrypcior.atena.pl.skrypty.status.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,11 +16,11 @@ import javafx.stage.Stage;
  *
  * @author perlro1
  */
-public class FXMLEmail extends Application{
+public class FXMLSkryptyEmail extends Application{
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLEmail.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("FXMLSkryptyStatus.fxml"));
         
         Scene scene = new Scene(root);
         

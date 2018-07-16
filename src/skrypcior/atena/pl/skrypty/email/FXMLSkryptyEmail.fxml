@@ -11,7 +11,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="316.0" prefWidth="554.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="skrypcior.atena.pl.skrypty.email.FXMLSkryptyEmailController">
+<AnchorPane id="AnchorPane" prefHeight="418.0" prefWidth="647.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="skrypcior.atena.pl.skrypty.email.FXMLSkryptyEmailController">
     <stylesheets>
         <URL value="@fxmlskryptyemail.css" />
     </stylesheets>
@@ -20,21 +20,37 @@
          <center>
             <VBox prefHeight="250.0" prefWidth="250.0" BorderPane.alignment="CENTER">
                <children>
-                  <JFXTextField fx:id="tf_emailDo" labelFloat="true" prefHeight="25.0" prefWidth="362.0" promptText="Email: Do">
+                  <JFXTextField fx:id="tf_email" labelFloat="true" prefHeight="25.0" prefWidth="362.0" promptText="Email">
                      <VBox.margin>
                         <Insets left="15.0" right="15.0" top="25.0" />
                      </VBox.margin>
                   </JFXTextField>
-                  <JFXTextField fx:id="tf_EmailDw" labelFloat="true" layoutX="25.0" layoutY="35.0" prefHeight="25.0" prefWidth="362.0" promptText="Email: Dw">
+                  <Label fx:id="lb_email">
                      <VBox.margin>
-                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                        <Insets left="15.0" />
                      </VBox.margin>
-                  </JFXTextField>
-                  <TableView fx:id="tabela_status" prefHeight="271.0" prefWidth="454.0">
+                  </Label>
+                  <CheckBox fx:id="ccb_adresat" mnemonicParsing="false" text="Adresat główny">
+                     <VBox.margin>
+                        <Insets left="15.0" top="15.0" />
+                     </VBox.margin>
+                  </CheckBox>
+                  <ComboBox fx:id="cmb_grupa" prefWidth="150.0" promptText="Dopisz do grupy">
+                     <VBox.margin>
+                        <Insets left="15.0" top="15.0" />
+                     </VBox.margin>
+                  </ComboBox>
+                  <Label fx:id="lb_grupa">
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TableView fx:id="tabela_email" prefHeight="271.0" prefWidth="454.0">
                     <columns>
                       <TableColumn fx:id="col_id" prefWidth="75.0" text="Id" />
-                      <TableColumn fx:id="col_emailDo" prefWidth="75.0" text="Email Do" />
-                        <TableColumn fx:id="col_emailDw" prefWidth="75.0" text="Email Dw" />
+                      <TableColumn fx:id="col_email" prefWidth="75.0" text="Email" />
+                        <TableColumn fx:id="col_adresat" prefWidth="75.0" text="Adresat Główny" />
+                        <TableColumn fx:id="col_grupa" prefWidth="75.0" text="Grupa" />
                         <TableColumn fx:id="col_data" prefWidth="75.0" text="Data Utworzenia" />
                         <TableColumn fx:id="col_operator" prefWidth="75.0" text="Operator" />
                     </columns>
@@ -64,7 +80,7 @@
                      <graphic>
                         <ImageView fitHeight="31.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../addkompilat/icons8-data-recovery-26.png" />
+                              <Image url="@icons8-data-recovery-26.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -76,7 +92,7 @@
                      <graphic>
                         <ImageView fitHeight="39.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../addkompilat/icons8-delete-column-26.png" />
+                              <Image url="@icons8-delete-column-26.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -88,7 +104,7 @@
                      <graphic>
                         <ImageView fitHeight="39.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../addkompilat/icons8-delete-26.png" />
+                              <Image url="@icons8-delete-26.png" />
                            </image>
                         </ImageView>
                      </graphic>

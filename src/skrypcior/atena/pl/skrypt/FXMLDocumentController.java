@@ -43,8 +43,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.DefaultStringConverter;
+import javax.mail.MessagingException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import skrypcior.atena.pl.database2.DbConnect;
+import skrypcior.atena.pl.ftp.FTPFunctions;
+import skrypcior.atena.pl.skrypty.email.Email;
 import skrypcior.atena.pl.tools.RestrictiveTextField;
 import skrypcior.atena.pl.tools.dataToString;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
@@ -199,14 +202,20 @@ public class FXMLDocumentController implements Initializable
                 alert.setHeaderText("Czy napewno chcesz zmienić status skryptu?");
                 alert.showAndWait();
 
-                if (alert.getResult() == ButtonType.YES)
+                if (alert.getResult() == yesButtonType)
                 {
                     ((Skrypt) event.getTableView().getItems().get(event.getTablePosition().getRow())).setStatus(event.getNewValue());
                     event.getTableView().getColumns().get(0).setVisible(false);
                     event.getTableView().getColumns().get(0).setVisible(true);
 
-                    SkryptUpdate(event.getNewValue(), event.getRowValue().getId());
-                    
+                    try
+                    {
+                        SkryptUpdate(event.getNewValue(), event.getRowValue().getId());
+                    } catch (MessagingException ex)
+                    {
+                        Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
                 }
                 //Przywrócenie starych
                 event.getTableView().refresh();
@@ -214,7 +223,7 @@ public class FXMLDocumentController implements Initializable
 
         });
         //Dodanie koloru do wiersza
-        
+
         table_skrypty.setRowFactory(row -> new TableRow<Skrypt>()
         {
             @Override
@@ -318,7 +327,7 @@ public class FXMLDocumentController implements Initializable
 
         //Pobieramy id na potrzeby insertu do bazy
         int idSrod = pobierzIdSrod(oznSrod);
-        int idOsobaOdp =  pobierzIdOpekuna(osobaOdp);
+        int idOsobaOdp = pobierzIdOpekuna(osobaOdp);
 
         if (skryptZatrzymac.equals("Tak"))
         {
@@ -540,7 +549,7 @@ public class FXMLDocumentController implements Initializable
         
     }
      */
-    public void SkryptUpdate(String newStatus, Integer idStatus)
+    public void SkryptUpdate(String newStatus, Integer idStatus) throws MessagingException
     {
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -552,34 +561,42 @@ public class FXMLDocumentController implements Initializable
             preparedStatement.setString(1, newStatus);
             preparedStatement.setInt(2, idStatus);
             System.out.println(qu);
-            preparedStatement.executeUpdate();
-            preparedStatement.close();
+            
+            //tu musimy wysłac maila
+            //Tu wywołamy w przypadku zmiany rózne przypadki
+        switch (newStatus)
+        {
+            case "Utworzony":
+                //
+                break;
+            case "Przygotowany":
+                //wyslemy maila
+                //Email.sendMail("robert.perlejewski@atena.pl", "Test", "Test2");
+                FTPFunctions.uploadFtp();
+                break;
+            case "Wysłany":
+                //
+                break;
+            case "Wdrożony":
+                //
+                break;
+            case "Błąd":
+                //
+                break;
+            default:
+                break;
+        }
+        
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
+            
         } catch (SQLException ex)
         {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
         showInfoAlertBox.showInformationAlertBox("Status Zmieniono");
         //Tu wywołamy w przypadku zmiany rózne przypadki
-            switch (newStatus)
-                    {
-                        case "Utworzony":
-                            //
-                            break;
-                        case "Przygotowany":
-                            //
-                            break;
-                        case "Wysłany":
-                            //
-                            break;
-                        case "Wdrożony":
-                            //
-                            break;
-                        case "Błąd":
-                            //
-                            break;
-                        default:
-                            break;
-                    }
+        
 
     }
 }

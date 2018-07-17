@@ -133,6 +133,7 @@ public class FXMLSrodowiskoController implements Initializable {
         preparedStatement.close();
         showInfoAlertBox.showInformationAlertBox("Słowniki - Środowisko zostało dopisano");
         }
+        tf_nazwa.setText("");
         zaladuj();
     }
 
@@ -142,7 +143,7 @@ public class FXMLSrodowiskoController implements Initializable {
         ResultSet rs=null;
         
         Srodowisko status = (Srodowisko) tabela_status.getSelectionModel().getSelectedItem();
-        
+                
         String ls = "SELECT count(*) FROM SKRYPTY where srodowisko = " + status.getId();
         System.out.println(status.getId());
         preparedStatement = (PreparedStatement) conn.prepareStatement(ls);

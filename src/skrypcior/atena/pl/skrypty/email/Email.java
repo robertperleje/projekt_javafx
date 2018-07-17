@@ -31,10 +31,6 @@ import javax.mail.internet.MimeMultipart;
  */
 public class Email
 {
-    static Properties mailServerProperties;
-    static Session getMailSession;
-    static MimeMessage generateMailMessage;
-
     private final SimpleIntegerProperty id;
     private final SimpleStringProperty email;
     //private CheckBox adresat;
@@ -75,7 +71,7 @@ public class Email
     {
         return adresat.get();
     }
-    
+
     public Boolean getPrzygot()
     {
         return przygot.get();
@@ -96,43 +92,4 @@ public class Email
         return operator.get();
     }
 
-    public static void sendMail(String adres, String tytul, String tresc) throws AddressException, MessagingException
-    {
-
-        		
-		System.out.println("\n\n ===> Your Java Program has just sent an Email successfully. Check your email..");
-	// Step1
-		System.out.println("\n 1st ===> setup Mail Server Properties..");
-		mailServerProperties = System.getProperties();
-		mailServerProperties.put("mail.smtp.port", "1200");
-		mailServerProperties.put("mail.smtp.auth", "true");//true
-		mailServerProperties.put("mail.smtp.starttls.enable", "true");//true
-                mailServerProperties.put("mail.debug", "true");
-                //mailServerProperties.put("java.net.preferIPv4Stack" , "true");
-		System.out.println("Mail Server Properties have been setup successfully..");
- 
-		// Step2
-		System.out.println("\n\n 2nd ===> get Mail Session..");
-		getMailSession = Session.getDefaultInstance(mailServerProperties, null);
-		generateMailMessage = new MimeMessage(getMailSession);
-		generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress("test@localhost.com"));
-		//generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("test2@crunchify.com"));
-		generateMailMessage.setSubject("Greetings from Crunchify..");
-		String emailBody = "Test email by Crunchify.com JavaMail API example. " + "<br><br> Regards, <br>Crunchify Admin";
-		generateMailMessage.setContent(emailBody, "text/html");
-		System.out.println("Mail Session has been created successfully..");
- 
-		// Step3
-		System.out.println("\n\n 3rd ===> Get Session and Send mail");
-		Transport transport = getMailSession.getTransport("smtp");
- 
-		// Enter your correct gmail UserID and Password
-		// if you have 2FA enabled then provide App Specific Password
-		transport.connect("localhost", "postmaster", "");
-		transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
-		transport.close();
-	}
 }
-        
-    
-

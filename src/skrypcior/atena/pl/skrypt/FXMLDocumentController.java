@@ -48,6 +48,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import skrypcior.atena.pl.database2.DbConnect;
 import skrypcior.atena.pl.ftp.FTPFunctions;
 import skrypcior.atena.pl.skrypty.email.Email;
+import skrypcior.atena.pl.skrypty.email.SendMail;
 import skrypcior.atena.pl.tools.RestrictiveTextField;
 import skrypcior.atena.pl.tools.dataToString;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
@@ -62,17 +63,16 @@ public class FXMLDocumentController implements Initializable
     ObservableList<Skrypt> list = FXCollections.observableArrayList();
     Connection conn = DbConnect.createConnection();
 
-    @FXML
-    private JFXComboBox cmb_lp;
+    @FXML private JFXComboBox cmb_lp;
     ObservableList<String> lpList = FXCollections.observableArrayList("01", "02", "03");
-    @FXML
-    private JFXComboBox cmb_schemat;
+    
+    @FXML private JFXComboBox cmb_schemat;
     ObservableList<String> schematList = FXCollections.observableArrayList();
-    @FXML
-    private JFXComboBox cmb_przeladowac;
+    
+    @FXML private JFXComboBox cmb_przeladowac;
     ObservableList<String> przeladowacList = FXCollections.observableArrayList("Nie", "Tak");
-    @FXML
-    private JFXComboBox cmb_odwersji;
+    
+    @FXML private JFXComboBox cmb_odwersji;
     ObservableList<String> odWersjiList = FXCollections.observableArrayList("Nie", "Tak");
     @FXML
     private JFXComboBox cmb_czy_zatrzymac;
@@ -149,8 +149,6 @@ public class FXMLDocumentController implements Initializable
     private Label label_jira;
     @FXML
     private Label label_sciezka;
-    
-    
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
@@ -218,7 +216,8 @@ public class FXMLDocumentController implements Initializable
 
                     try
                     {
-                        SkryptUpdate(event.getNewValue(), event.getRowValue().getId());
+                        SkryptUpdate(event.getNewValue(), event.getRowValue().getId(), event.getRowValue().getFolder(), event.getRowValue().getJira(), event.getRowValue().getSrodowisko(), event.getRowValue().getBazy(), event.getRowValue().getUwagi(), event.getRowValue().getNazwa());
+
                     } catch (MessagingException ex)
                     {
                         Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
@@ -283,7 +282,7 @@ public class FXMLDocumentController implements Initializable
                     + " WHERE sk.Status = sks.id and sk.srodowisko = w.id and sk.opodp = k.id order by sk.id asc");
             while (rs.next())
             {
-                list.add(new Skrypt(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10), rs.getString(11), rs.getString(12), rs.getString(13),rs.getString(14)));
+                list.add(new Skrypt(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10), rs.getString(11), rs.getString(12), rs.getString(13), rs.getString(14)));
             }
         } catch (SQLException ex)
         {
@@ -368,11 +367,11 @@ public class FXMLDocumentController implements Initializable
             preparedStatement.setString(7, skryptPrzeladowanie);
             preparedStatement.setString(8, bazy);
             preparedStatement.setString(9, skryptCzyWersja);
-            preparedStatement.setString(10, skryptFolder + "_" + oznSrod + "/'");
+            preparedStatement.setString(10, skryptFolder + "_" + oznSrod + "/");
             preparedStatement.setString(11, skryptUwagi);
             preparedStatement.setString(12, skryptJira);
             preparedStatement.setInt(13, idOsobaOdp);
-            
+
             InputStream inputStream = new FileInputStream(new File(sciezka));
             preparedStatement.setBlob(14, inputStream);
 
@@ -559,8 +558,9 @@ public class FXMLDocumentController implements Initializable
         
         
     }
+    SkryptUpdate(,event.getRowValue().getUwagi(), event.getRowValue().getNazwa());
      */
-    public void SkryptUpdate(String newStatus, Integer idStatus) throws MessagingException
+    public void SkryptUpdate(String newStatus, Integer idStatus, String folder, String jira, String srod, String baza, String uwaga, String nazwa) throws MessagingException
     {
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -572,43 +572,42 @@ public class FXMLDocumentController implements Initializable
             preparedStatement.setString(1, newStatus);
             preparedStatement.setInt(2, idStatus);
             System.out.println(qu);
-            
+
             //tu musimy wysłac maila
             //Tu wywołamy w przypadku zmiany rózne przypadki
-        switch (newStatus)
-        {
-            case "Utworzony":
-                //
-                break;
-            case "Przygotowany":
-                //wyslemy maila
-                Email.sendMail("robert.perlejewski@atena.pl", "Test", "Test2");
-                //FTPFunctions.uploadFtp();
+            switch (newStatus)
+            {
+                case "Utworzony":
+                    //
+                    break;
+                case "Przygotowany":
+                    //wyslemy maila
+                    SendMail.sendMail("robert.perlejewski@atena.pl", "Test", "Test2",nazwa,folder, srod);
+                    //FTPFunctions.uploadFtp();
 
-                break;
-            case "Wysłany":
-                //
-                break;
-            case "Wdrożony":
-                //
-                break;
-            case "Błąd":
-                //
-                break;
-            default:
-                break;
-        }
-        
-        preparedStatement.executeUpdate();
-        preparedStatement.close();
-            
+                    break;
+                case "Wysłany":
+                    //
+                    break;
+                case "Wdrożony":
+                    //
+                    break;
+                case "Błąd":
+                    //
+                    break;
+                default:
+                    break;
+            }
+
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+
         } catch (SQLException ex)
         {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
         showInfoAlertBox.showInformationAlertBox("Status Zmieniono");
         //Tu wywołamy w przypadku zmiany rózne przypadki
-        
 
     }
 }

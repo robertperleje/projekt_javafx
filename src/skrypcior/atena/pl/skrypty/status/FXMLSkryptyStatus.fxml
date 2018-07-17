@@ -58,7 +58,7 @@
                      <graphic>
                         <ImageView fitHeight="31.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../addkompilat/icons8-data-recovery-26.png" />
+                              <Image url="@icons8-data-recovery-26.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -70,7 +70,7 @@
                      <graphic>
                         <ImageView fitHeight="39.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../addkompilat/icons8-delete-column-26.png" />
+                              <Image url="@icons8-delete-column-26.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -82,7 +82,7 @@
                      <graphic>
                         <ImageView fitHeight="39.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../addkompilat/icons8-delete-26.png" />
+                              <Image url="@icons8-delete-26.png" />
                            </image>
                         </ImageView>
                      </graphic>

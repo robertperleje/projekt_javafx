@@ -84,6 +84,9 @@ public class FXMLDocumentController implements Initializable
     private JFXComboBox cmb_odpowiedzialny;
     ObservableList<String> odpList = FXCollections.observableArrayList();
     @FXML
+    private JFXComboBox<String> cmb_bazy;
+    ObservableList<String> bazyList = FXCollections.observableArrayList("Nie, brak danych", "Tak");
+    @FXML
     private JFXTextField jira;
     @FXML
     private AnchorPane rootPane;
@@ -109,6 +112,8 @@ public class FXMLDocumentController implements Initializable
     private TableColumn<Skrypt, String> col_status;
     @FXML
     private TableColumn<Skrypt, String> col_przelad;
+    @FXML
+    private TableColumn<Skrypt, String> col_bazy;
     @FXML
     private TableColumn<Skrypt, String> col_wersja;
     @FXML
@@ -144,6 +149,8 @@ public class FXMLDocumentController implements Initializable
     private Label label_jira;
     @FXML
     private Label label_sciezka;
+    
+    
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
@@ -155,7 +162,7 @@ public class FXMLDocumentController implements Initializable
         cmb_lp.setItems(lpList);
 
         wczytajSchemat();
-
+        cmb_bazy.setItems(bazyList);
         cmb_czy_zatrzymac.setItems(zatrzymacList);
         wczytajSrod();
         wczytajUzyt();
@@ -170,12 +177,13 @@ public class FXMLDocumentController implements Initializable
         col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
         col_nazwa.setCellValueFactory(new PropertyValueFactory<>("nazwa"));
         col_srodowisko.setCellValueFactory(new PropertyValueFactory<>("srodowisko"));
-        col_date_utw.setCellValueFactory(new PropertyValueFactory<>("data_utw"));
+        col_date_utw.setCellValueFactory(new PropertyValueFactory<>("datautw"));
         col_operator.setCellValueFactory(new PropertyValueFactory<>("operator"));
-        col_date_wysl.setCellValueFactory(new PropertyValueFactory<>("data_wysl"));
+        col_date_wysl.setCellValueFactory(new PropertyValueFactory<>("datawysl"));
         col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
         col_przelad.setCellValueFactory(new PropertyValueFactory<>("przeladowanie"));
-        col_wersja.setCellValueFactory(new PropertyValueFactory<>("zalezy_od_wersji"));
+        col_bazy.setCellValueFactory(new PropertyValueFactory<>("bazy"));
+        col_wersja.setCellValueFactory(new PropertyValueFactory<>("odwersji"));
         col_folder.setCellValueFactory(new PropertyValueFactory<>("folder"));
         col_jira.setCellValueFactory(new PropertyValueFactory<>("jira"));
         col_odp.setCellValueFactory(new PropertyValueFactory<>("odpowiedzialny"));
@@ -270,12 +278,12 @@ public class FXMLDocumentController implements Initializable
         try
         {
             list.clear();
-            ResultSet rs = conn.createStatement().executeQuery("SELECT sk.Id,sk.Nazwa, w.nazwa, sk.Data_utw, sk.Operator, sk.Data_wysl, sks.nazwa, sk.Przeladowanie, sk.Od_wersji, sk.Folder, sk.Jira, k.login, sk.Uwagi "
+            ResultSet rs = conn.createStatement().executeQuery("SELECT sk.id, sk.nazwa, w.nazwa, sk.datautw, sk.operator, sk.datawysl, sks.nazwa, sk.hurtprzelad, sk.bazytestur, sk.odwersji, sk.folder, sk.jira, k.login, sk.uwagi "
                     + " FROM skrypty sk, skrypty_status sks, srodowisko w, konta k "
-                    + " WHERE sk.Status = sks.id and sk.srodowisko = w.id and sk.odpowiedzialny = k.id order by sk.id asc");
+                    + " WHERE sk.Status = sks.id and sk.srodowisko = w.id and sk.opodp = k.id order by sk.id asc");
             while (rs.next())
             {
-                list.add(new Skrypt(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10), rs.getString(11), rs.getString(12), rs.getString(13)));
+                list.add(new Skrypt(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10), rs.getString(11), rs.getString(12), rs.getString(13),rs.getString(14)));
             }
         } catch (SQLException ex)
         {
@@ -298,6 +306,7 @@ public class FXMLDocumentController implements Initializable
         String oznSrod = (String) cmb_srodowisko.getSelectionModel().getSelectedItem();
         String osobaOdp = (String) cmb_odpowiedzialny.getSelectionModel().getSelectedItem();
         String skryptPrzeladowanie = (String) cmb_przeladowac.getSelectionModel().getSelectedItem();
+        String bazy = (String) cmb_bazy.getSelectionModel().getSelectedItem();
         String skryptCzyWersja = (String) cmb_odwersji.getSelectionModel().getSelectedItem();
         String skryptUwagi = text_uwaga.getText();
         String skryptJira = jira.getText().toUpperCase();
@@ -344,7 +353,7 @@ public class FXMLDocumentController implements Initializable
         //Operator chwilowo jeden póxniej z tego kto się zalogojue
         String skryptOperator = "ROBERT1";
 
-        String qu = "INSERT INTO SKRYPTY (nazwa,srodowisko,data_utw,operator,data_wysl,status,przeladowanie,od_wersji,folder,jira,odpowiedzialny,uwagi ,plik) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String qu = "INSERT INTO SKRYPTY (nazwa, srodowisko, datautw, operator, datawysl, status, hurtprzelad, bazytestur, odwersji, folder, uwagi, jira, opodp, plik) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try
         {
 
@@ -357,13 +366,15 @@ public class FXMLDocumentController implements Initializable
             preparedStatement.setNull(5, java.sql.Types.DATE);
             preparedStatement.setString(6, "1");
             preparedStatement.setString(7, skryptPrzeladowanie);
-            preparedStatement.setString(8, skryptCzyWersja);
-            preparedStatement.setString(9, skryptFolder + "_" + oznSrod + "/' ,");
-            preparedStatement.setString(10, skryptJira);
-            preparedStatement.setInt(11, idOsobaOdp);
-            preparedStatement.setString(12, skryptUwagi);
+            preparedStatement.setString(8, bazy);
+            preparedStatement.setString(9, skryptCzyWersja);
+            preparedStatement.setString(10, skryptFolder + "_" + oznSrod + "/'");
+            preparedStatement.setString(11, skryptUwagi);
+            preparedStatement.setString(12, skryptJira);
+            preparedStatement.setInt(13, idOsobaOdp);
+            
             InputStream inputStream = new FileInputStream(new File(sciezka));
-            preparedStatement.setBlob(13, inputStream);
+            preparedStatement.setBlob(14, inputStream);
 
             System.out.println(qu);
 
@@ -573,6 +584,7 @@ public class FXMLDocumentController implements Initializable
                 //wyslemy maila
                 Email.sendMail("robert.perlejewski@atena.pl", "Test", "Test2");
                 //FTPFunctions.uploadFtp();
+
                 break;
             case "Wysłany":
                 //

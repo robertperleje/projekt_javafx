@@ -24,7 +24,7 @@
                      <graphic>
                         <ImageView fitHeight="31.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../addkompilat/icons8-data-recovery-26.png" />
+                              <Image url="@icons8-data-recovery-26.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -36,7 +36,7 @@
                      <graphic>
                         <ImageView fitHeight="39.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../addkompilat/icons8-delete-column-26.png" />
+                              <Image url="@icons8-delete-column-26.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -48,7 +48,7 @@
                      <graphic>
                         <ImageView fitHeight="39.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../addkompilat/icons8-delete-26.png" />
+                              <Image url="@icons8-delete-26.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -71,7 +71,7 @@
                               <Insets left="25.0" />
                            </VBox.margin>
                         </Label>
-                        <JFXComboBox fx:id="cmb_czy_zatrzymac" prefWidth="250.0" promptText="Czy zatrzymać system">
+                        <JFXComboBox fx:id="cmb_czy_zatrzymac" prefWidth="250.0" promptText="Zatrzymać system">
                            <VBox.margin>
                               <Insets left="25.0" right="15.0" />
                            </VBox.margin>
@@ -91,7 +91,7 @@
                               <Insets left="25.0" />
                            </VBox.margin>
                         </Label>
-                        <JFXComboBox fx:id="cmb_odwersji" prefWidth="250.0" promptText="Czy zależy od wersji ">
+                        <JFXComboBox fx:id="cmb_odwersji" prefWidth="250.0" promptText="Zależy od wersji ">
                            <VBox.margin>
                               <Insets left="25.0" />
                            </VBox.margin>
@@ -103,7 +103,7 @@
                         </Label>
                         <TextArea fx:id="text_uwaga" promptText="Uwagi">
                            <VBox.margin>
-                              <Insets left="25.0" right="45.0" top="15.0" />
+                              <Insets left="25.0" right="45.0" top="17.0" />
                            </VBox.margin>
                         </TextArea>
                      </children>
@@ -130,7 +130,7 @@
                               <Insets left="25.0" />
                            </VBox.margin>
                         </Label>
-                        <JFXComboBox fx:id="cmb_przeladowac" prefWidth="250.0" promptText="Czy przeładować hurtownie">
+                        <JFXComboBox fx:id="cmb_przeladowac" prefWidth="250.0" promptText="Przeładowanie hurtowni">
                            <VBox.margin>
                               <Insets left="25.0" />
                            </VBox.margin>
@@ -140,6 +140,11 @@
                               <Insets left="25.0" />
                            </VBox.margin>
                         </Label>
+                        <JFXComboBox fx:id="cmb_bazy" layoutX="35.0" layoutY="119.0" prefWidth="250.0" promptText="Wgrać na bazy testowe">
+                           <VBox.margin>
+                              <Insets bottom="15.0" left="25.0" />
+                           </VBox.margin>
+                        </JFXComboBox>
                         <JFXTextField fx:id="jira" labelFloat="true" promptText="Jira">
                            <VBox.margin>
                               <Insets left="25.0" right="25.0" />
@@ -157,7 +162,7 @@
                         </Label>
                         <TextField fx:id="sciezkaDoPliku" editable="false" promptText="Ścieżka do pliku">
                            <VBox.margin>
-                              <Insets left="25.0" right="35.0" top="15.0" />
+                              <Insets left="25.0" right="35.0" />
                            </VBox.margin>
                         </TextField>
                         <Label fx:id="label_sciezka">
@@ -165,7 +170,7 @@
                               <Insets left="25.0" />
                            </VBox.margin>
                         </Label>
-                        <Button fx:id="btn_plik" alignment="CENTER" mnemonicParsing="false" onAction="#loadWindowsFile" text="Button">
+                        <Button fx:id="btn_plik" alignment="CENTER" mnemonicParsing="false" onAction="#loadWindowsFile" text="Wczytaj plik">
                            <VBox.margin>
                               <Insets left="25.0" top="10.0" />
                            </VBox.margin>
@@ -186,6 +191,7 @@
                   <TableColumn fx:id="col_date_wysl" prefWidth="75.0" text="Data Wysłania" />
                   <TableColumn fx:id="col_status" prefWidth="75.0" text="Status" />
                   <TableColumn fx:id="col_przelad" prefWidth="75.0" text="Przeładowanie" />
+                  <TableColumn fx:id="col_bazy" prefWidth="75.0" text="Bazy testowe" />
                   <TableColumn fx:id="col_wersja" prefWidth="75.0" text="Od Wersji" />
                   <TableColumn fx:id="col_folder" prefWidth="75.0" text="Folder" />
                   <TableColumn fx:id="col_jira" prefWidth="75.0" text="Jira" />

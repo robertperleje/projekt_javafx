@@ -16,28 +16,30 @@ public class Skrypt {
         private final SimpleIntegerProperty  id;
         private final SimpleStringProperty nazwa;
         private final SimpleStringProperty srodowisko;
-        private final SimpleStringProperty data_utw;
+        private final SimpleStringProperty datautw;
         private final SimpleStringProperty operator;
-        private final SimpleStringProperty data_wysl;
+        private final SimpleStringProperty datawysl;
         private final SimpleStringProperty status;
         private final SimpleStringProperty przeladowanie;
-        private final SimpleStringProperty zalezy_od_wersji;
+        private final SimpleStringProperty bazy;
+        private final SimpleStringProperty odwersji;
         private final SimpleStringProperty folder;
         private final SimpleStringProperty jira;
         private final SimpleStringProperty odpowiedzialny;
         private final SimpleStringProperty uwagi;
         
 
-    Skrypt(Integer id, String nazwa, String srodowisko, String data_utw, String operator, String data_wysl, String status, String przeladowanie, String zalezy_od_wersji, String folder, String jira, String odpowiedzialny, String uwagi) {
+    Skrypt(Integer id, String nazwa, String srodowisko, String datautw, String operator, String datawysl, String status, String przeladowanie, String bazy, String odwersji, String folder, String jira, String odpowiedzialny, String uwagi) {
         this.id = new SimpleIntegerProperty(id);
         this.nazwa = new SimpleStringProperty(nazwa);
         this.srodowisko = new SimpleStringProperty(srodowisko);
-        this.data_utw = new SimpleStringProperty(data_utw);
+        this.datautw = new SimpleStringProperty(datautw);
         this.operator = new SimpleStringProperty(operator);
-        this.data_wysl = new SimpleStringProperty(data_wysl);
+        this.datawysl = new SimpleStringProperty(datawysl);
         this.status = new SimpleStringProperty(status);
         this.przeladowanie = new SimpleStringProperty(przeladowanie);
-        this.zalezy_od_wersji = new SimpleStringProperty(zalezy_od_wersji);
+        this.bazy = new SimpleStringProperty(bazy);
+        this.odwersji = new SimpleStringProperty(odwersji);
         this.folder = new SimpleStringProperty(folder);
         this.jira = new SimpleStringProperty(jira);
         this.odpowiedzialny = new SimpleStringProperty(odpowiedzialny);
@@ -56,16 +58,16 @@ public class Skrypt {
         return srodowisko.get();
     }
 
-    public String getData_utw() {
-        return data_utw.get();
+    public String getDatautw() {
+        return datautw.get();
     }
 
     public String getOperator() {
         return operator.get();
     }
 
-    public String getData_wysl() {
-        return data_wysl.get();
+    public String getDatawysl() {
+        return datawysl.get();
     }
 
     public String getStatus() {
@@ -80,8 +82,12 @@ public class Skrypt {
         return przeladowanie.get();
     }
 
-    public String getZalezy_od_wersji() {
-        return zalezy_od_wersji.get();
+        public String getBazy() {
+        return bazy.get();
+    }
+        
+    public String getOdwersji() {
+        return odwersji.get();
     }
 
     public String getFolder() {

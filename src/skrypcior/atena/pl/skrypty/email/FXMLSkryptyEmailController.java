@@ -54,6 +54,8 @@ public class FXMLSkryptyEmailController implements Initializable
     @FXML
     private TableColumn<Email, Boolean> col_adresat;
     @FXML
+    private TableColumn<Email, Boolean> col_przygot;
+    @FXML
     private TableColumn<Email, String> col_grupa;
     @FXML
     private TableColumn<Email, String> col_data;
@@ -71,6 +73,9 @@ public class FXMLSkryptyEmailController implements Initializable
     private Label lb_email;
     @FXML
     private Label lb_grupa;
+    @FXML
+    private CheckBox ccb_przygot;
+    
 
     /**
      * Initializes the controller class.
@@ -92,6 +97,7 @@ public class FXMLSkryptyEmailController implements Initializable
         col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
         col_email.setCellValueFactory(new PropertyValueFactory<>("email"));
         col_adresat.setCellValueFactory(new PropertyValueFactory<>("adresat"));
+        col_przygot.setCellValueFactory(new PropertyValueFactory<>("przygot"));
         /*col_adresat.setCellFactory(param -> new CheckBoxTableCell<Email, Boolean>(){
             @Override
             protected void updateItem(Boolean item, boolean empty) {
@@ -115,7 +121,7 @@ public class FXMLSkryptyEmailController implements Initializable
             ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM SKRYPTY_EMAIL");
             while (rs.next())
             {
-                list.add(new Email(rs.getInt(1), rs.getString(2), rs.getBoolean(3), rs.getString(4), rs.getString(5), rs.getString(6)));
+                list.add(new Email(rs.getInt(1), rs.getString(2), rs.getBoolean(3), rs.getBoolean(4), rs.getString(5), rs.getString(6), rs.getString(7)));
                 //list.setId(rs.getInt("id"));
 
                 System.out.println(rs.getBoolean(3));
@@ -138,6 +144,7 @@ public class FXMLSkryptyEmailController implements Initializable
 
         String email = (String) tf_email.getText();
         Boolean adresat = ccb_adresat.isSelected();
+        Boolean przygot = ccb_przygot.isSelected();
         String grupa = (String) cmb_grupa.getSelectionModel().getSelectedItem();
 
         String skryptOperator = "ROBERT1";
@@ -150,7 +157,7 @@ public class FXMLSkryptyEmailController implements Initializable
             return;
         }
 
-        String qu = "INSERT INTO SKRYPTY_EMAIL (email, czy_glowny,grupa, data_utw, operator ) VALUES (?,?,?,?,?)";
+        String qu = "INSERT INTO SKRYPTY_EMAIL (email, czy_glowny, przygotowany, grupa, data_utw, operator ) VALUES (?,?,?,?,?,?)";
 
         try
         {
@@ -158,9 +165,10 @@ public class FXMLSkryptyEmailController implements Initializable
 
             preparedStatement.setString(1, email);
             preparedStatement.setBoolean(2, adresat);
-            preparedStatement.setString(3, grupa);
-            preparedStatement.setTimestamp(4, java.sql.Timestamp.valueOf(LocalDateTime.now()));
-            preparedStatement.setString(5, skryptOperator);
+            preparedStatement.setBoolean(3, przygot);
+            preparedStatement.setString(4, grupa);
+            preparedStatement.setTimestamp(5, java.sql.Timestamp.valueOf(LocalDateTime.now()));
+            preparedStatement.setString(6, skryptOperator);
 
             System.out.println(qu);
 
@@ -177,6 +185,7 @@ public class FXMLSkryptyEmailController implements Initializable
         lb_email.setText("");
         lb_grupa.setText("");
         ccb_adresat.setSelected(false);
+        ccb_przygot.setSelected(false);
         zaladuj();
         showInfoAlertBox.showInformationAlertBox("Email został dopisany do słownika.");
 

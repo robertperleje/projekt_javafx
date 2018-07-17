@@ -31,6 +31,9 @@ import javax.mail.internet.MimeMultipart;
  */
 public class Email
 {
+    static Properties mailServerProperties;
+    static Session getMailSession;
+    static MimeMessage generateMailMessage;
 
     private final SimpleIntegerProperty id;
     private final SimpleStringProperty email;
@@ -89,46 +92,40 @@ public class Email
     public static void sendMail(String adres, String tytul, String tresc) throws AddressException, MessagingException
     {
 
-        //Setting up configurations for the email connection to the Google SMTP server using TLS
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp-out.atena.pl");
-        props.put("mail.smtp.port", "26");
-        props.put("mail.smtp.auth", "true");
-
-        //Establishing a session with required user details
-        Session session = Session.getInstance(props, new Authenticator()
-        {
-            protected PasswordAuthentication getPasswordAuthentication()
-            {
-                return new PasswordAuthentication("aiptest", "sd!jZq@EYMcmMw9M");
-            }
-        });
-
-        try
-        {
-            //Creating a Message object to set the email content
-            MimeMessage msg = new MimeMessage(session);
-            //Storing the comma seperated values to email addresses
-            String to = "robertperleje@gmail.com";
-            /*Parsing the String with defualt delimiter as a comma by marking the boolean as true and storing the email
-            addresses in an array of InternetAddress objects*/
-            InternetAddress[] address = InternetAddress.parse(to, true);
-            //Setting the recepients from the address variable
-            msg.setRecipients(Message.RecipientType.TO, address);
-            String timeStamp = new SimpleDateFormat("yyyymmdd_hh-mm-ss").format(new Date());
-            msg.setSubject("Sample Mail : " + timeStamp);
-            msg.setSentDate(new Date());
-            msg.setText("Sampel System Generated mail");
-            msg.setHeader("XPriority", "1");
-            Transport.send(msg);
-            System.out.println("Mail has been sent successfully");
-
-        } catch (MessagingException mex)
-        {
-            System.out.println("Unable to send an email" + mex);
-        }
-    }
-
+        		
+		System.out.println("\n\n ===> Your Java Program has just sent an Email successfully. Check your email..");
+	// Step1
+		System.out.println("\n 1st ===> setup Mail Server Properties..");
+		mailServerProperties = System.getProperties();
+		mailServerProperties.put("mail.smtp.port", "1200");
+		mailServerProperties.put("mail.smtp.auth", "true");//true
+		mailServerProperties.put("mail.smtp.starttls.enable", "true");//true
+                mailServerProperties.put("mail.debug", "true");
+                //mailServerProperties.put("java.net.preferIPv4Stack" , "true");
+		System.out.println("Mail Server Properties have been setup successfully..");
+ 
+		// Step2
+		System.out.println("\n\n 2nd ===> get Mail Session..");
+		getMailSession = Session.getDefaultInstance(mailServerProperties, null);
+		generateMailMessage = new MimeMessage(getMailSession);
+		generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress("test@localhost.com"));
+		//generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("test2@crunchify.com"));
+		generateMailMessage.setSubject("Greetings from Crunchify..");
+		String emailBody = "Test email by Crunchify.com JavaMail API example. " + "<br><br> Regards, <br>Crunchify Admin";
+		generateMailMessage.setContent(emailBody, "text/html");
+		System.out.println("Mail Session has been created successfully..");
+ 
+		// Step3
+		System.out.println("\n\n 3rd ===> Get Session and Send mail");
+		Transport transport = getMailSession.getTransport("smtp");
+ 
+		// Enter your correct gmail UserID and Password
+		// if you have 2FA enabled then provide App Specific Password
+		transport.connect("localhost", "postmaster", "");
+		transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
+		transport.close();
+	}
 }
+        
+    
+

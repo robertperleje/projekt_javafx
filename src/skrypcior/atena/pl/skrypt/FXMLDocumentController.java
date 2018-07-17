@@ -571,8 +571,8 @@ public class FXMLDocumentController implements Initializable
                 break;
             case "Przygotowany":
                 //wyslemy maila
-                //Email.sendMail("robert.perlejewski@atena.pl", "Test", "Test2");
-                FTPFunctions.uploadFtp();
+                Email.sendMail("robert.perlejewski@atena.pl", "Test", "Test2");
+                //FTPFunctions.uploadFtp();
                 break;
             case "Wysłany":
                 //

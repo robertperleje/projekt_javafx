@@ -29,6 +29,8 @@ public class Skrypt {
         private final SimpleStringProperty uwagi;
         
 
+            
+
     Skrypt(Integer id, String nazwa, String srodowisko, String datautw, String operator, String datawysl, String status, String przeladowanie, String bazytestowe, String odwersji, String folder, String jira, String odpowiedzialny, String uwagi) {
         this.id = new SimpleIntegerProperty(id);
         this.nazwa = new SimpleStringProperty(nazwa);
@@ -82,7 +84,7 @@ public class Skrypt {
         return przeladowanie.get();
     }
 
-        public String getBazyTestowe() {
+        public String getBazytestowe() {
         return bazytestowe.get();
     }
         

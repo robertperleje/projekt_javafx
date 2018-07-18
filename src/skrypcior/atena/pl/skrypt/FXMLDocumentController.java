@@ -48,8 +48,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import skrypcior.atena.pl.database2.DbConnect;
 import skrypcior.atena.pl.ftp.FTPFunctions;
 import skrypcior.atena.pl.skrypty.email.Email;
-import skrypcior.atena.pl.skrypty.email.FXMLSkryptyEmailController;
 import skrypcior.atena.pl.skrypty.email.SendEmail;
+import skrypcior.atena.pl.skrypty.email.SkryptyEmailDao;
 import skrypcior.atena.pl.skrypty.email.SubjectEmail;
 import skrypcior.atena.pl.tools.RestrictiveTextField;
 import skrypcior.atena.pl.tools.dataToString;
@@ -61,7 +61,7 @@ import skrypcior.atena.pl.tools.showInfoAlertBox;
  */
 public class FXMLDocumentController implements Initializable
 {
-
+        
     ObservableList<Skrypt> list = FXCollections.observableArrayList();
     Connection conn = DbConnect.createConnection();
 
@@ -151,11 +151,15 @@ public class FXMLDocumentController implements Initializable
     private Label label_jira;
     @FXML
     private Label label_sciezka;
+    
+    
+    
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-
+        
+        
         przypiszCol();
         zaladuj();
 
@@ -218,7 +222,8 @@ public class FXMLDocumentController implements Initializable
 
                     try
                     {
-                        SkryptUpdate(event.getNewValue(), event.getRowValue().getId(), event.getRowValue().getFolder(), event.getRowValue().getJira(), event.getRowValue().getSrodowisko(), event.getRowValue().getBazyTestowe(), event.getRowValue().getUwagi(), event.getRowValue().getNazwa());
+                        SkryptyDao dao = new SkryptyDao();
+                        dao.SkryptUpdate(event.getNewValue(), event.getRowValue().getId(), event.getRowValue().getFolder(), event.getRowValue().getJira(), event.getRowValue().getSrodowisko(), event.getRowValue().getBazytestowe(), event.getRowValue().getUwagi(), event.getRowValue().getNazwa());
 
                     } catch (MessagingException ex)
                     {
@@ -279,9 +284,9 @@ public class FXMLDocumentController implements Initializable
         try
         {
             list.clear();
-            ResultSet rs = conn.createStatement().executeQuery("SELECT sk.id, sk.nazwa, w.nazwa, sk.datautw, sk.operator, sk.datawysl, sks.nazwa, sk.hurtprzelad, sk.bazytestur, sk.odwersji, sk.folder, sk.jira, k.login, sk.uwagi "
-                    + " FROM skrypty sk, skrypty_status sks, srodowisko w, konta k "
-                    + " WHERE sk.Status = sks.id and sk.srodowisko = w.id and sk.opodp = k.id order by sk.id asc");
+            ResultSet rs = conn.createStatement().executeQuery("SELECT sk.id, sk.nazwa, srd.nazwa, sk.datautw, sk.operator, sk.datawysl, sks.nazwa, sk.hurtprzelad, sk.bazytestur, sk.odwersji, sk.folder, sk.jira, k.login, sk.uwagi "
+                    + " FROM skrypty sk, skrypty_status sks, srodowisko srd, konta k "
+                    + " WHERE sk.Status = sks.id and sk.srodowisko = srd.id and sk.opodp = k.id order by sk.id asc");
             while (rs.next())
             {
                 list.add(new Skrypt(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10), rs.getString(11), rs.getString(12), rs.getString(13), rs.getString(14)));
@@ -296,7 +301,8 @@ public class FXMLDocumentController implements Initializable
     @FXML
     private void addSkrypt(ActionEvent event) throws IOException, SQLException
     {
-
+        
+        
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
 
@@ -336,8 +342,9 @@ public class FXMLDocumentController implements Initializable
         }
 
         //Pobieramy id na potrzeby insertu do bazy
-        int idSrod = pobierzIdSrod(oznSrod);
-        int idOsobaOdp = pobierzIdOpekuna(osobaOdp);
+        SkryptyDao dao = new SkryptyDao();
+        int idSrod = dao.pobierzIdSrod(oznSrod);
+        int idOsobaOdp = dao.pobierzIdOpekuna(osobaOdp);
 
         if (skryptZatrzymac.equals("Tak"))
         {
@@ -501,54 +508,9 @@ public class FXMLDocumentController implements Initializable
         }
     }
 
-    private Integer pobierzIdSrod(String oznSrod) throws SQLException
-    {
-        PreparedStatement preparedStatement = null;
-        ResultSet rs = null;
-        try
-        {
-            String qu = ("SELECT * FROM SRODOWISKO WHERE NAZWA = ?");
-            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
-            preparedStatement.setString(1, oznSrod);
-            System.out.println(qu);
-            rs = preparedStatement.executeQuery();
+    
 
-            while (rs.next())
-            {
-                return rs.getInt(1);
-            }
-            preparedStatement.close();
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
-    private Integer pobierzIdOpekuna(String osobaOdp) throws SQLException
-    {
-        PreparedStatement preparedStatement = null;
-        ResultSet rs = null;
-        try
-        {
-            String qu = ("SELECT * FROM KONTA WHERE login = ?");
-            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
-            preparedStatement.setString(1, osobaOdp);
-            System.out.println(qu);
-            rs = preparedStatement.executeQuery();
-
-            while (rs.next())
-            {
-                return rs.getInt(1);
-            }
-            preparedStatement.close();
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
+    
     /*@FXML
     public void zmienStatus(CellEditEvent edittedCell)
     {
@@ -562,59 +524,5 @@ public class FXMLDocumentController implements Initializable
     }
     SkryptUpdate(,event.getRowValue().getUwagi(), event.getRowValue().getNazwa());
      */
-    public void SkryptUpdate(String newStatus, Integer idStatus, String folder, String jira, String srod, String bazytestowe, String uwaga, String nazwa) throws MessagingException
-    {
-        
-        PreparedStatement preparedStatement = null;
-        ResultSet rs = null;
-
-        String qu = "UPDATE SKRYPTY SET STATUS = (SELECT id FROM SKRYPTY_STATUS WHERE NAZWA = ? ) where id = ?";
-        try
-        {
-            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
-            preparedStatement.setString(1, newStatus);
-            preparedStatement.setInt(2, idStatus);
-            System.out.println(qu);
-
-            //tu musimy wysłac maila
-            //Tu wywołamy w przypadku zmiany rózne przypadki
-            switch (newStatus)
-            {
-                case "Utworzony":
-                    //
-                    break;
-                case "Przygotowany":
-                    //wyslemy maila tylko do loginów które maja zaznaczonu status - w przygotowaniu
-                    FXMLSkryptyEmailController.
-                    //przygotuj tytuł
-                    String subject = SubjectEmail.subjectMail("skrypt",nazwa,folder,srod);
-                    
-                    SendEmail.sendMail("robert.perlejewski@atena.pl", subject, "Test2",nazwa,folder, srod);
-                    //FTPFunctions.uploadFtp();
-
-                    break;
-                case "Wysłany":
-                    //
-                    break;
-                case "Wdrożony":
-                    //
-                    break;
-                case "Błąd":
-                    //
-                    break;
-                default:
-                    break;
-            }
-
-            preparedStatement.executeUpdate();
-            preparedStatement.close();
-
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        showInfoAlertBox.showInformationAlertBox("Status Zmieniono");
-        //Tu wywołamy w przypadku zmiany rózne przypadki
-
-    }
+    
 }

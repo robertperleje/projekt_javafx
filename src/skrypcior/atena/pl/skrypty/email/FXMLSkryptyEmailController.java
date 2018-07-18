@@ -135,7 +135,6 @@ public class FXMLSkryptyEmailController implements Initializable
     }
 
     @FXML
-    @SuppressWarnings("empty-statement")
     private void dodajWiersz(ActionEvent event) throws SQLException
     {
 
@@ -221,44 +220,6 @@ public class FXMLSkryptyEmailController implements Initializable
     private void zamknijOkno(ActionEvent event)
     {
         ((Stage) (((Button) event.getSource()).getScene().getWindow())).close();
-    }
-    
-    public  String selectMail(String przeznaczenie){
-        PreparedStatement preparedStatement = null;
-        ResultSet rs = null;
-        try
-        {
-            String qu = ("SELECT * FROM SKRYPTY_EMAIL");
-            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
-            
-            switch (przeznaczenie)
-            {
-                case "glowny":
-                    //
-                    break;
-                case "wprzygotowaniu":
-                    preparedStatement.setString(4, "1");
-                    break;
-                case "dw":
-                    //
-                    break;
-                default:
-                    break;
-            }
-            
-            System.out.println(qu);
-            rs = preparedStatement.executeQuery();
-
-            while (rs.next())
-            {
-                return rs.getString(2);
-            }
-            preparedStatement.close();
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(FXMLSkryptyEmailController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
     }
 }
     

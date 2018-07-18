@@ -140,7 +140,7 @@
                               <Insets left="25.0" />
                            </VBox.margin>
                         </Label>
-                        <JFXComboBox fx:id="cmb_bazy" layoutX="35.0" layoutY="119.0" prefWidth="250.0" promptText="Wgrać na bazy testowe">
+                        <JFXComboBox fx:id="cmb_bazyTestowe" layoutX="35.0" layoutY="119.0" prefWidth="250.0" promptText="Wgrać na bazy testowe">
                            <VBox.margin>
                               <Insets bottom="15.0" left="25.0" />
                            </VBox.margin>
@@ -191,7 +191,7 @@
                   <TableColumn fx:id="col_date_wysl" prefWidth="75.0" text="Data Wysłania" />
                   <TableColumn fx:id="col_status" prefWidth="75.0" text="Status" />
                   <TableColumn fx:id="col_przelad" prefWidth="75.0" text="Przeładowanie" />
-                  <TableColumn fx:id="col_bazy" prefWidth="75.0" text="Bazy testowe" />
+                  <TableColumn fx:id="col_bazytestowe" prefWidth="75.0" text="Bazy testowe" />
                   <TableColumn fx:id="col_wersja" prefWidth="75.0" text="Od Wersji" />
                   <TableColumn fx:id="col_folder" prefWidth="75.0" text="Folder" />
                   <TableColumn fx:id="col_jira" prefWidth="75.0" text="Jira" />

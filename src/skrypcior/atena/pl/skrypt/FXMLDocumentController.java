@@ -48,7 +48,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import skrypcior.atena.pl.database2.DbConnect;
 import skrypcior.atena.pl.ftp.FTPFunctions;
 import skrypcior.atena.pl.skrypty.email.Email;
-import skrypcior.atena.pl.skrypty.email.SendMail;
+import skrypcior.atena.pl.skrypty.email.FXMLSkryptyEmailController;
+import skrypcior.atena.pl.skrypty.email.SendEmail;
+import skrypcior.atena.pl.skrypty.email.SubjectEmail;
 import skrypcior.atena.pl.tools.RestrictiveTextField;
 import skrypcior.atena.pl.tools.dataToString;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
@@ -84,7 +86,7 @@ public class FXMLDocumentController implements Initializable
     private JFXComboBox cmb_odpowiedzialny;
     ObservableList<String> odpList = FXCollections.observableArrayList();
     @FXML
-    private JFXComboBox<String> cmb_bazy;
+    private JFXComboBox<String> cmb_bazyTestowe;
     ObservableList<String> bazyList = FXCollections.observableArrayList("Nie, brak danych", "Tak");
     @FXML
     private JFXTextField jira;
@@ -113,7 +115,7 @@ public class FXMLDocumentController implements Initializable
     @FXML
     private TableColumn<Skrypt, String> col_przelad;
     @FXML
-    private TableColumn<Skrypt, String> col_bazy;
+    private TableColumn<Skrypt, String> col_bazytestowe;
     @FXML
     private TableColumn<Skrypt, String> col_wersja;
     @FXML
@@ -160,7 +162,7 @@ public class FXMLDocumentController implements Initializable
         cmb_lp.setItems(lpList);
 
         wczytajSchemat();
-        cmb_bazy.setItems(bazyList);
+        cmb_bazyTestowe.setItems(bazyList);
         cmb_czy_zatrzymac.setItems(zatrzymacList);
         wczytajSrod();
         wczytajUzyt();
@@ -180,7 +182,7 @@ public class FXMLDocumentController implements Initializable
         col_date_wysl.setCellValueFactory(new PropertyValueFactory<>("datawysl"));
         col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
         col_przelad.setCellValueFactory(new PropertyValueFactory<>("przeladowanie"));
-        col_bazy.setCellValueFactory(new PropertyValueFactory<>("bazy"));
+        col_bazytestowe.setCellValueFactory(new PropertyValueFactory<>("bazytestowe"));
         col_wersja.setCellValueFactory(new PropertyValueFactory<>("odwersji"));
         col_folder.setCellValueFactory(new PropertyValueFactory<>("folder"));
         col_jira.setCellValueFactory(new PropertyValueFactory<>("jira"));
@@ -216,7 +218,7 @@ public class FXMLDocumentController implements Initializable
 
                     try
                     {
-                        SkryptUpdate(event.getNewValue(), event.getRowValue().getId(), event.getRowValue().getFolder(), event.getRowValue().getJira(), event.getRowValue().getSrodowisko(), event.getRowValue().getBazy(), event.getRowValue().getUwagi(), event.getRowValue().getNazwa());
+                        SkryptUpdate(event.getNewValue(), event.getRowValue().getId(), event.getRowValue().getFolder(), event.getRowValue().getJira(), event.getRowValue().getSrodowisko(), event.getRowValue().getBazyTestowe(), event.getRowValue().getUwagi(), event.getRowValue().getNazwa());
 
                     } catch (MessagingException ex)
                     {
@@ -305,7 +307,7 @@ public class FXMLDocumentController implements Initializable
         String oznSrod = (String) cmb_srodowisko.getSelectionModel().getSelectedItem();
         String osobaOdp = (String) cmb_odpowiedzialny.getSelectionModel().getSelectedItem();
         String skryptPrzeladowanie = (String) cmb_przeladowac.getSelectionModel().getSelectedItem();
-        String bazy = (String) cmb_bazy.getSelectionModel().getSelectedItem();
+        String bazytestowe = (String) cmb_bazyTestowe.getSelectionModel().getSelectedItem();
         String skryptCzyWersja = (String) cmb_odwersji.getSelectionModel().getSelectedItem();
         String skryptUwagi = text_uwaga.getText();
         String skryptJira = jira.getText().toUpperCase();
@@ -365,7 +367,7 @@ public class FXMLDocumentController implements Initializable
             preparedStatement.setNull(5, java.sql.Types.DATE);
             preparedStatement.setString(6, "1");
             preparedStatement.setString(7, skryptPrzeladowanie);
-            preparedStatement.setString(8, bazy);
+            preparedStatement.setString(8, bazytestowe);
             preparedStatement.setString(9, skryptCzyWersja);
             preparedStatement.setString(10, skryptFolder + "_" + oznSrod + "/");
             preparedStatement.setString(11, skryptUwagi);
@@ -560,8 +562,9 @@ public class FXMLDocumentController implements Initializable
     }
     SkryptUpdate(,event.getRowValue().getUwagi(), event.getRowValue().getNazwa());
      */
-    public void SkryptUpdate(String newStatus, Integer idStatus, String folder, String jira, String srod, String baza, String uwaga, String nazwa) throws MessagingException
+    public void SkryptUpdate(String newStatus, Integer idStatus, String folder, String jira, String srod, String bazytestowe, String uwaga, String nazwa) throws MessagingException
     {
+        
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
 
@@ -581,8 +584,12 @@ public class FXMLDocumentController implements Initializable
                     //
                     break;
                 case "Przygotowany":
-                    //wyslemy maila
-                    SendMail.sendMail("robert.perlejewski@atena.pl", "Test", "Test2",nazwa,folder, srod);
+                    //wyslemy maila tylko do loginów które maja zaznaczonu status - w przygotowaniu
+                    FXMLSkryptyEmailController.
+                    //przygotuj tytuł
+                    String subject = SubjectEmail.subjectMail("skrypt",nazwa,folder,srod);
+                    
+                    SendEmail.sendMail("robert.perlejewski@atena.pl", subject, "Test2",nazwa,folder, srod);
                     //FTPFunctions.uploadFtp();
 
                     break;

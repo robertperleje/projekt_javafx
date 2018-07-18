@@ -21,7 +21,7 @@ public class Skrypt {
         private final SimpleStringProperty datawysl;
         private final SimpleStringProperty status;
         private final SimpleStringProperty przeladowanie;
-        private final SimpleStringProperty bazy;
+        private final SimpleStringProperty bazytestowe;
         private final SimpleStringProperty odwersji;
         private final SimpleStringProperty folder;
         private final SimpleStringProperty jira;
@@ -29,7 +29,7 @@ public class Skrypt {
         private final SimpleStringProperty uwagi;
         
 
-    Skrypt(Integer id, String nazwa, String srodowisko, String datautw, String operator, String datawysl, String status, String przeladowanie, String bazy, String odwersji, String folder, String jira, String odpowiedzialny, String uwagi) {
+    Skrypt(Integer id, String nazwa, String srodowisko, String datautw, String operator, String datawysl, String status, String przeladowanie, String bazytestowe, String odwersji, String folder, String jira, String odpowiedzialny, String uwagi) {
         this.id = new SimpleIntegerProperty(id);
         this.nazwa = new SimpleStringProperty(nazwa);
         this.srodowisko = new SimpleStringProperty(srodowisko);
@@ -38,7 +38,7 @@ public class Skrypt {
         this.datawysl = new SimpleStringProperty(datawysl);
         this.status = new SimpleStringProperty(status);
         this.przeladowanie = new SimpleStringProperty(przeladowanie);
-        this.bazy = new SimpleStringProperty(bazy);
+        this.bazytestowe = new SimpleStringProperty(bazytestowe);
         this.odwersji = new SimpleStringProperty(odwersji);
         this.folder = new SimpleStringProperty(folder);
         this.jira = new SimpleStringProperty(jira);
@@ -82,8 +82,8 @@ public class Skrypt {
         return przeladowanie.get();
     }
 
-        public String getBazy() {
-        return bazy.get();
+        public String getBazyTestowe() {
+        return bazytestowe.get();
     }
         
     public String getOdwersji() {

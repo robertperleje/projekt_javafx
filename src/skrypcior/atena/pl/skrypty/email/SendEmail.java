@@ -19,7 +19,7 @@ import javax.mail.internet.MimeMessage;
  *
  * @author perlro1
  */
-public class SendMail        
+public class SendEmail        
 {
     static Properties mailServerProperties;
     static Session getMailSession;

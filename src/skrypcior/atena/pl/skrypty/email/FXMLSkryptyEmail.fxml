@@ -58,7 +58,7 @@
                     <columns>
                       <TableColumn fx:id="col_id" prefWidth="75.0" text="Id" />
                       <TableColumn fx:id="col_email" prefWidth="75.0" text="Email" />
-                        <TableColumn fx:id="col_adresat" prefWidth="75.0" text="Adresat Główny" />
+                        <TableColumn fx:id="col_adresat" prefWidth="75.0" text="Adresat DO" />
                         <TableColumn fx:id="col_przygot" prefWidth="75.0" text="W przygotowaniu" />
                         <TableColumn fx:id="col_grupa" prefWidth="75.0" text="Grupa" />
                         <TableColumn fx:id="col_data" prefWidth="75.0" text="Data Utworzenia" />

@@ -13,10 +13,11 @@ package skrypcior.atena.pl.skrypty.email;
  */
 public class SubjectEmail
 {
-    public static String subjectMail(String modul,String nazwa, String folder, String srod){
+    public static String subjectMail(String modul,String folder, String srod){
         
-        String tyt = modul + folder + "na środowisko " + srod;
-        return  tyt;
+        folder = folder.substring(0,folder.length()-1);
+        String subject = modul + " " + folder + " na środowisko " + srod;
+        return  subject;
        
     }
 }

@@ -75,7 +75,7 @@ public class SkryptyDao
         return null;
     }
     
-    public void SkryptUpdate(String newStatus, Integer idStatus, String folder, String jira, String srod, String bazytestowe, String uwaga, String nazwa) throws MessagingException
+    public void SkryptUpdate(String newStatus, Integer idStatus, String folder, String jira, String srodowisko, String bazytestowe, String uwaga, String nazwa) throws MessagingException
     {
         
         PreparedStatement preparedStatement = null;
@@ -101,9 +101,11 @@ public class SkryptyDao
                     //pobieramy liste mailowa
                     String email = dao.selectMail("Przygotowany");
                     //pobieramy tytul maila
-                    String subject = SubjectEmail.subjectMail("skrypt",nazwa,folder,srod);
+                    String subject = SubjectEmail.subjectMail("skrypt",folder,srodowisko);
+                    //pobieramybody
+                    String body = BodyMailSkrypt.bodyMailSkrypt();
                     
-                    SendEmail.sendMail(email, subject, "Test2",nazwa,folder, srod);
+                    SendEmail.sendMail(email, subject, body,nazwa,folder, srodowisko);
                     //FTPFunctions.uploadFtp();
 
                     break;

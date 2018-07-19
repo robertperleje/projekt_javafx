@@ -24,7 +24,7 @@ public class SendEmail
     static Properties mailServerProperties;
     static Session getMailSession;
     static MimeMessage generateMailMessage;
-    public static void sendMail(String adres, String tytul, String tresc, String nazwa, String folder, String srod) throws AddressException, MessagingException
+    public static void sendMail(String adres, String subject, String tresc, String nazwa, String folder, String srod) throws AddressException, MessagingException
     {
 
         		
@@ -45,9 +45,9 @@ public class SendEmail
 		generateMailMessage = new MimeMessage(getMailSession);
 		generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress("test@localhost.com"));
 		//generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("test2@crunchify.com"));
-		generateMailMessage.setSubject("skrypt " + folder + "na środowisko " + srod);
-		String emailBody = "Test email by Crunchify.com JavaMail API example. " + "<br><br> Regards, <br>Crunchify Admin";
-		generateMailMessage.setContent(emailBody, "text/html");
+		generateMailMessage.setSubject(subject);
+		String emailBody = tresc;
+		generateMailMessage.setContent(emailBody, "text/html; charset=ISO-8859-2");
 		System.out.println("Mail Session has been created successfully..");
  
 		// Step3

@@ -227,8 +227,8 @@ public class FXMLDocumentController implements Initializable
                         SkryptyDao dao = new SkryptyDao();
                         dao.SkryptUpdate(event.getNewValue(), event.getRowValue().getId());
                         
-                            //wysyłamy maila zgodnie z nowym statusem
-                            CreateSkryptEmail.createSkryptEmail(event.getNewValue(), event.getRowValue().getId());
+                        //wysyłamy maila zgodnie z nowym statusem
+                        CreateSkryptEmail.createSkryptEmail(event.getNewValue(), event.getRowValue().getId());
                         
                     } catch (MessagingException ex)
                     {
@@ -371,7 +371,7 @@ public class FXMLDocumentController implements Initializable
         //Operator chwilowo jeden póxniej z tego kto się zalogojue
         String skryptOperator = "ROBERT1";
 
-        String qu = "INSERT INTO SKRYPTY (nazwa, srodowiskoid, schemat,czaswykonywania ,datautw, operator, datawysl, statusid, hurtprzelad, bazytestur, odwersji, folder, uwagi, jira, opodp, plik) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String qu = "INSERT INTO SKRYPTY (nazwa, srodowiskoid, schemat,czaswykonywania,zatrzymac_serwer ,datautw, operator, datawysl, statusid, hurtprzelad, bazytestur, odwersji, folder, uwagi, jira, opodp, plik) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try
         {
 
@@ -381,20 +381,21 @@ public class FXMLDocumentController implements Initializable
             preparedStatement.setInt(2, idSrod);
             preparedStatement.setString(3, skryptSchemat);
             preparedStatement.setString(4, czaswykonywania);
-            preparedStatement.setTimestamp(5, java.sql.Timestamp.valueOf(LocalDateTime.now()));
-            preparedStatement.setString(6, skryptOperator);
-            preparedStatement.setNull(7, java.sql.Types.DATE);
-            preparedStatement.setString(8, "1");
-            preparedStatement.setString(9, skryptPrzeladowanie);
-            preparedStatement.setString(10, bazytestowe);
-            preparedStatement.setString(11, skryptCzyWersja);
-            preparedStatement.setString(12, skryptFolder + "_" + oznSrod + "/");
-            preparedStatement.setString(13, skryptUwagi);
-            preparedStatement.setString(14, skryptJira);
-            preparedStatement.setInt(15, idOsobaOdp);
+            preparedStatement.setString(5, skryptZatrzymac);
+            preparedStatement.setTimestamp(6, java.sql.Timestamp.valueOf(LocalDateTime.now()));
+            preparedStatement.setString(7, skryptOperator);
+            preparedStatement.setNull(8, java.sql.Types.DATE);
+            preparedStatement.setString(9, "1");
+            preparedStatement.setString(10, skryptPrzeladowanie);
+            preparedStatement.setString(11, bazytestowe);
+            preparedStatement.setString(12, skryptCzyWersja);
+            preparedStatement.setString(13, skryptFolder + "_" + oznSrod + "/");
+            preparedStatement.setString(14, skryptUwagi);
+            preparedStatement.setString(15, skryptJira);
+            preparedStatement.setInt(16, idOsobaOdp);
 
             InputStream inputStream = new FileInputStream(new File(sciezka));
-            preparedStatement.setBlob(16, inputStream);
+            preparedStatement.setBlob(17, inputStream);
 
             System.out.println(qu);
 

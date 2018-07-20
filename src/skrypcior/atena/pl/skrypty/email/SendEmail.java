@@ -24,7 +24,7 @@ public class SendEmail
     static Properties mailServerProperties;
     static Session getMailSession;
     static MimeMessage generateMailMessage;
-    public static void sendMail(String adres, String subject, String tresc, String nazwa, String folder, String srod) throws AddressException, MessagingException
+    public static void sendMail(String adres, String subject, String tresc) throws AddressException, MessagingException
     {
 
         		
@@ -35,7 +35,7 @@ public class SendEmail
 		mailServerProperties.put("mail.smtp.port", "1200");
 		mailServerProperties.put("mail.smtp.auth", "true");//true
 		mailServerProperties.put("mail.smtp.starttls.enable", "true");//true
-                mailServerProperties.put("mail.debug", "true");
+                //mailServerProperties.put("mail.debug", "true");
                 //mailServerProperties.put("java.net.preferIPv4Stack" , "true");
 		System.out.println("Mail Server Properties have been setup successfully..");
  
@@ -48,6 +48,7 @@ public class SendEmail
 		generateMailMessage.setSubject(subject);
 		String emailBody = tresc;
 		generateMailMessage.setContent(emailBody, "text/html; charset=ISO-8859-2");
+                //generateMailMessage.setContent(emailBody, "text/html");
 		System.out.println("Mail Session has been created successfully..");
  
 		// Step3

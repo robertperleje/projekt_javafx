@@ -5,6 +5,9 @@
  */
 package skrypcior.atena.pl.skrypty.email;
 
+import java.sql.SQLException;
+import skrypcior.atena.pl.skrypt.SkryptyDao;
+
 
 
 /**
@@ -13,10 +16,14 @@ package skrypcior.atena.pl.skrypty.email;
  */
 public class SubjectEmail
 {
-    public static String subjectMail(String modul,String folder, String srod){
+    public static String subjectMail(String modul,int idrekord ) throws SQLException{
+        
+        SkryptyDao dao2 = new SkryptyDao();
+        String folder = dao2.pobierzWartoscKolumny(idrekord,"folder");
+        String srodowisko = dao2.pobierzSrod(idrekord);
         
         folder = folder.substring(0,folder.length()-1);
-        String subject = modul + " " + folder + " na środowisko " + srod;
+        String subject = modul + " " + folder + " na środowisko " + srodowisko;
         return  subject;
        
     }

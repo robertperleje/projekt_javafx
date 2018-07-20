@@ -71,6 +71,36 @@
                               <Insets left="25.0" />
                            </VBox.margin>
                         </Label>
+                        <JFXComboBox fx:id="cmb_srodowisko" prefWidth="250.0" promptText="Środowisko">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </JFXComboBox>
+                        <Label fx:id="label_srodowisko">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </Label>
+                        <JFXComboBox fx:id="cmb_schemat" prefWidth="250.0" promptText="Schemat">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </JFXComboBox>
+                        <Label fx:id="label_schemat">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </Label>
+                        <JFXComboBox fx:id="cmb_czaswykonywania" prefWidth="250.0" promptText="Czas wykonywania skryptu">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </JFXComboBox>
+                        <Label fx:id="l_czaswykonywania">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </Label>
                         <JFXComboBox fx:id="cmb_czy_zatrzymac" prefWidth="250.0" promptText="Zatrzymać system">
                            <VBox.margin>
                               <Insets left="25.0" right="15.0" />
@@ -81,12 +111,31 @@
                               <Insets left="25.0" />
                            </VBox.margin>
                         </Label>
-                        <JFXComboBox fx:id="cmb_odpowiedzialny" prefHeight="25.0" prefWidth="250.0" promptText="Odpowiedzialny">
+                        <TextArea fx:id="text_uwaga" promptText="Uwagi">
+                           <VBox.margin>
+                              <Insets left="25.0" right="45.0" top="15.0" />
+                           </VBox.margin>
+                        </TextArea>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="336.0" prefWidth="500.0">
+                     <children>
+                        <JFXComboBox fx:id="cmb_przeladowac" prefWidth="250.0" promptText="Przeładowanie hurtowni">
+                           <VBox.margin>
+                              <Insets left="25.0" top="25.0" />
+                           </VBox.margin>
+                        </JFXComboBox>
+                        <Label fx:id="label_przeladowanie">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </Label>
+                        <JFXComboBox fx:id="cmb_bazyTestowe" layoutX="35.0" layoutY="119.0" prefWidth="250.0" promptText="Wgrać na bazy testowe">
                            <VBox.margin>
                               <Insets left="25.0" />
                            </VBox.margin>
                         </JFXComboBox>
-                        <Label fx:id="label_odpowiedzialny">
+                        <Label fx:id="label_wgracbazy">
                            <VBox.margin>
                               <Insets left="25.0" />
                            </VBox.margin>
@@ -101,50 +150,16 @@
                               <Insets left="25.0" />
                            </VBox.margin>
                         </Label>
-                        <TextArea fx:id="text_uwaga" promptText="Uwagi">
+                        <JFXComboBox fx:id="cmb_odpowiedzialny" prefHeight="25.0" prefWidth="250.0" promptText="Odpowiedzialny">
                            <VBox.margin>
-                              <Insets left="25.0" right="45.0" top="17.0" />
-                           </VBox.margin>
-                        </TextArea>
-                     </children>
-                  </VBox>
-                  <VBox prefHeight="336.0" prefWidth="500.0">
-                     <children>
-                        <JFXComboBox fx:id="cmb_schemat" prefWidth="250.0" promptText="Schemat">
-                           <VBox.margin>
-                              <Insets left="25.0" top="25.0" />
+                              <Insets left="25.0" />
                            </VBox.margin>
                         </JFXComboBox>
-                        <Label fx:id="label_schemat">
+                        <Label fx:id="label_odpowiedzialny">
                            <VBox.margin>
                               <Insets left="25.0" />
                            </VBox.margin>
                         </Label>
-                        <JFXComboBox fx:id="cmb_srodowisko" prefWidth="250.0" promptText="Środowisko">
-                           <VBox.margin>
-                              <Insets left="25.0" />
-                           </VBox.margin>
-                        </JFXComboBox>
-                        <Label fx:id="label_srodowisko">
-                           <VBox.margin>
-                              <Insets left="25.0" />
-                           </VBox.margin>
-                        </Label>
-                        <JFXComboBox fx:id="cmb_przeladowac" prefWidth="250.0" promptText="Przeładowanie hurtowni">
-                           <VBox.margin>
-                              <Insets left="25.0" />
-                           </VBox.margin>
-                        </JFXComboBox>
-                        <Label fx:id="label_przeladowanie">
-                           <VBox.margin>
-                              <Insets left="25.0" />
-                           </VBox.margin>
-                        </Label>
-                        <JFXComboBox fx:id="cmb_bazyTestowe" layoutX="35.0" layoutY="119.0" prefWidth="250.0" promptText="Wgrać na bazy testowe">
-                           <VBox.margin>
-                              <Insets bottom="15.0" left="25.0" />
-                           </VBox.margin>
-                        </JFXComboBox>
                         <JFXTextField fx:id="jira" labelFloat="true" promptText="Jira">
                            <VBox.margin>
                               <Insets left="25.0" right="25.0" />
@@ -155,14 +170,9 @@
                               <Insets left="25.0" />
                            </VBox.margin>
                         </Label>
-                        <Label fx:id="l_jira" alignment="CENTER">
-                           <VBox.margin>
-                              <Insets left="25.0" />
-                           </VBox.margin>
-                        </Label>
                         <TextField fx:id="sciezkaDoPliku" editable="false" promptText="Ścieżka do pliku">
                            <VBox.margin>
-                              <Insets left="25.0" right="35.0" />
+                              <Insets left="25.0" right="35.0" top="15.0" />
                            </VBox.margin>
                         </TextField>
                         <Label fx:id="label_sciezka">
@@ -172,7 +182,7 @@
                         </Label>
                         <Button fx:id="btn_plik" alignment="CENTER" mnemonicParsing="false" onAction="#loadWindowsFile" text="Wczytaj plik">
                            <VBox.margin>
-                              <Insets left="25.0" top="10.0" />
+                              <Insets left="25.0" />
                            </VBox.margin>
                         </Button>
                      </children>
@@ -181,7 +191,7 @@
             </HBox>
          </center>
          <bottom>
-            <TableView fx:id="table_skrypty" prefHeight="307.0" prefWidth="740.0" BorderPane.alignment="CENTER">
+            <TableView fx:id="table_skrypty" prefHeight="270.0" prefWidth="841.0" BorderPane.alignment="CENTER">
               <columns>
                 <TableColumn fx:id="col_id" prefWidth="75.0" text="Id" />
                 <TableColumn fx:id="col_nazwa" prefWidth="75.0" text="Nazwa" />

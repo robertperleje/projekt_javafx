@@ -75,53 +75,19 @@ public class SkryptyDao
         return null;
     }
     
-    public void SkryptUpdate(String newStatus, Integer idStatus, String folder, String jira, String srodowisko, String bazytestowe, String uwaga, String nazwa) throws MessagingException
+    public void SkryptUpdate(String newStatus, Integer idSkrypt ) throws MessagingException
     {
         
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
 
-        String qu = "UPDATE SKRYPTY SET STATUS = (SELECT id FROM SKRYPTY_STATUS WHERE NAZWA = ? ) where id = ?";
+        String qu = "UPDATE SKRYPTY SET statusid = (SELECT id FROM SKRYPTY_STATUS WHERE NAZWA = ? ) where id = ?";
         try
         {
             preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
             preparedStatement.setString(1, newStatus);
-            preparedStatement.setInt(2, idStatus);
+            preparedStatement.setInt(2, idSkrypt);
             System.out.println(qu);
-
-            //tu musimy wysłac maila
-            //Tu wywołamy w przypadku zmiany rózne przypadki
-            switch (newStatus)
-            {
-                case "Utworzony":
-                    //może kiedyś 
-                    break;
-                case "Przygotowany":
-                    SkryptyEmailDao dao = new SkryptyEmailDao();
-                    //pobieramy liste mailowa
-                    String email = dao.selectMail("Przygotowany");
-                    //pobieramy tytul maila
-                    String subject = SubjectEmail.subjectMail("skrypt",folder,srodowisko);
-                    //pobieramybody
-                    String body = BodyMailSkrypt.bodyMailSkrypt();
-                    
-                    SendEmail.sendMail(email, subject, body,nazwa,folder, srodowisko);
-                    //FTPFunctions.uploadFtp();
-
-                    break;
-                case "Wysłany":
-                    //
-                    break;
-                case "Wdrożony":
-                    //
-                    break;
-                case "Błąd":
-                    //
-                    break;
-                default:
-                    break;
-            }
-
             preparedStatement.executeUpdate();
             preparedStatement.close();
 
@@ -129,8 +95,54 @@ public class SkryptyDao
         {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        showInfoAlertBox.showInformationAlertBox("Status Zmieniono");
         
+       }
+    
+    public String pobierzWartoscKolumny(Integer id, String nazwakol) throws SQLException
+    {
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        try
+        {
+            String qu = ("SELECT " + nazwakol + " FROM SKRYPTY WHERE id = ?");
+            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
+            preparedStatement.setInt(1, id);
+            System.out.println(qu);
+            rs = preparedStatement.executeQuery();
 
+            while (rs.next())
+            {
+                return rs.getString(1);
+            }
+            preparedStatement.close();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public String pobierzSrod(Integer id) throws SQLException
+    {
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        try
+        {
+            String qu = ("SELECT * FROM SRODOWISKO WHERE id in (SELECT srodowiskoid FROM SKRYPTY WHERE id = ?)");
+            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
+            preparedStatement.setInt(1, id);
+            System.out.println(qu);
+            rs = preparedStatement.executeQuery();
+
+            while (rs.next())
+            {
+                return rs.getString(2);
+            }
+            preparedStatement.close();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

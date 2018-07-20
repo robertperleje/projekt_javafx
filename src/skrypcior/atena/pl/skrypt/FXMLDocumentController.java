@@ -32,7 +32,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -46,11 +45,7 @@ import javafx.util.converter.DefaultStringConverter;
 import javax.mail.MessagingException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import skrypcior.atena.pl.database2.DbConnect;
-import skrypcior.atena.pl.ftp.FTPFunctions;
-import skrypcior.atena.pl.skrypty.email.Email;
-import skrypcior.atena.pl.skrypty.email.SendEmail;
-import skrypcior.atena.pl.skrypty.email.SkryptyEmailDao;
-import skrypcior.atena.pl.skrypty.email.SubjectEmail;
+import skrypcior.atena.pl.skrypty.email.CreateSkryptEmail;
 import skrypcior.atena.pl.tools.RestrictiveTextField;
 import skrypcior.atena.pl.tools.dataToString;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
@@ -88,6 +83,12 @@ public class FXMLDocumentController implements Initializable
     @FXML
     private JFXComboBox<String> cmb_bazyTestowe;
     ObservableList<String> bazyList = FXCollections.observableArrayList("Nie, brak danych", "Tak");
+    @FXML
+    private JFXComboBox<String> cmb_czaswykonywania;
+    ObservableList<String> czaswykList = FXCollections.observableArrayList();
+    @FXML
+    private Label l_czaswykonywania;
+    
     @FXML
     private JFXTextField jira;
     @FXML
@@ -128,8 +129,7 @@ public class FXMLDocumentController implements Initializable
     private TableColumn<Skrypt, String> col_uwagi;
     @FXML
     private TextArea text_uwaga;
-    @FXML
-    private Label l_jira;
+    
 
     private ObservableList<String> listaStatus = FXCollections.observableArrayList();
 
@@ -151,8 +151,9 @@ public class FXMLDocumentController implements Initializable
     private Label label_jira;
     @FXML
     private Label label_sciezka;
-    
-    
+    @FXML
+    private Label label_wgracbazy;
+      
     
 
     @Override
@@ -164,7 +165,7 @@ public class FXMLDocumentController implements Initializable
         zaladuj();
 
         cmb_lp.setItems(lpList);
-
+        czasWyk();
         wczytajSchemat();
         cmb_bazyTestowe.setItems(bazyList);
         cmb_czy_zatrzymac.setItems(zatrzymacList);
@@ -222,14 +223,21 @@ public class FXMLDocumentController implements Initializable
 
                     try
                     {
+                        //zmieniamy status na bazie
                         SkryptyDao dao = new SkryptyDao();
-                        dao.SkryptUpdate(event.getNewValue(), event.getRowValue().getId(), event.getRowValue().getFolder(), event.getRowValue().getJira(), event.getRowValue().getSrodowisko(), event.getRowValue().getBazytestowe(), event.getRowValue().getUwagi(), event.getRowValue().getNazwa());
-
+                        dao.SkryptUpdate(event.getNewValue(), event.getRowValue().getId());
+                        
+                            //wysyłamy maila zgodnie z nowym statusem
+                            CreateSkryptEmail.createSkryptEmail(event.getNewValue(), event.getRowValue().getId());
+                        
                     } catch (MessagingException ex)
                     {
                         Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex)
+                    {
+                        Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
+                    showInfoAlertBox.showInformationAlertBox("Status Zmieniono");
                 }
                 //Przywrócenie starych
                 event.getTableView().refresh();
@@ -286,7 +294,7 @@ public class FXMLDocumentController implements Initializable
             list.clear();
             ResultSet rs = conn.createStatement().executeQuery("SELECT sk.id, sk.nazwa, srd.nazwa, sk.datautw, sk.operator, sk.datawysl, sks.nazwa, sk.hurtprzelad, sk.bazytestur, sk.odwersji, sk.folder, sk.jira, k.login, sk.uwagi "
                     + " FROM skrypty sk, skrypty_status sks, srodowisko srd, konta k "
-                    + " WHERE sk.Status = sks.id and sk.srodowisko = srd.id and sk.opodp = k.id order by sk.id asc");
+                    + " WHERE sk.Statusid = sks.id and sk.srodowiskoid = srd.id and sk.opodp = k.id order by sk.id asc");
             while (rs.next())
             {
                 list.add(new Skrypt(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10), rs.getString(11), rs.getString(12), rs.getString(13), rs.getString(14)));
@@ -308,34 +316,36 @@ public class FXMLDocumentController implements Initializable
 
         //Z czytujemy wszytskie wartości z formatki
         String skryptlp = (String) cmb_lp.getSelectionModel().getSelectedItem();
-        String skryptSchemat = (String) cmb_schemat.getSelectionModel().getSelectedItem();
-        String skryptZatrzymac = (String) cmb_czy_zatrzymac.getSelectionModel().getSelectedItem();
         String oznSrod = (String) cmb_srodowisko.getSelectionModel().getSelectedItem();
-        String osobaOdp = (String) cmb_odpowiedzialny.getSelectionModel().getSelectedItem();
+        String skryptSchemat = (String) cmb_schemat.getSelectionModel().getSelectedItem();
+        String czaswykonywania = (String) cmb_czaswykonywania.getSelectionModel().getSelectedItem();
+        String skryptZatrzymac = (String) cmb_czy_zatrzymac.getSelectionModel().getSelectedItem();
         String skryptPrzeladowanie = (String) cmb_przeladowac.getSelectionModel().getSelectedItem();
         String bazytestowe = (String) cmb_bazyTestowe.getSelectionModel().getSelectedItem();
+        String osobaOdp = (String) cmb_odpowiedzialny.getSelectionModel().getSelectedItem();
         String skryptCzyWersja = (String) cmb_odwersji.getSelectionModel().getSelectedItem();
         String skryptUwagi = text_uwaga.getText();
         String skryptJira = jira.getText().toUpperCase();
         String sciezka = sciezkaDoPliku.getText();
 
-        boolean lpIsEmpty = RestrictiveTextField.StringIsEmpty(skryptlp, label_lp, "Wypełnij pole");
-        boolean zatrzymacIsEmpty = RestrictiveTextField.StringIsEmpty(skryptZatrzymac, label_czy_zatrzymac, "Wypełnij pole");
-        boolean odpIsEmpty = RestrictiveTextField.StringIsEmpty(osobaOdp, label_odpowiedzialny, "Wypełnij pole");
-        boolean wersjaIsEmpty = RestrictiveTextField.StringIsEmpty(skryptCzyWersja, label_od_wersji, "Wypełnij pole");
-        boolean schematIsEmpty = RestrictiveTextField.StringIsEmpty(skryptSchemat, label_schemat, "Wypełnij pole");
-        boolean srodtIsEmpty = RestrictiveTextField.StringIsEmpty(oznSrod, label_srodowisko, "Wypełnij pole");
-        boolean przeladIsEmpty = RestrictiveTextField.StringIsEmpty(skryptPrzeladowanie, label_przeladowanie, "Wypełnij pole");
+        boolean lpIsEmpty = RestrictiveTextField.StringIsEmpty(skryptlp, label_lp, "Wybierz wartość");
+        boolean srodtIsEmpty = RestrictiveTextField.StringIsEmpty(oznSrod, label_srodowisko, "Wybierz wartość");
+        boolean schematIsEmpty = RestrictiveTextField.StringIsEmpty(skryptSchemat, label_schemat, "Wybierz wartość");
+        boolean zatrzymacIsEmpty = RestrictiveTextField.StringIsEmpty(skryptZatrzymac, label_czy_zatrzymac, "Wybierz wartość");
+        boolean przeladIsEmpty = RestrictiveTextField.StringIsEmpty(skryptPrzeladowanie, label_przeladowanie, "Wybierz wartość");
+        boolean wgracnabazyIsEmpty = RestrictiveTextField.StringIsEmpty(skryptPrzeladowanie, label_wgracbazy, "Wybierz wartość");
+        boolean odpIsEmpty = RestrictiveTextField.StringIsEmpty(osobaOdp, label_odpowiedzialny, "Wybierz wartość");
+        boolean wersjaIsEmpty = RestrictiveTextField.StringIsEmpty(skryptCzyWersja, label_od_wersji, "Wybierz wartość");
         boolean jiraIsEmpty = RestrictiveTextField.StringIsEmpty(skryptJira, label_jira, "Wypełnij pole");
-        boolean sciezkaIsEmpty = RestrictiveTextField.StringIsEmpty(sciezka, label_sciezka, "Wypełnij pole");
+        boolean sciezkaIsEmpty = RestrictiveTextField.StringIsEmpty(sciezka, label_sciezka, "Wczytaj plik");
 
-        if (!lpIsEmpty || !zatrzymacIsEmpty || !odpIsEmpty || !wersjaIsEmpty || !schematIsEmpty || !srodtIsEmpty || !przeladIsEmpty || !jiraIsEmpty || !sciezkaIsEmpty)
+        if (!lpIsEmpty || !zatrzymacIsEmpty || !odpIsEmpty || !wersjaIsEmpty || !schematIsEmpty || !srodtIsEmpty || !przeladIsEmpty || !jiraIsEmpty || !sciezkaIsEmpty || !wgracnabazyIsEmpty)
         {
             return;
         }
 
         //Weryfikacja pobranego stringa względem ilości znaków(ograniczenie kolumny na bazie)
-        boolean nazwJira = RestrictiveTextField.textLenght(jira.getText(), l_jira, "Maksymalna ilość znaków 50", "50");
+        boolean nazwJira = RestrictiveTextField.textLenght(jira.getText(), label_jira, "Maksymalna ilość znaków 50", "50");
         if (!nazwJira)
         {
             return;
@@ -361,7 +371,7 @@ public class FXMLDocumentController implements Initializable
         //Operator chwilowo jeden póxniej z tego kto się zalogojue
         String skryptOperator = "ROBERT1";
 
-        String qu = "INSERT INTO SKRYPTY (nazwa, srodowisko, datautw, operator, datawysl, status, hurtprzelad, bazytestur, odwersji, folder, uwagi, jira, opodp, plik) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String qu = "INSERT INTO SKRYPTY (nazwa, srodowiskoid, schemat,czaswykonywania ,datautw, operator, datawysl, statusid, hurtprzelad, bazytestur, odwersji, folder, uwagi, jira, opodp, plik) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try
         {
 
@@ -369,20 +379,22 @@ public class FXMLDocumentController implements Initializable
 
             preparedStatement.setString(1, skryptNazwa);
             preparedStatement.setInt(2, idSrod);
-            preparedStatement.setTimestamp(3, java.sql.Timestamp.valueOf(LocalDateTime.now()));
-            preparedStatement.setString(4, skryptOperator);
-            preparedStatement.setNull(5, java.sql.Types.DATE);
-            preparedStatement.setString(6, "1");
-            preparedStatement.setString(7, skryptPrzeladowanie);
-            preparedStatement.setString(8, bazytestowe);
-            preparedStatement.setString(9, skryptCzyWersja);
-            preparedStatement.setString(10, skryptFolder + "_" + oznSrod + "/");
-            preparedStatement.setString(11, skryptUwagi);
-            preparedStatement.setString(12, skryptJira);
-            preparedStatement.setInt(13, idOsobaOdp);
+            preparedStatement.setString(3, skryptSchemat);
+            preparedStatement.setString(4, czaswykonywania);
+            preparedStatement.setTimestamp(5, java.sql.Timestamp.valueOf(LocalDateTime.now()));
+            preparedStatement.setString(6, skryptOperator);
+            preparedStatement.setNull(7, java.sql.Types.DATE);
+            preparedStatement.setString(8, "1");
+            preparedStatement.setString(9, skryptPrzeladowanie);
+            preparedStatement.setString(10, bazytestowe);
+            preparedStatement.setString(11, skryptCzyWersja);
+            preparedStatement.setString(12, skryptFolder + "_" + oznSrod + "/");
+            preparedStatement.setString(13, skryptUwagi);
+            preparedStatement.setString(14, skryptJira);
+            preparedStatement.setInt(15, idOsobaOdp);
 
             InputStream inputStream = new FileInputStream(new File(sciezka));
-            preparedStatement.setBlob(14, inputStream);
+            preparedStatement.setBlob(16, inputStream);
 
             System.out.println(qu);
 
@@ -525,4 +537,19 @@ public class FXMLDocumentController implements Initializable
     SkryptUpdate(,event.getRowValue().getUwagi(), event.getRowValue().getNazwa());
      */
     
+    private void czasWyk()
+    {
+        try
+        {
+            ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM SKRYPTY_SL_CZAS_WYKONYWANIA");
+            while (rs.next())
+            {
+                czaswykList.add(rs.getString(2));
+            }
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        cmb_czaswykonywania.getItems().setAll(czaswykList);
+    }
 }

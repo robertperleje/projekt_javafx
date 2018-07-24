@@ -44,4 +44,29 @@ public class SkryptySchematDao
         }
         return null;
     }
+    
+    public Integer pobierzIdSchemat(String nazwa ) throws SQLException
+    {
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        try
+        {
+            String qu = ("SELECT * FROM skrypty_schemat WHERE schemat = ?");
+            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
+            preparedStatement.setString(1, nazwa);
+            System.out.println(qu);
+            rs = preparedStatement.executeQuery();
+
+            while (rs.next())
+            {
+                return rs.getInt(1);
+            }
+            preparedStatement.close();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(SkryptySchematDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
 }

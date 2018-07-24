@@ -13,7 +13,7 @@
 
 <StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="885.0" prefWidth="843.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="skrypcior.atena.pl.menu.FXMLMenuController">
    <children>
-      <BorderPane prefHeight="496.0" prefWidth="736.0">
+      <BorderPane fx:id="BorderPane" prefHeight="496.0" prefWidth="736.0">
          <top>
             <MenuBar BorderPane.alignment="CENTER">
               <menus>
@@ -31,9 +31,10 @@
                   <Menu mnemonicParsing="false" text="Słowniki">
                      <items>
                         <MenuItem mnemonicParsing="false" onAction="#menuStatusSkryptow" text="Skrypty Status" />
-                        <MenuItem mnemonicParsing="false" onAction="#menuSchematy" text="Schematy" />
-                        <MenuItem mnemonicParsing="false" onAction="#menuKonta" text="Konta Użytkowników" />
                         <MenuItem mnemonicParsing="false" onAction="#menuSrodowiska" text="Środowiska" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuSchematy" text="Schematy" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuBazy" text="Bazy" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuKonta" text="Konta Użytkowników" />
                         <MenuItem mnemonicParsing="false" onAction="#menuEmail" text="Email" />
                      </items>
                   </Menu>
@@ -45,199 +46,8 @@
               </menus>
             </MenuBar>
          </top>
-         <center>
-            <TabPane prefHeight="860.0" prefWidth="732.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-              <tabs>
-                <Tab text="Info">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="496.0" prefWidth="637.0" stylesheets="@fxmlmenu.css">
-                           <children>
-                              <VBox layoutX="22.0" layoutY="25.0" prefHeight="423.0" prefWidth="506.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <children>
-                                    <HBox fx:id="skrypt_info" prefHeight="294.0" prefWidth="466.0" style="-fx-background-color: #e7e7e7;">
-                                       <children>
-                                          <VBox prefHeight="294.0" prefWidth="276.0">
-                                             <children>
-                                                <TextField fx:id="skryptNazwaInput" alignment="TOP_CENTER" onAction="#loadSkryptInfo" prefHeight="25.0" prefWidth="231.0" promptText="Nazwa Skryptu">
-                                                   <VBox.margin>
-                                                      <Insets left="20.0" right="10.0" top="70.0" />
-                                                   </VBox.margin></TextField>
-                                             </children>
-                                          </VBox>
-                                          <VBox alignment="TOP_CENTER" prefHeight="294.0" prefWidth="291.0">
-                                             <children>
-                                                <HBox prefHeight="294.0" prefWidth="287.0">
-                                                   <children>
-                                                      <VBox alignment="CENTER" prefHeight="294.0" prefWidth="282.0">
-                                                         <children>
-                                                            <Text fx:id="skryptId" strokeType="OUTSIDE" strokeWidth="0.0" text="Id Skryptu" textAlignment="CENTER" wrappingWidth="224.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="20.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptNazwa" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwa Skryptu" textAlignment="CENTER" wrappingWidth="224.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptSrodowisko" strokeType="OUTSIDE" strokeWidth="0.0" text="Środowisko" textAlignment="CENTER" wrappingWidth="225.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptDataUtw" strokeType="OUTSIDE" strokeWidth="0.0" text="Data Utworzenia" textAlignment="CENTER" wrappingWidth="185.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptStatus" strokeType="OUTSIDE" strokeWidth="0.0" text="Status" textAlignment="CENTER" wrappingWidth="225.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptDataWysl" strokeType="OUTSIDE" strokeWidth="0.0" text="Data Wysłania" textAlignment="CENTER" wrappingWidth="225.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptPrzelad" strokeType="OUTSIDE" strokeWidth="0.0" text="Przeladowanie Hurtowni" textAlignment="CENTER" wrappingWidth="225.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptFolder" strokeType="OUTSIDE" strokeWidth="0.0" text="Folder na FTP" textAlignment="CENTER" wrappingWidth="225.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptJira" strokeType="OUTSIDE" strokeWidth="0.0" text="Jira" textAlignment="CENTER" wrappingWidth="225.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptOdpowiedzialny" strokeType="OUTSIDE" strokeWidth="0.0" text="Odpowiedzialny" textAlignment="CENTER" wrappingWidth="225.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                         </children>
-                                                      </VBox>
-                                                   </children>
-                                                </HBox>
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
-                                       <VBox.margin>
-                                          <Insets left="20.0" right="20.0" top="20.0" />
-                                       </VBox.margin>
-    
-                                    </HBox>
-                                    <HBox fx:id="kompilat_info" layoutX="30.0" layoutY="30.0" prefHeight="294.0" prefWidth="466.0" style="-fx-background-color: #e7e7e7;">
-                                       <children>
-                                          <VBox prefHeight="294.0" prefWidth="276.0">
-                                             <children>
-                                                <TextField fx:id="skryptNazwaInput1" alignment="TOP_CENTER" onAction="#loadSkryptInfo" prefHeight="25.0" prefWidth="231.0" promptText="Nazwa Skryptu">
-                                                   <VBox.margin>
-                                                      <Insets left="20.0" right="10.0" top="70.0" />
-                                                   </VBox.margin>
-                                                </TextField>
-                                             </children>
-                                          </VBox>
-                                          <VBox alignment="TOP_CENTER" prefHeight="294.0" prefWidth="291.0">
-                                             <children>
-                                                <HBox prefHeight="294.0" prefWidth="287.0">
-                                                   <children>
-                                                      <VBox alignment="CENTER" prefHeight="294.0" prefWidth="282.0">
-                                                         <children>
-                                                            <Text fx:id="skryptId1" strokeType="OUTSIDE" strokeWidth="0.0" text="Id Skryptu" textAlignment="CENTER" wrappingWidth="224.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="20.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptNazwa1" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwa Skryptu" textAlignment="CENTER" wrappingWidth="224.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptSrodowisko1" strokeType="OUTSIDE" strokeWidth="0.0" text="Środowisko" textAlignment="CENTER" wrappingWidth="225.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptDataUtw1" strokeType="OUTSIDE" strokeWidth="0.0" text="Data Utworzenia" textAlignment="CENTER" wrappingWidth="185.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptStatus1" strokeType="OUTSIDE" strokeWidth="0.0" text="Status" textAlignment="CENTER" wrappingWidth="225.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptDataWysl1" strokeType="OUTSIDE" strokeWidth="0.0" text="Data Wysłania" textAlignment="CENTER" wrappingWidth="225.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptPrzelad1" strokeType="OUTSIDE" strokeWidth="0.0" text="Przeladowanie Hurtowni" textAlignment="CENTER" wrappingWidth="225.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptFolder1" strokeType="OUTSIDE" strokeWidth="0.0" text="Folder na FTP" textAlignment="CENTER" wrappingWidth="225.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptJira1" strokeType="OUTSIDE" strokeWidth="0.0" text="Jira" textAlignment="CENTER" wrappingWidth="225.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                            <Text fx:id="skryptOdpowiedzialny1" strokeType="OUTSIDE" strokeWidth="0.0" text="Odpowiedzialny" textAlignment="CENTER" wrappingWidth="225.802734375">
-                                                               <VBox.margin>
-                                                                  <Insets top="10.0" />
-                                                               </VBox.margin>
-                                                            </Text>
-                                                         </children>
-                                                      </VBox>
-                                                   </children>
-                                                </HBox>
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
-                                       <VBox.margin>
-                                          <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                       </VBox.margin>
-                                    </HBox>
-                                    <VBox alignment="CENTER" prefHeight="83.0" prefWidth="506.0">
-                                       <children>
-                                          <JFXButton prefHeight="15.0" prefWidth="64.0" styleClass="setup-button" stylesheets="@fxmlmenu.css" text="Wczytaj">
-
-                                          </JFXButton>
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </VBox>
-                           </children></AnchorPane>
-                  </content>
-                </Tab>
-                <Tab text="Kompilaty">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="574.0" prefWidth="649.0" />
-                  </content>
-                </Tab>
-              </tabs>
-            </TabPane>
-         </center>
          <right>
-            <VBox alignment="TOP_RIGHT" prefHeight="860.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <VBox alignment="TOP_RIGHT" prefHeight="860.0" prefWidth="102.0">
                <children>
                   <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#loadAddSkrypt" prefHeight="100.0" prefWidth="100.0" text="Skrypty">
                      <graphic>
@@ -247,6 +57,9 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
                   </Button>
                   <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#dodajKompilat" prefHeight="100.0" prefWidth="100.0" text="Kompilaty">
                      <graphic>
@@ -256,6 +69,9 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
                   </Button>
                   <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#dodajPW" prefHeight="100.0" prefWidth="100.0" text="Dodaj PW">
                      <graphic>
@@ -265,6 +81,9 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
                   </Button>
                   <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#dodajMediacje" prefHeight="100.0" prefWidth="100.0" text="Dodaj Mediacje">
                      <graphic>
@@ -274,6 +93,9 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
                   </Button>
                </children>
             </VBox>

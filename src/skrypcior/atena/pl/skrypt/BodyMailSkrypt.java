@@ -44,10 +44,10 @@ public class BodyMailSkrypt
         htmBodyMail.addRowValues("<strong>Można uruchomić podczas pracy użytkowników:</strong>", dao.pobierzWartoscKolumny(idrekord, "zatrzymac_serwer"));
         htmBodyMail.addRowValues("<strong>Czy należy przeładować Hurtownię:</strong>",  dao.pobierzWartoscKolumny(idrekord, "hurtprzelad"));
         htmBodyMail.addRowValues("<strong>Można wgrać na bazy testowe:</strong>",  dao.pobierzWartoscKolumny(idrekord, "bazytestur"));
-        htmBodyMail.addRowValues("<strong>Realizowany cel:</strong>",  "<em>dupa</em>");
+        htmBodyMail.addRowValues("<strong>Realizowany cel:</strong>",  "<em>" + dao.pobierzWartoscKolumny(idrekord, "opis") + "</em>");
         htmBodyMail.addRowValues("<strong>Kolejność uruchamiania:</strong>",  dao.pobierzWartoscKolumny(idrekord, "nazwa"));
-        htmBodyMail.addRowValues("<strong>Uwagi:</strong>",  dao.pobierzWartoscKolumny(idrekord, "nazwa"));
-        htmBodyMail.addRowValues("<strong>W razie pytań/problemów kontakt do <br /> pracownika Ateny:</strong>",  dao.pobierzWartoscKolumny(idrekord, "nazwa"));
+        htmBodyMail.addRowValues("<strong>Uwagi:</strong>",  dao.pobierzWartoscKolumny(idrekord, "uwagi"));
+        htmBodyMail.addRowValues("<strong>W razie pytań/problemów kontakt do <br /> pracownika Ateny:</strong>",  "607 110 278 - Robert Perlejewski");
         
         String table = htmBodyMail.build();
         System.out.println(table.toString());

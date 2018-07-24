@@ -43,6 +43,8 @@ public class MD5 {
         System.out.println(generatedPassword);
         return generatedPassword;
     }
+    
+    
 }
     
 

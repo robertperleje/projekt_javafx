@@ -22,6 +22,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -38,74 +39,57 @@ import skrypcior.atena.pl.database.DatabaseConnect;
  */
 public class FXMLMenuController implements Initializable
 {
-
-    @FXML
+ 
+    
     private HBox skrypt_info;
-    @FXML
     private TextField skryptNazwaInput;
-    @FXML
     private Text skryptNazwa;
-    @FXML
     private Text skryptStatus;
-    @FXML
     private Text skryptId;
-    @FXML
     private Text skryptSrodowisko;
-    @FXML
     private Text skryptDataUtw;
-    @FXML
     private Text skryptDataWysl;
-    @FXML
     private Text skryptPrzelad;
-    @FXML
     private Text skryptFolder;
-    @FXML
     private Text skryptJira;
-    @FXML
     private Text skryptOdpowiedzialny;
 
     DatabaseConnect databaseConnect;
     @FXML
     private StackPane rootPane;
     @FXML
-    private HBox kompilat_info;
-    @FXML
-    private TextField skryptNazwaInput1;
-    @FXML
-    private Text skryptId1;
-    @FXML
-    private Text skryptNazwa1;
-    @FXML
-    private Text skryptSrodowisko1;
-    @FXML
-    private Text skryptDataUtw1;
-    @FXML
-    private Text skryptStatus1;
-    @FXML
-    private Text skryptDataWysl1;
-    @FXML
-    private Text skryptPrzelad1;
-    @FXML
-    private Text skryptFolder1;
-    @FXML
-    private Text skryptJira1;
-    @FXML
-    private Text skryptOdpowiedzialny1;
+    private BorderPane BorderPane;
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        JFXDepthManager.setDepth(skrypt_info, 1);
-        databaseConnect = DatabaseConnect.getInstance();
+        //JFXDepthManager.setDepth(skrypt_info, 1);
+        databaseConnect = DatabaseConnect.getInstance(); 
     }
 
     @FXML
     private void loadAddSkrypt(ActionEvent event)
     {
         loadWindows("/skrypcior/atena/pl/skrypt/FXMLDocument.fxml", "Dodanie Skryptu");
+        //setCenter("/skrypcior/atena/pl/skrypt/FXMLDocument.fxml");
     }
 
-    void loadWindows(String loc, String title)
+    
+    public void setCenter(String fxmlPath){
+        FXMLLoader loader = new FXMLLoader (this.getClass().getResource(fxmlPath));
+        //ResourceBundle bundle = ResourceBundle.getBundle("Dupa");
+        //loader.setResources(bundle);
+        Parent parent = null;
+        try
+        {
+            parent = loader.load();
+        } catch (Exception e)
+        {
+        }
+        BorderPane.setCenter(parent);
+    }
+    
+    public void loadWindows(String loc, String title)
     {
 
         try
@@ -122,7 +106,6 @@ public class FXMLMenuController implements Initializable
 
     }
 
-    @FXML
     private void loadSkryptInfo(ActionEvent event)
     {
         wyczyscInfoOSkrypt();
@@ -259,6 +242,12 @@ public class FXMLMenuController implements Initializable
     private void menuEmail(ActionEvent event)
     {
         loadWindows("/skrypcior/atena/pl/skrypty/email/FXMLSkryptyEmail.fxml", "Słownik - Email");
+    }
+
+    @FXML
+    private void menuBazy(ActionEvent event)
+    {
+        loadWindows("/skrypcior/atena/pl/bazy/FXMLBazy.fxml", "Słownik - Bazy");
     }
 
 }

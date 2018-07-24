@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.shape.*?>
@@ -11,9 +12,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" fx:id="rootPane" prefHeight="713.0" prefWidth="841.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="skrypcior.atena.pl.skrypt.FXMLDocumentController">
+<AnchorPane id="AnchorPane" fx:id="rootPane" prefHeight="802.0" prefWidth="841.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="skrypcior.atena.pl.skrypt.FXMLDocumentController">
    <children>
-      <BorderPane prefHeight="421.0" prefWidth="519.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <right>
             <VBox prefHeight="298.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                <children>
@@ -96,7 +97,7 @@
                               <Insets left="25.0" />
                            </VBox.margin>
                         </JFXComboBox>
-                        <Label fx:id="l_czaswykonywania">
+                        <Label fx:id="label_czaswykonywania">
                            <VBox.margin>
                               <Insets left="25.0" />
                            </VBox.margin>
@@ -111,11 +112,16 @@
                               <Insets left="25.0" />
                            </VBox.margin>
                         </Label>
-                        <TextArea fx:id="text_uwaga" promptText="Uwagi">
+                        <TextArea fx:id="text_opis" prefHeight="170.0" promptText="Realizowany cel:">
                            <VBox.margin>
                               <Insets left="25.0" right="45.0" top="15.0" />
                            </VBox.margin>
                         </TextArea>
+                        <Label fx:id="label_Opis">
+                           <VBox.margin>
+                              <Insets left="25.0" />
+                           </VBox.margin>
+                        </Label>
                      </children>
                   </VBox>
                   <VBox prefHeight="336.0" prefWidth="500.0">
@@ -162,7 +168,7 @@
                         </Label>
                         <JFXTextField fx:id="jira" labelFloat="true" promptText="Jira">
                            <VBox.margin>
-                              <Insets left="25.0" right="25.0" />
+                              <Insets left="25.0" right="45.0" />
                            </VBox.margin>
                         </JFXTextField>
                         <Label fx:id="label_jira">
@@ -170,9 +176,14 @@
                               <Insets left="25.0" />
                            </VBox.margin>
                         </Label>
+                        <TextArea fx:id="text_uwaga" prefHeight="80.0" promptText="Uwagi:">
+                           <VBox.margin>
+                              <Insets left="25.0" right="45.0" top="15.0" />
+                           </VBox.margin>
+                        </TextArea>
                         <TextField fx:id="sciezkaDoPliku" editable="false" promptText="Ścieżka do pliku">
                            <VBox.margin>
-                              <Insets left="25.0" right="35.0" top="15.0" />
+                              <Insets left="25.0" right="45.0" top="25.0" />
                            </VBox.margin>
                         </TextField>
                         <Label fx:id="label_sciezka">
@@ -191,7 +202,7 @@
             </HBox>
          </center>
          <bottom>
-            <TableView fx:id="table_skrypty" prefHeight="270.0" prefWidth="841.0" BorderPane.alignment="CENTER">
+            <TableView fx:id="table_skrypty" prefHeight="356.0" prefWidth="841.0" BorderPane.alignment="CENTER">
               <columns>
                 <TableColumn fx:id="col_id" prefWidth="75.0" text="Id" />
                 <TableColumn fx:id="col_nazwa" prefWidth="75.0" text="Nazwa" />
@@ -223,9 +234,9 @@
                             <MenuItem mnemonicParsing="false" text="Usuń" />
                           </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Unspecified Menu">
+                        <Menu mnemonicParsing="false" text="Wgraj">
                            <items>
-                              <MenuItem mnemonicParsing="false" text="Usuń" />
+                              <MenuItem fx:id="menuItemNaMain" mnemonicParsing="false" onAction="#wgrajNaMain" text="MAIN" />
                               <MenuItem mnemonicParsing="false" text="Unspecified Action" />
                            </items>
                         </Menu>
@@ -234,6 +245,9 @@
                </contextMenu>
             </TableView>
          </bottom>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
       </BorderPane>
    </children>
 </AnchorPane>

@@ -39,9 +39,9 @@ import skrypcior.atena.pl.tools.showInfoAlertBox;
 public class FXMLSrodowiskoController implements Initializable
 {
 
-    ObservableList<Srodowisko> list = FXCollections.observableArrayList();
     Connection conn = DbConnect.createConnection();
-
+    
+    ObservableList<Srodowisko> list = FXCollections.observableArrayList();
     @FXML
     private JFXTextField tf_nazwa;
     @FXML

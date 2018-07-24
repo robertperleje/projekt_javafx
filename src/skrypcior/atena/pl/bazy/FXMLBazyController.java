@@ -27,6 +27,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import skrypcior.atena.pl.database2.DbConnect;
 import skrypcior.atena.pl.skrypty.schemat.SkryptySchematDao;
 import skrypcior.atena.pl.srodowiska.SrodowiskaDao;
@@ -143,11 +144,31 @@ public class FXMLBazyController implements Initializable
     @FXML
     private void usunWiersz(ActionEvent event)
     {
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+
+        Bazy id = (Bazy) tabela_bazy.getSelectionModel().getSelectedItem();
+
+        String qu = "DELETE FROM baza WHERE id = ?";
+        try
+        {
+            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
+            preparedStatement.setInt(1, id.getId());
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(FXMLBazyController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        zaladujTabele();
+        showInfoAlertBox.showInformationAlertBox("Rekord usunięto");
     }
 
     @FXML
     private void zamknijOkno(ActionEvent event)
     {
+        ((Stage) (((Button) event.getSource()).getScene().getWindow())).close();
     }
 
     @FXML
@@ -199,7 +220,7 @@ public class FXMLBazyController implements Initializable
         showInfoAlertBox.showInformationAlertBox("Słowniki - konfiguracja bazy została dopisana");
         }
         
-        //zaladuj();
+        zaladujTabele();
     }
    
     private void wypelnijComboBoxSrodowisko()

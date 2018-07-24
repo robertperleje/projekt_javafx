@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -50,6 +51,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import skrypcior.atena.pl.database2.DbConnect;
 import skrypcior.atena.pl.menu.FXMLMenuController;
 import skrypcior.atena.pl.skrypty.email.CreateSkryptEmail;
+import skrypcior.atena.pl.skrypty.wgranie.SkryptyWgranie;
 import skrypcior.atena.pl.tools.RestrictiveTextField;
 import skrypcior.atena.pl.tools.dataToString;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
@@ -567,7 +569,7 @@ public class FXMLDocumentController implements Initializable
     }
 
     @FXML
-    private void wgrajNaMain(ActionEvent event)
+    private void wgrajNaMain(ActionEvent event) throws SQLException, UnsupportedEncodingException
     {
         
         Skrypt selectedForRecord = table_skrypty.getSelectionModel().getSelectedItem();
@@ -576,7 +578,11 @@ public class FXMLDocumentController implements Initializable
             showInfoAlertBox.showInformationAlertBox("Nie wybrano żadnego rekordu");
             return;
         }
+        String main = "MAIN_ATENA";
+        SkryptyWgranie.uruchomSkrypt(selectedForRecord.getId(), main);
         System.out.println(selectedForRecord.getId());
+        System.out.println(selectedForRecord.getSrodowisko());
+        System.out.println(selectedForRecord.getNazwa());
         
         
         menuController.loadWindows("/skrypcior/atena/pl/skrypty/wgranie/FXMLSkryptyWgranie.fxml", "Wgrywanie skryptu");

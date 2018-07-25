@@ -28,7 +28,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -45,16 +48,20 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.converter.DefaultStringConverter;
 import javax.mail.MessagingException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import skrypcior.atena.pl.database2.DbConnect;
 import skrypcior.atena.pl.menu.FXMLMenuController;
 import skrypcior.atena.pl.skrypty.email.CreateSkryptEmail;
+import skrypcior.atena.pl.skrypty.wgranie.FXMLSkryptyWgranieController;
 import skrypcior.atena.pl.skrypty.wgranie.SkryptyWgranie;
 import skrypcior.atena.pl.tools.RestrictiveTextField;
 import skrypcior.atena.pl.tools.dataToString;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
+
+ 
 
 /**
  *
@@ -70,13 +77,9 @@ public class FXMLDocumentController implements Initializable
     @FXML private JFXComboBox cmb_lp;
     ObservableList<String> lpList = FXCollections.observableArrayList("01", "02", "03");
     
-    @FXML private JFXComboBox cmb_schemat;
+    @FXML private JFXComboBox cmb_schemat, cmb_przeladowac, cmb_odwersji;
     ObservableList<String> schematList = FXCollections.observableArrayList();
-    
-    @FXML private JFXComboBox cmb_przeladowac;
     ObservableList<String> przeladowacList = FXCollections.observableArrayList("Nie", "Tak");
-    
-    @FXML private JFXComboBox cmb_odwersji;
     ObservableList<String> odWersjiList = FXCollections.observableArrayList("Nie", "Tak");
     @FXML
     private JFXComboBox cmb_czy_zatrzymac;
@@ -579,12 +582,27 @@ public class FXMLDocumentController implements Initializable
             return;
         }
         String main = "MAIN_ATENA";
-        SkryptyWgranie.uruchomSkrypt(selectedForRecord.getId(), main);
+        String wynik = SkryptyWgranie.uruchomSkrypt(selectedForRecord.getId(), main);
         System.out.println(selectedForRecord.getId());
         System.out.println(selectedForRecord.getSrodowisko());
         System.out.println(selectedForRecord.getNazwa());
         
-        
-        menuController.loadWindows("/skrypcior/atena/pl/skrypty/wgranie/FXMLSkryptyWgranie.fxml", "Wgrywanie skryptu");
+        FXMLLoader Loader= new FXMLLoader();
+        Loader.setLocation(getClass().getResource("/skrypcior/atena/pl/skrypty/wgranie/FXMLSkryptyWgranie.fxml"));
+        try
+        {
+            Loader.load();
+        } catch (IOException ex)
+        {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        FXMLSkryptyWgranieController display = Loader.getController();
+        display.setText(wynik);
+        Parent p = Loader.getRoot();
+        Stage stage = new Stage(StageStyle.DECORATED);
+        stage.setTitle("Wynik wgrania skryptu");
+        stage.setScene(new Scene(p));
+        stage.showAndWait();
+        //menuController.loadWindows("/skrypcior/atena/pl/skrypty/wgranie/FXMLSkryptyWgranie.fxml", "Wgrywanie skryptu");
     }
 }

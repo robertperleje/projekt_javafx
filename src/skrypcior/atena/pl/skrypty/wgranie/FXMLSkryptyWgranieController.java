@@ -7,7 +7,9 @@ package skrypcior.atena.pl.skrypty.wgranie;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TextArea;
 
 /**
  * FXML Controller class
@@ -17,6 +19,9 @@ import javafx.fxml.Initializable;
 public class FXMLSkryptyWgranieController implements Initializable
 {
 
+    @FXML
+    private TextArea text_wynik;
+
     /**
      * Initializes the controller class.
      */
@@ -25,5 +30,10 @@ public class FXMLSkryptyWgranieController implements Initializable
     {
         // TODO
     }    
+    
+    public void setText(String wynik){
+        this.text_wynik.setText(wynik);
+    }
+    
     
 }

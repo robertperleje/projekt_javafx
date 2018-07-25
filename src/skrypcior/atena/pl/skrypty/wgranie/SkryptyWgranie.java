@@ -24,17 +24,20 @@ import skrypcior.atena.pl.bazy.BazyDao;
 public class SkryptyWgranie
 {
 
-    public static void uruchomSkrypt(Integer id, String srodowisko) throws SQLException, UnsupportedEncodingException
+    public static String uruchomSkrypt(Integer id, String srodowisko) throws SQLException, UnsupportedEncodingException
     {
         //Pobieramy schemat czyli login z jakiego ma iść skrypt
         String login =  PobierzSrodSchemat.pobierzSchemat(id);
         
-        //Na podsatwie loginu i śrdowiska na jakie wfrazamy pobieramy dane bazy
+        //Na podsatwie loginu i śrdowiska na jakie wfrazamy pobieramy id bazy
         BazyDao bazyDao = new BazyDao();
         Integer id_bazy = bazyDao.pobierzId(srodowisko, login);
         
+        //Pobieram url i haslo
+        String url = bazyDao.pobierzWartoscKolumny(id_bazy, "url");
+        String haslo = bazyDao.pobierzWartoscKolumny(id_bazy, "haslo");
         
-        Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@//localhost:1521/XE", "klrice", "klrice");
+        Connection conn = DriverManager.getConnection(url, login, haslo);
         conn.setAutoCommit(false);
         
         // #create sqlcl
@@ -54,11 +57,13 @@ public class SkryptyWgranie
 
         // # run a whole file 
         // adjust the path as it needs to be absolute
-        sqlcl.setStmt("@/Users/klrice/workspace_commons/sqlcl-java/myfile.sql");
+        //sqlcl.setStmt("@/d/KLIENT_PW/Skrypty_do_klienta/test1.sql");
+        sqlcl.setStmt("@d:/KLIENT_PW/Skrypty_do_klienta/test1.sql");
         sqlcl.run();
 
         String results = bout.toString("UTF8");
         results = results.replaceAll(" force_print\n", "");
         System.out.println(results);
+        return  results;
     }
 }

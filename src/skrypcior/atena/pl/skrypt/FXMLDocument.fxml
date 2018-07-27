@@ -236,8 +236,8 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Wgraj">
                            <items>
-                              <MenuItem fx:id="menuItemNaMain" mnemonicParsing="false" onAction="#wgrajNaMain" text="MAIN" />
-                              <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                              <MenuItem fx:id="menuItemNaMain" mnemonicParsing="false" onAction="#wywolajDlaMain" text="MAIN" />
+                              <MenuItem mnemonicParsing="false" onAction="#wywolajDlaPrep" text="PREP" />
                            </items>
                         </Menu>
                     </items>

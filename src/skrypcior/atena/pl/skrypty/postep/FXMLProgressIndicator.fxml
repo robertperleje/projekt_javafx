@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="92.0" prefWidth="97.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="skrypcior.atena.pl.skrypty.postep.FXMLProgressIndicatorController">
+    <stylesheets>
+        <URL value="@fxmlprogressindicator.css" />
+    </stylesheets>
+   <children>
+      <ProgressIndicator fx:id="progressIndicator" layoutX="7.0" layoutY="7.0" prefHeight="90.0" prefWidth="90.0" progress="0.0" />
+   </children>
+</AnchorPane>

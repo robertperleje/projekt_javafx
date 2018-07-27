@@ -151,6 +151,7 @@ public class FXMLSkryptySchematController implements Initializable {
             showInfoAlertBox.showInformationAlertBox("Słowniki - Schemat dopisano");
         }
         zaladuj();
+        tf_nazwa.setText("");
     }
     
 }

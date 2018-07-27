@@ -221,6 +221,11 @@ public class FXMLBazyController implements Initializable
         }
         
         zaladujTabele();
+        wypelnijComboBoxSrodowisko();
+        wczytajComboBoxSchemat();
+        textfield_url.setText("");
+        textfield_uzytkownik.setText("");
+        textfield_haslo.setText("");
     }
    
     private void wypelnijComboBoxSrodowisko()

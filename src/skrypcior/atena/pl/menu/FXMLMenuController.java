@@ -27,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import jdk.nashorn.internal.objects.Global;
@@ -98,6 +99,7 @@ public class FXMLMenuController implements Initializable
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.setTitle(title);
             stage.setScene(new Scene(parent));
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
         } catch (IOException ex)
         {
@@ -206,6 +208,7 @@ public class FXMLMenuController implements Initializable
     @FXML
     private void dodajMediacje(ActionEvent event)
     {
+        loadWindows("/skrypcior/atena/pl/skrypty/postep/FXMLProgressIndicator.fxml", "Dodanie Kompilatu");
     }
 
     @FXML

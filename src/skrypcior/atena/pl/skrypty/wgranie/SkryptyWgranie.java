@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import oracle.dbtools.raptor.newscriptrunner.ScriptExecutor;
 import oracle.dbtools.raptor.newscriptrunner.ScriptRunnerContext;
 import skrypcior.atena.pl.bazy.BazyDao;
+import skrypcior.atena.pl.skrypt.SkryptyDao;
 
 
 /**
@@ -57,13 +58,14 @@ public class SkryptyWgranie
 
         // # run a whole file 
         // adjust the path as it needs to be absolute
-        //sqlcl.setStmt("@/d/KLIENT_PW/Skrypty_do_klienta/test1.sql");
-        sqlcl.setStmt("@d:/KLIENT_PW/Skrypty_do_klienta/test1.sql");
+        
+        SkryptyDao skryptyDao = new SkryptyDao();
+        String skrypt = skryptyDao.pobierzPlik(id);
+        sqlcl.setStmt(skrypt);
         sqlcl.run();
 
         String results = bout.toString("UTF8");
         results = results.replaceAll(" force_print\n", "");
-        System.out.println(results);
         return  results;
     }
 }

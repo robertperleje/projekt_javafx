@@ -25,6 +25,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -47,6 +48,7 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.converter.DefaultStringConverter;
@@ -58,10 +60,10 @@ import skrypcior.atena.pl.skrypty.email.CreateSkryptEmail;
 import skrypcior.atena.pl.skrypty.wgranie.FXMLSkryptyWgranieController;
 import skrypcior.atena.pl.skrypty.wgranie.SkryptyWgranie;
 import skrypcior.atena.pl.tools.RestrictiveTextField;
+import skrypcior.atena.pl.tools.WorkIndicatorDialog;
 import skrypcior.atena.pl.tools.dataToString;
+import skrypcior.atena.pl.tools.otwieranieOknaFXML;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
-
- 
 
 /**
  *
@@ -69,34 +71,29 @@ import skrypcior.atena.pl.tools.showInfoAlertBox;
  */
 public class FXMLDocumentController implements Initializable
 {
-    
+
+    private WorkIndicatorDialog wd = null;
+
     Connection conn = DbConnect.createConnection();
-    
+
     ObservableList<Skrypt> list = FXCollections.observableArrayList();
-    
-    @FXML private JFXComboBox cmb_lp;
+
+    @FXML
+    private JFXComboBox cmb_lp;
     ObservableList<String> lpList = FXCollections.observableArrayList("01", "02", "03");
-    
-    @FXML private JFXComboBox cmb_schemat, cmb_przeladowac, cmb_odwersji;
+
+    @FXML
+    private JFXComboBox cmb_schemat, cmb_przeladowac, cmb_odwersji, cmb_czy_zatrzymac, cmb_srodowisko, cmb_odpowiedzialny, cmb_bazyTestowe, cmb_czaswykonywania;
+
     ObservableList<String> schematList = FXCollections.observableArrayList();
     ObservableList<String> przeladowacList = FXCollections.observableArrayList("Nie", "Tak");
     ObservableList<String> odWersjiList = FXCollections.observableArrayList("Nie", "Tak");
-    @FXML
-    private JFXComboBox cmb_czy_zatrzymac;
     ObservableList<String> zatrzymacList = FXCollections.observableArrayList("Nie", "Tak");
-    @FXML
-    private JFXComboBox cmb_srodowisko;
     ObservableList<String> srodowiskoList = FXCollections.observableArrayList();
-    @FXML
-    private JFXComboBox cmb_odpowiedzialny;
     ObservableList<String> odpList = FXCollections.observableArrayList();
-    @FXML
-    private JFXComboBox<String> cmb_bazyTestowe;
     ObservableList<String> bazyList = FXCollections.observableArrayList("Nie, brak danych", "Tak");
-    @FXML
-    private JFXComboBox<String> cmb_czaswykonywania;
     ObservableList<String> czaswykList = FXCollections.observableArrayList();
-    
+
     @FXML
     private JFXTextField jira;
     @FXML
@@ -137,8 +134,7 @@ public class FXMLDocumentController implements Initializable
     private TableColumn<Skrypt, String> col_uwagi;
     @FXML
     private TextArea text_uwaga;
-    
-    
+
     private ObservableList<String> listaStatus = FXCollections.observableArrayList();
 
     @FXML
@@ -169,15 +165,13 @@ public class FXMLDocumentController implements Initializable
     private Label label_Opis;
     @FXML
     private MenuItem menuItemNaMain;
-      
-    FXMLMenuController  menuController = new FXMLMenuController();
 
+    FXMLMenuController menuController = new FXMLMenuController();
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        
-        
+
         przypiszCol();
         zaladuj();
 
@@ -231,30 +225,29 @@ public class FXMLDocumentController implements Initializable
                 //alert.setTitle("Zmiana statusu");
                 //alert.setHeaderText("Czy napewno chcesz zmienić status skryptu?");
                 //alert.showAndWait();
-
                 //if (alert.getResult() == yesButtonType)
                 //{
-                    ((Skrypt) event.getTableView().getItems().get(event.getTablePosition().getRow())).setStatus(event.getNewValue());
-                    event.getTableView().getColumns().get(0).setVisible(false);
-                    event.getTableView().getColumns().get(0).setVisible(true);
+                ((Skrypt) event.getTableView().getItems().get(event.getTablePosition().getRow())).setStatus(event.getNewValue());
+                event.getTableView().getColumns().get(0).setVisible(false);
+                event.getTableView().getColumns().get(0).setVisible(true);
 
-                    try
-                    {
-                        //zmieniamy status na bazie
-                        SkryptyDao dao = new SkryptyDao();
-                        dao.SkryptUpdate(event.getNewValue(), event.getRowValue().getId());
-                        
-                        //wysyłamy maila zgodnie z nowym statusem
-                        CreateSkryptEmail.createSkryptEmail(event.getNewValue(), event.getRowValue().getId());
-                        
-                    } catch (MessagingException ex)
-                    {
-                        Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SQLException ex)
-                    {
-                        Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    showInfoAlertBox.showInformationAlertBox("Status Zmieniono");
+                try
+                {
+                    //zmieniamy status na bazie
+                    SkryptyDao dao = new SkryptyDao();
+                    dao.SkryptUpdate(event.getNewValue(), event.getRowValue().getId());
+
+                    //wysyłamy maila zgodnie z nowym statusem
+                    CreateSkryptEmail.createSkryptEmail(event.getNewValue(), event.getRowValue().getId());
+
+                } catch (MessagingException ex)
+                {
+                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex)
+                {
+                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                showInfoAlertBox.showInformationAlertBox("Status Zmieniono");
                 //}
                 //Przywrócenie starych
                 event.getTableView().refresh();
@@ -263,7 +256,6 @@ public class FXMLDocumentController implements Initializable
         });
 
         //Dodanie koloru do wiersza
-
         table_skrypty.setRowFactory(row -> new TableRow<Skrypt>()
         {
             @Override
@@ -327,8 +319,7 @@ public class FXMLDocumentController implements Initializable
     @FXML
     private void addSkrypt(ActionEvent event) throws IOException, SQLException
     {
-        
-        
+
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
 
@@ -360,7 +351,7 @@ public class FXMLDocumentController implements Initializable
         boolean opissEmpty = RestrictiveTextField.StringIsEmpty(opis, label_Opis, "Wypełnij pole");
         boolean sciezkaIsEmpty = RestrictiveTextField.StringIsEmpty(sciezka, label_sciezka, "Wczytaj plik");
 
-        if (!lpIsEmpty || !zatrzymacIsEmpty || !odpIsEmpty || !wersjaIsEmpty || !schematIsEmpty || !srodtIsEmpty || !przeladIsEmpty || !jiraIsEmpty || !sciezkaIsEmpty || !wgracnabazyIsEmpty || !czasIsEmpty ||!opissEmpty)
+        if (!lpIsEmpty || !zatrzymacIsEmpty || !odpIsEmpty || !wersjaIsEmpty || !schematIsEmpty || !srodtIsEmpty || !przeladIsEmpty || !jiraIsEmpty || !sciezkaIsEmpty || !wgracnabazyIsEmpty || !czasIsEmpty || !opissEmpty)
         {
             return;
         }
@@ -373,16 +364,15 @@ public class FXMLDocumentController implements Initializable
         {
             return;
         }
-        */
+         */
         //Pobieramy id na potrzeby insertu do bazy
         SkryptyDao dao = new SkryptyDao();
         int idSrod = dao.pobierzIdSrod(oznSrod);
         int idOsobaOdp = dao.pobierzIdOpekuna(osobaOdp);
-    
-                
+
         String skryptDataUtw = dataToString.dataBezMysln();
         String skryptFolder = dataToString.dataZMysln();
-        String skryptNazwa = skryptlp + "-" + skryptSchemat + "-" + skryptZatrzymac.substring(0,skryptZatrzymac.length()-2) + "-" + skryptDataUtw + "_" + skryptJira;
+        String skryptNazwa = skryptlp + "-" + skryptSchemat + "-" + skryptZatrzymac.substring(0, skryptZatrzymac.length() - 2) + "-" + skryptDataUtw + "_" + skryptJira;
 
         //Operator chwilowo jeden póxniej z tego kto się zalogojue
         String skryptOperator = "ROBERT1";
@@ -538,9 +528,6 @@ public class FXMLDocumentController implements Initializable
         }
     }
 
-    
-
-    
     /*@FXML
     public void zmienStatus(CellEditEvent edittedCell)
     {
@@ -554,7 +541,6 @@ public class FXMLDocumentController implements Initializable
     }
     SkryptUpdate(,event.getRowValue().getUwagi(), event.getRowValue().getNazwa());
      */
-    
     private void czasWyk()
     {
         try
@@ -572,37 +558,95 @@ public class FXMLDocumentController implements Initializable
     }
 
     @FXML
-    private void wgrajNaMain(ActionEvent event) throws SQLException, UnsupportedEncodingException
+    private void wywolajDlaMain(ActionEvent event) throws SQLException, UnsupportedEncodingException
     {
-        
+
         Skrypt selectedForRecord = table_skrypty.getSelectionModel().getSelectedItem();
-            if (selectedForRecord == null)
+        if (selectedForRecord == null)
         {
             showInfoAlertBox.showInformationAlertBox("Nie wybrano żadnego rekordu");
             return;
         }
-        String main = "MAIN_ATENA";
-        String wynik = SkryptyWgranie.uruchomSkrypt(selectedForRecord.getId(), main);
-        System.out.println(selectedForRecord.getId());
-        System.out.println(selectedForRecord.getSrodowisko());
-        System.out.println(selectedForRecord.getNazwa());
-        
-        FXMLLoader Loader= new FXMLLoader();
-        Loader.setLocation(getClass().getResource("/skrypcior/atena/pl/skrypty/wgranie/FXMLSkryptyWgranie.fxml"));
-        try
-        {
-            Loader.load();
-        } catch (IOException ex)
-        {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        FXMLSkryptyWgranieController display = Loader.getController();
-        display.setText(wynik);
-        Parent p = Loader.getRoot();
-        Stage stage = new Stage(StageStyle.DECORATED);
-        stage.setTitle("Wynik wgrania skryptu");
-        stage.setScene(new Scene(p));
-        stage.showAndWait();
-        //menuController.loadWindows("/skrypcior/atena/pl/skrypty/wgranie/FXMLSkryptyWgranie.fxml", "Wgrywanie skryptu");
+
+        wykonanieSkryptu(selectedForRecord.getId(), "MAIN_ATENA");
+
     }
+
+    @FXML
+    private void wywolajDlaPrep(ActionEvent event) throws SQLException, UnsupportedEncodingException
+    {
+        Skrypt selectedForRecord = table_skrypty.getSelectionModel().getSelectedItem();
+        if (selectedForRecord == null)
+        {
+            showInfoAlertBox.showInformationAlertBox("Nie wybrano żadnego rekordu");
+            return;
+        }
+
+        wykonanieSkryptu(selectedForRecord.getId(), "PREP_ATENA");
+    }
+
+    private void wykonanieSkryptu(Integer id, String srodowisko) throws SQLException, UnsupportedEncodingException
+    {
+
+        wd = new WorkIndicatorDialog(rootPane.getScene().getWindow(), "Loading Project Files...");
+
+        wd.addTaskEndNotification(result ->
+        {
+            System.out.println(result);
+
+            FXMLLoader Loader = new FXMLLoader();
+            Loader.setLocation(getClass().getResource("/skrypcior/atena/pl/skrypty/wgranie/FXMLSkryptyWgranie.fxml"));
+            try
+            {
+                Loader.load();
+            } catch (IOException ex)
+            {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            FXMLSkryptyWgranieController display = Loader.getController();
+
+            String wynik = null;
+            try
+            {
+                wynik = SkryptyWgranie.uruchomSkrypt(id, srodowisko);
+            } catch (SQLException ex)
+            {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnsupportedEncodingException ex)
+            {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            display.setText(wynik);
+            Parent p = Loader.getRoot();
+            Stage stage = new Stage(StageStyle.DECORATED);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Wynik wgrania skryptu");
+            stage.setScene(new Scene(p));
+            stage.showAndWait();
+
+        });
+
+        wd.exec(Boolean.FALSE, inputParam ->
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                try
+                {
+                    //Thread.sleep(500);
+                    String wynik = SkryptyWgranie.uruchomSkrypt(id, srodowisko);
+
+                } catch (SQLException ex)
+                {
+                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (UnsupportedEncodingException ex)
+                {
+                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            return new Integer(1);
+        });
+
+    }
+
 }

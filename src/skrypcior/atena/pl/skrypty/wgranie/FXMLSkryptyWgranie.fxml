@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import java.util.*?>
@@ -16,6 +18,48 @@
          <center>
             <TextArea fx:id="text_wynik" prefHeight="200.0" prefWidth="200.0" promptText="TEKST" BorderPane.alignment="CENTER" />
          </center>
+         <right>
+            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button fx:id="btn_zapisz" contentDisplay="TOP" mnemonicParsing="false" onAction="#dodajKompilat" prefHeight="84.0" prefWidth="101.0" text="Zapisz">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="31.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../status/icons8-data-recovery-26.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btn_usun" contentDisplay="TOP" mnemonicParsing="false" onAction="#usunWiersz" prefHeight="83.0" prefWidth="101.0" text="Usuń">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="39.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../status/icons8-delete-column-26.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btn_anuluj" cancelButton="true" contentDisplay="TOP" mnemonicParsing="false" onAction="#zamknijOkno" prefHeight="83.0" prefWidth="101.0" text="Anuluj">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="39.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../status/icons8-delete-26.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </VBox>
+         </right>
       </BorderPane>
    </children>
 </AnchorPane>

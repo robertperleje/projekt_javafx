@@ -588,7 +588,7 @@ public class FXMLDocumentController implements Initializable
     private void wykonanieSkryptu(Integer id, String srodowisko) throws SQLException, UnsupportedEncodingException
     {
 
-        wd = new WorkIndicatorDialog(rootPane.getScene().getWindow(), "Loading Project Files...");
+        wd = new WorkIndicatorDialog(rootPane.getScene().getWindow(), "Czekaj, trwa uruchamianie skryptu na środowisku: " + srodowisko);
 
         wd.addTaskEndNotification(result ->
         {
@@ -617,7 +617,8 @@ public class FXMLDocumentController implements Initializable
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            display.setText(wynik);
+            display.setText(wynik,id.toString());
+            
             Parent p = Loader.getRoot();
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.initModality(Modality.APPLICATION_MODAL);

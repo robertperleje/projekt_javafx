@@ -31,7 +31,7 @@ public class WorkIndicatorDialog<P> {
     private final Stage dialog = new Stage(StageStyle.UNDECORATED);
     private final Label label = new Label();
     private final Group root = new Group();
-    private final Scene scene = new Scene(root, 330, 120, Color.WHITE);
+    private final Scene scene = new Scene(root, 360, 120, Color.WHITE);
     private final BorderPane mainPane = new BorderPane();
     private final VBox vbox = new VBox();
  

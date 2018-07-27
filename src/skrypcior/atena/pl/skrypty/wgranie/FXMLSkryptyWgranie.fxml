@@ -21,42 +21,43 @@
          <right>
             <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="btn_zapisz" contentDisplay="TOP" mnemonicParsing="false" onAction="#dodajKompilat" prefHeight="84.0" prefWidth="101.0" text="Zapisz">
+                  <Button fx:id="button_mail" contentDisplay="TOP" mnemonicParsing="false" onAction="#wyslijMail" prefHeight="84.0" prefWidth="101.0" text="Mail">
                      <font>
                         <Font size="14.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="31.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../status/icons8-data-recovery-26.png" />
+                              <Image url="@icons8-secured-letter-26.png" />
                            </image>
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="btn_usun" contentDisplay="TOP" mnemonicParsing="false" onAction="#usunWiersz" prefHeight="83.0" prefWidth="101.0" text="Usuń">
+                  <Button fx:id="button_blad" contentDisplay="TOP" mnemonicParsing="false" onAction="#bladWykonania" prefHeight="83.0" prefWidth="101.0" text="Błąd">
                      <font>
                         <Font size="14.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="39.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../status/icons8-delete-column-26.png" />
+                              <Image url="@icons8-box-important-26.png" />
                            </image>
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="btn_anuluj" cancelButton="true" contentDisplay="TOP" mnemonicParsing="false" onAction="#zamknijOkno" prefHeight="83.0" prefWidth="101.0" text="Anuluj">
+                  <Button fx:id="button_ok" cancelButton="true" contentDisplay="TOP" mnemonicParsing="false" onAction="#zapiszOk" prefHeight="83.0" prefWidth="101.0" text="Ok">
                      <font>
                         <Font size="14.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="39.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../status/icons8-delete-26.png" />
+                              <Image url="@icons8-checkmark-26.png" />
                            </image>
                         </ImageView>
                      </graphic>
                   </Button>
+                  <Label fx:id="label_id" text="Label" />
                </children>
             </VBox>
          </right>

@@ -13,6 +13,7 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import skrypcior.atena.pl.tools.showInfoAlertBox;
 
 
 /**
@@ -60,5 +61,7 @@ public class SendEmail
 		transport.connect("localhost", "postmaster", "");
 		transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
 		transport.close();
+                
+                
 	}
 }

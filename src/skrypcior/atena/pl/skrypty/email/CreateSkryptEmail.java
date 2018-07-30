@@ -5,7 +5,12 @@
  */
 package skrypcior.atena.pl.skrypty.email;
 
+import java.io.File;
+import static java.nio.file.Files.list;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import static java.util.Collections.list;
+import java.util.List;
 import javax.mail.MessagingException;
 import skrypcior.atena.pl.skrypt.BodyMailSkrypt;
 import skrypcior.atena.pl.skrypt.SkryptyDao;
@@ -33,8 +38,12 @@ public class CreateSkryptEmail
                 String subject = SubjectEmail.subjectMail("skrypt", idrekord);
                 //pobieramybody
                 String body = BodyMailSkrypt.bodyMailSkrypt(idrekord);
+                //
+                File file = new File("Skrypt");
+                List<File> listZacznik = new ArrayList<>();
+                listZacznik.add(file);
 
-                SendEmail.sendMail(email, subject, body);
+                SendEmail.sendMail(email, subject, body, (File) listZacznik);
                 //FTPFunctions.uploadFtp();
 
                 break;

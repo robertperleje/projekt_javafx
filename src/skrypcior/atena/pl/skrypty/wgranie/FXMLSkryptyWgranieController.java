@@ -5,8 +5,12 @@
  */
 package skrypcior.atena.pl.skrypty.wgranie;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +25,7 @@ import skrypcior.atena.pl.konta.KontaDao;
 import skrypcior.atena.pl.skrypt.SkryptyDao;
 import skrypcior.atena.pl.skrypty.email.SendEmail;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
+import skrypcior.atena.pl.tools.zip;
 
 /**
  * FXML Controller class
@@ -50,41 +55,43 @@ public class FXMLSkryptyWgranieController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-     
-        
 
-    }    
-    
-    public void setText(String wynik, String id){
-        this.text_wynik.setText(wynik);
-        this.label_id.setText(id);
-       System.err.println(id); 
     }
 
-    
-    @FXML
-    private void wyslijMail(ActionEvent event) throws SQLException          
+    public void setText(String wynik, String id)
     {
-       int id = Integer.parseInt(label_id.getText());
-       String tresc = text_wynik.getText();
-       //nazwa skryuptu
-       String nazwaSkryptu = skryptyDao.pobierzWartoscKolumny(id, "nazwa");
-       //id uzytkownika odpowiedzialnego
-       String idDevOdp = skryptyDao.pobierzWartoscKolumny(id, "opodp");
-       //jego email
-       String konto_email = kontaDao.pobierzWartoscKolumnyKonta(Integer.parseInt(idDevOdp), "email");
-       
+        this.text_wynik.setText(wynik);
+        this.label_id.setText(id);
+        System.err.println(id);
+    }
+
+    @FXML
+    private void wyslijMail(ActionEvent event) throws SQLException, IOException
+    {
+        int id = Integer.parseInt(label_id.getText());
+        String tresc = text_wynik.getText();
+        //nazwa skryuptu
+        String nazwaSkryptu = skryptyDao.pobierzWartoscKolumny(id, "nazwa");
+        //id uzytkownika odpowiedzialnego
+        String idDevOdp = skryptyDao.pobierzWartoscKolumny(id, "opodp");
+        //jego email
+        String konto_email = kontaDao.pobierzWartoscKolumnyKonta(Integer.parseInt(idDevOdp), "email");
+
+        File file = new File(tresc);
+        List<File> listaZalacznik = new ArrayList<>();
+        listaZalacznik.add(file);
+        File zalacznik  = zip.zipFiles(nazwaSkryptu, listaZalacznik);
         try
         {
             //wyslanie maila
-            SendEmail.sendMail(konto_email, nazwaSkryptu, tresc);
+            SendEmail.sendMail(konto_email, nazwaSkryptu, "Wynik wykonania skryptu w zał:", zalacznik);
             showInfoAlertBox.showInformationAlertBox("Mail wysłany");
         } catch (MessagingException ex)
         {
             Logger.getLogger(FXMLSkryptyWgranieController.class.getName()).log(Level.SEVERE, null, ex);
             showInfoAlertBox.showInformationAlertBox("Błąd wysłania maila");
         }
-       
+
     }
 
     @FXML
@@ -96,6 +103,5 @@ public class FXMLSkryptyWgranieController implements Initializable
     private void zapiszOk(ActionEvent event)
     {
     }
-    
-    
+
 }

@@ -5,7 +5,12 @@
  */
 package skrypcior.atena.pl.skrypty.email;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -25,7 +30,7 @@ public class SendEmail
     static Properties mailServerProperties;
     static Session getMailSession;
     static MimeMessage generateMailMessage;
-    public static void sendMail(String adres, String subject, String tresc) throws AddressException, MessagingException
+    public static void sendMail(String adres, String subject, String tresc, File zalacznik) throws AddressException, MessagingException
     {
 
         		
@@ -50,6 +55,11 @@ public class SendEmail
 		String emailBody = tresc;
 		generateMailMessage.setContent(emailBody, "text/html; charset=ISO-8859-2");
                 //generateMailMessage.setContent(emailBody, "text/html");
+                
+                String zal = zalacznik.toString();
+                generateMailMessage.setFileName(zal);
+    
+
 		System.out.println("Mail Session has been created successfully..");
  
 		// Step3

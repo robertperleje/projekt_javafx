@@ -6,12 +6,17 @@
 package skrypcior.atena.pl.tools;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UncheckedIOException;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import java.util.List;
+import static java.util.Objects.isNull;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import static javax.management.Query.gt;
@@ -23,36 +28,21 @@ import static javax.management.Query.gt;
 public class zip
 {
 
-    public static File zipFiles(String zipFileName, List<File> addToZip) 
-         throws IOException 
+    public static byte[] zipFiles(String addToZip)
+            throws IOException
     {
 
-        String zipPath = System.getProperty("java.io.tmpdir") 
-         + File.separator + zipFileName;
-    new File(zipPath).delete(); //delete if zip file already exist
- 
-    try (FileOutputStream fos = new FileOutputStream(zipPath);
-         ZipOutputStream zos = new ZipOutputStream(
-              new BufferedOutputStream(fos))) {
-        zos.setLevel(9); //level of compression
- 
-        for (File file : addToZip) {
-            if (file.exists()) {
-                try (FileInputStream fis = new FileInputStream(file)) {
-                    ZipEntry entry = new ZipEntry(file.getName());
-                    zos.putNextEntry(entry);
-                    for (int c = fis.read(); c != -1; c = fis.read()) {
-                        zos.write(c);
-                    }
-                    zos.flush();
-                }
-            }
+       if (isNull(addToZip) || addToZip.length() == 0) {
+            return null;
+        }
+
+        try (final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            final GZIPOutputStream gzipOutput = new GZIPOutputStream(baos)) {
+            gzipOutput.write(addToZip.getBytes(UTF_8));
+            gzipOutput.finish();
+            return baos.toByteArray();
+        } catch (IOException e) {
+            throw new UncheckedIOException("Error while compression!", e);
         }
     }
-    File zip = new File(zipPath);
-    if (!zip.exists()) {
-        throw new FileNotFoundException("The created zip file could not be found");
-    }
-    return zip;
-}
 }

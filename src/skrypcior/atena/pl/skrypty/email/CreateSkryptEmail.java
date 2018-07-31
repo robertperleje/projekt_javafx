@@ -39,11 +39,8 @@ public class CreateSkryptEmail
                 //pobieramybody
                 String body = BodyMailSkrypt.bodyMailSkrypt(idrekord);
                 //
-                File file = new File("Skrypt");
-                List<File> listZacznik = new ArrayList<>();
-                listZacznik.add(file);
-
-                SendEmail.sendMail(email, subject, body, (File) listZacznik);
+                
+                SendEmail.sendMail(email, subject, body);
                 //FTPFunctions.uploadFtp();
 
                 break;

@@ -45,7 +45,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="button_ok" cancelButton="true" contentDisplay="TOP" mnemonicParsing="false" onAction="#zapiszOk" prefHeight="83.0" prefWidth="101.0" text="Ok">
+                  <Button fx:id="button_ok" cancelButton="true" contentDisplay="TOP" mnemonicParsing="false" onAction="#zapiszOk" prefHeight="83.0" prefWidth="101.0" text="Zapisz wynik">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -58,6 +58,7 @@
                      </graphic>
                   </Button>
                   <Label fx:id="label_id" text="Label" />
+                  <Label fx:id="label_srodowisko" text="Label" />
                </children>
             </VBox>
          </right>

@@ -14,10 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import skrypcior.atena.pl.database2.DbConnect;
-import skrypcior.atena.pl.skrypty.email.SendEmail;
-import skrypcior.atena.pl.skrypty.email.SkryptyEmailDao;
-import skrypcior.atena.pl.skrypty.email.SubjectEmail;
-import skrypcior.atena.pl.tools.showInfoAlertBox;
+
 
 /**
  *

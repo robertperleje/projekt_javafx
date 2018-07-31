@@ -34,11 +34,12 @@ import skrypcior.atena.pl.tools.showInfoAlertBox;
  *
  * @author perlro1
  */
-public class FXMLSkryptySchematController implements Initializable {
-    
+public class FXMLSkryptySchematController implements Initializable
+{
+
     ObservableList<Schemat> list = FXCollections.observableArrayList();
     Connection conn = DbConnect.createConnection();
-    
+
     @FXML
     private JFXTextField tf_nazwa;
     @FXML
@@ -57,101 +58,113 @@ public class FXMLSkryptySchematController implements Initializable {
     private Button btn_usun;
     @FXML
     private Button btn_anuluj;
-    
 
     /**
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb)
+    {
         przypcol();
         zaladuj();
-    }    
-    
-    
-    private void przypcol(){
+    }
+
+    private void przypcol()
+    {
         col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
         col_schemat.setCellValueFactory(new PropertyValueFactory<>("schemat"));
         col_data.setCellValueFactory(new PropertyValueFactory<>("data_utw"));
         col_operator.setCellValueFactory(new PropertyValueFactory<>("operator"));
-        
-}
-    private void zaladuj(){
-        try {
+
+    }
+
+    private void zaladuj()
+    {
+        try
+        {
             list.clear();
             ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM SKRYPTY_SCHEMAT");
-            while (rs.next()) {
-             list.add(new Schemat(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4)));
+            while (rs.next())
+            {
+                list.add(new Schemat(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4)));
             }
-            } catch (SQLException ex) {
+        } catch (SQLException ex)
+        {
             Logger.getLogger(FXMLSkryptySchematController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-       tabela_schemat.getItems().setAll(list); 
+        }
+        tabela_schemat.getItems().setAll(list);
     }
-    
 
     @FXML
-    private void usunWiersz(ActionEvent event) {
+    private void usunWiersz(ActionEvent event)
+    {
         PreparedStatement preparedStatement = null;
-        ResultSet rs=null;
-        
+        ResultSet rs = null;
+
         Schemat schemat = (Schemat) tabela_schemat.getSelectionModel().getSelectedItem();
         String qu = "DELETE FROM SKRYPTY_STATUS where schemat = ?";
-        try {
+        try
+        {
             preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
             preparedStatement.setString(1, schemat.getSchemat());
             preparedStatement.executeUpdate();
             preparedStatement.close();
-            
-        } catch (SQLException ex) {
+
+        } catch (SQLException ex)
+        {
             Logger.getLogger(FXMLSkryptySchematController.class.getName()).log(Level.SEVERE, null, ex);
         }
         showInfoAlertBox.showInformationAlertBox("Rekord usunięto");
-        
+
         zaladuj();
     }
 
     @FXML
-    private void zamknijOkno(ActionEvent event) {
-        ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
+    private void zamknijOkno(ActionEvent event)
+    {
+        ((Stage) (((Button) event.getSource()).getScene().getWindow())).close();
     }
 
     @FXML
-    private void dodajSchemat(ActionEvent event) throws SQLException {
+    private void dodajSchemat(ActionEvent event) throws SQLException
+    {
         PreparedStatement preparedStatement = null;
-        ResultSet rs=null;
-        
+        ResultSet rs = null;
+
         String ozn_schemat = (String) tf_nazwa.getText();
-               
-       if(ozn_schemat.isEmpty() || ozn_schemat.isEmpty() ){
+
+        if (ozn_schemat.isEmpty() || ozn_schemat.isEmpty())
+        {
             showInfoAlertBox.showInformationAlertBox("Wypełnij wszystkie pola");
             return;
         }
-       
-       String skryptOperator = "ROBERT1";
-       
-       String qu = "INSERT INTO SKRYPTY_SCHEMAT (schemat, data_utw, operator ) VALUES (?,?,?)";
 
-        try {
+        String skryptOperator = "ROBERT1";
+
+        String qu = "INSERT INTO SKRYPTY_SCHEMAT (schemat, data_utw, operator ) VALUES (?,?,?)";
+
+        try
+        {
             preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
-            
+
             preparedStatement.setString(1, ozn_schemat);
 //            preparedStatement.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
             preparedStatement.setTimestamp(2, java.sql.Timestamp.valueOf(LocalDateTime.now()));
             preparedStatement.setString(3, skryptOperator);
-            
+
             System.out.println(qu);
-            
-        } catch (SQLException ex) {
+
+        } catch (SQLException ex)
+        {
             Logger.getLogger(FXMLSkryptySchematController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally{
-        preparedStatement.execute();
-        preparedStatement.close();
+        } finally
+        {
+            preparedStatement.execute();
+            preparedStatement.close();
             showInfoAlertBox.showInformationAlertBox("Słowniki - Schemat dopisano");
         }
         zaladuj();
         tf_nazwa.setText("");
     }
-    
+
 }

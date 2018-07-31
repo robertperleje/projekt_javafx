@@ -21,11 +21,8 @@ import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -33,10 +30,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -62,7 +56,6 @@ import skrypcior.atena.pl.skrypty.wgranie.SkryptyWgranie;
 import skrypcior.atena.pl.tools.RestrictiveTextField;
 import skrypcior.atena.pl.tools.WorkIndicatorDialog;
 import skrypcior.atena.pl.tools.dataToString;
-import skrypcior.atena.pl.tools.otwieranieOknaFXML;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
 
 /**
@@ -335,7 +328,7 @@ public class FXMLDocumentController implements Initializable
         String osobaOdp = (String) cmb_odpowiedzialny.getSelectionModel().getSelectedItem();
         String skryptCzyWersja = (String) cmb_odwersji.getSelectionModel().getSelectedItem();
         String skryptUwagi = text_uwaga.getText();
-        String skryptJira = jira.getText().toUpperCase();
+        String skryptJira = jira.getText().toUpperCase().replace("-", "_");
         String sciezka = sciezkaDoPliku.getText();
 
         boolean lpIsEmpty = RestrictiveTextField.StringIsEmpty(skryptlp, label_lp, "Wybierz wartość");
@@ -567,6 +560,8 @@ public class FXMLDocumentController implements Initializable
             showInfoAlertBox.showInformationAlertBox("Nie wybrano żadnego rekordu");
             return;
         }
+        //czy byl juz uruchomiony
+        
 
         wykonanieSkryptu(selectedForRecord.getId(), "MAIN_ATENA");
 
@@ -588,7 +583,7 @@ public class FXMLDocumentController implements Initializable
     private void wykonanieSkryptu(Integer id, String srodowisko) throws SQLException, UnsupportedEncodingException
     {
 
-        wd = new WorkIndicatorDialog(rootPane.getScene().getWindow(), "Czekaj, trwa uruchamianie skryptu na środowisku: " + srodowisko);
+        wd = new WorkIndicatorDialog(rootPane.getScene().getWindow(), "Czekaj, trwa wykonywanie skryptu na środowisku: " + srodowisko);
 
         wd.addTaskEndNotification(result ->
         {
@@ -617,7 +612,7 @@ public class FXMLDocumentController implements Initializable
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            display.setText(wynik,id.toString());
+            display.setText(wynik,id.toString(),srodowisko);
             
             Parent p = Loader.getRoot();
             Stage stage = new Stage(StageStyle.DECORATED);
@@ -630,17 +625,13 @@ public class FXMLDocumentController implements Initializable
 
         wd.exec(Boolean.FALSE, inputParam ->
         {
-            for (int i = 0; i < 20; i++)
+           for (int i = 0; i < 40; i++)
             {
                 try
                 {
-                    //Thread.sleep(500);
-                    String wynik = SkryptyWgranie.uruchomSkrypt(id, srodowisko);
-
-                } catch (SQLException ex)
-                {
-                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (UnsupportedEncodingException ex)
+                    Thread.sleep(500);
+                    //String wynik = SkryptyWgranie.uruchomSkrypt(id, srodowisko);
+                } catch (InterruptedException ex)
                 {
                     Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
                 }

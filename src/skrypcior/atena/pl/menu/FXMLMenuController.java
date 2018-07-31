@@ -71,7 +71,7 @@ public class FXMLMenuController implements Initializable
     @FXML
     private void loadAddSkrypt(ActionEvent event)
     {
-        loadWindows("/skrypcior/atena/pl/skrypt/FXMLDocument.fxml", "Dodanie Skryptu");
+        loadWindows("/skrypcior/atena/pl/skrypt/FXMLDocument.fxml", "Obsługa Skryptów");
         //setCenter("/skrypcior/atena/pl/skrypt/FXMLDocument.fxml");
     }
 
@@ -185,7 +185,7 @@ public class FXMLMenuController implements Initializable
     @FXML
     private void menuDodanieSkryptu(ActionEvent event)
     {
-        loadWindows("/skrypcior/atena/pl/addskrypt/FXMLDocument.fxml", "Dodanie Skryptu");
+        loadWindows("/skrypcior/atena/pl/skrypt/FXMLDocument.fxml", "Obsługa Skryptów");
     }
 
     @FXML

@@ -253,4 +253,10 @@ public class FXMLMenuController implements Initializable
         loadWindows("/skrypcior/atena/pl/bazy/FXMLBazy.fxml", "Słownik - Bazy");
     }
 
+    @FXML
+    private void menuFtp(ActionEvent event)
+    {
+        loadWindows("/skrypcior/atena/pl/ftp/FXMLFtp.fxml", "Słownik - Konfiguracja serwera FTP");
+    }
+
 }

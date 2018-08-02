@@ -41,7 +41,7 @@ public class BodyMailSkrypt
         htmBodyMail.addRowValues("<strong>Środowisko:</strong>", srodowisko);
         htmBodyMail.addRowValues("<strong>Schemat/Użytkownik:</strong>", dao.pobierzWartoscKolumny(idrekord, "schemat"));
         htmBodyMail.addRowValues("<strong>Czas trwania</strong>:", dao.pobierzWartoscKolumny(idrekord, "czaswykonywania"));
-        htmBodyMail.addRowValues("<strong>Można uruchomić podczas pracy użytkowników:</strong>", dao.pobierzWartoscKolumny(idrekord, "zatrzymac_serwer"));
+        htmBodyMail.addRowValues("<strong>Czy wymany restart serwera WAS:</strong>", dao.pobierzWartoscKolumny(idrekord, "zatrzymac_serwer"));
         htmBodyMail.addRowValues("<strong>Czy należy przeładować Hurtownię:</strong>",  dao.pobierzWartoscKolumny(idrekord, "hurtprzelad"));
         htmBodyMail.addRowValues("<strong>Można wgrać na bazy testowe:</strong>",  dao.pobierzWartoscKolumny(idrekord, "bazytestur"));
         htmBodyMail.addRowValues("<strong>Realizowany cel:</strong>",  "<em>" + dao.pobierzWartoscKolumny(idrekord, "opis") + "</em>");

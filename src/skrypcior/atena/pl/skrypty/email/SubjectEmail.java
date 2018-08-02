@@ -16,7 +16,7 @@ import skrypcior.atena.pl.skrypt.SkryptyDao;
  */
 public class SubjectEmail
 {
-    public static String subjectMail(String modul,int idrekord ) throws SQLException{
+    public String subjectMail(String modul,Integer idrekord ) throws SQLException{
         
         SkryptyDao dao2 = new SkryptyDao();
         String folder = dao2.pobierzWartoscKolumny(idrekord,"folder");

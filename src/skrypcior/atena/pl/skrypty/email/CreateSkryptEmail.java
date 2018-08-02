@@ -1,19 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package skrypcior.atena.pl.skrypty.email;
 
-import java.io.File;
-import static java.nio.file.Files.list;
+
 import java.sql.SQLException;
-import java.util.ArrayList;
-import static java.util.Collections.list;
-import java.util.List;
 import javax.mail.MessagingException;
 import skrypcior.atena.pl.skrypt.BodyMailSkrypt;
-import skrypcior.atena.pl.skrypt.SkryptyDao;
+
 
 /**
  *
@@ -21,9 +12,13 @@ import skrypcior.atena.pl.skrypt.SkryptyDao;
  */
 public class CreateSkryptEmail
 {
-
-    public static String createSkryptEmail(String status, Integer idrekord ) throws SQLException, MessagingException
+    
+    
+    public static String createSkryptEmail(String status, Integer idrekord) throws SQLException, MessagingException
     {
+        SkryptyEmailDao dao = new SkryptyEmailDao();
+        SubjectEmail subject = new SubjectEmail();
+        String email = null;
         //Tu wywołamy w przypadku zmiany rózne przypadki
         switch (status)
         {
@@ -31,21 +26,13 @@ public class CreateSkryptEmail
                 //może kiedyś 
                 break;
             case "Przygotowany":
-                SkryptyEmailDao dao = new SkryptyEmailDao();
-                //pobieramy liste mailowa
-                String email = dao.selectMail("Przygotowany");
-                //pobieramy tytul maila
-                String subject = SubjectEmail.subjectMail("skrypt", idrekord);
-                //pobieramybody
-                String body = BodyMailSkrypt.bodyMailSkrypt(idrekord);
-                //
-                
-                SendEmail.sendMail(email, subject, body);
-                //FTPFunctions.uploadFtp();
 
+                //pobieramy liste mailowa
+                email = dao.selectMail("Przygotowany");
                 break;
             case "Wysłany":
-                //
+                //pobieramy liste mailowa
+                email = dao.selectMail("Wysłany");
                 break;
             case "Wdrożony":
                 //
@@ -56,7 +43,12 @@ public class CreateSkryptEmail
             default:
                 break;
         }
-        return null;
+                //pobieramy tytul maila
         
+        String tytul = subject.subjectMail("skrypt", idrekord);
+        //pobieramybody
+        String body = BodyMailSkrypt.bodyMailSkrypt(idrekord);
+        SendEmail.sendMail(email, tytul, body);
+        return null;
     }
 }

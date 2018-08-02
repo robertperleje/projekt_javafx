@@ -1,42 +1,52 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package skrypcior.atena.pl.ftp;
 
-
-import java.io.FileInputStream;
-
+import java.io.FileNotFoundException;
 import java.io.IOException;
-
+import java.io.InputStream;
 import java.net.SocketException;
-
+import java.sql.Blob;
+import java.sql.SQLException;
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import skrypcior.atena.pl.skrypt.SkryptyDao;
+
 
 public class FTPFunctions
 {
-
-    public static void uploadFtp()
+    
+    
+    public static void uploadFtp(Integer id, String modul) throws SQLException, FileNotFoundException, IOException
     {
         
+        SkryptyDao skryptyDao = new SkryptyDao();
+        FtpDao ftpDao = new FtpDao();
         
-        String server = "ftp.atena.pl";
+        String host = ftpDao.selectFtp(modul, "host");
+        String port = ftpDao.selectFtp(modul, "port");
+        String user = ftpDao.selectFtp(modul, "login");
+        String pass = ftpDao.selectFtp(modul, "password");
         
-        int port = 21;
-        String user = "at_perlejewski";
-        String pass = "Baq6YuGdQg4X";
-        String filePath = "d:/KLIENT_PW/Skrypty_do_klienta/2017-07-12_FAZA3/01-PART-N-20170712_PRC_EP_O_RAPORT_GONET.prc";
-        String uploadPath = "/home/at_perlejewski/TO_GOTHAER/test/01-PART-N-20170712_PRC_EP_O_RAPORT_GONET.prc";
+        //Folder
+        String folder = skryptyDao.pobierzWartoscKolumny(id, "folder");
+        //Nazwa skryptu
+        String nazwa = skryptyDao.pobierzWartoscKolumny(id, "nazwa");
+        
+        String nowyFolder = "/home/at_perlejewski/TO_GOTHAER/test/" + folder;
+        String uploadPath = "/home/at_perlejewski/TO_GOTHAER/test/" + folder + "/" + nazwa;
+        
+        //Pobieramy plik z bazy i robimy konwersje aby wysłac go na ftp
+        Blob fileBlob = skryptyDao.pobierzPlikBinary(id);
+        InputStream blobStream = fileBlob.getBinaryStream();
+        
         
         // get an ftpClient object  
         FTPClient ftpClient = new FTPClient();
-        FileInputStream inputStream = null;
+        //FileInputStream inputStream = null;
 
         try
         {
             // pass directory path on server to connect  
-            ftpClient.connect(server);
+            ftpClient.connect(host);
 
             // pass username and password, returned true if authentication is  
             // successful  
@@ -45,10 +55,12 @@ public class FTPFunctions
             if (login)
             {
                 System.out.println("Connection established...");
-                inputStream = new FileInputStream(filePath);
-
+               
+                ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+                boolean mkdirFolder = ftpClient.makeDirectory(nowyFolder);
                 boolean uploaded = ftpClient.storeFile(uploadPath,
-                        inputStream);
+                        blobStream);
+                
                 if (uploaded)
                 {
                     System.out.println("File uploaded successfully !");

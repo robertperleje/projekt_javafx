@@ -57,15 +57,16 @@ public class SkryptyStanWgraniaDao
         }
     }
     
-    public Integer selectCzyUruchomiony(Integer skrypt_id ) throws SQLException
+    public Integer selectCzyUruchomiony(Integer skrypt_id, String srodowisko ) throws SQLException
     {
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
         try
         {
-            String qu = ("SELECT * FROM skrypty_stan_wgrania WHERE skrypt_id = ?");
+            String qu = ("SELECT * FROM skrypty_stan_wgrania WHERE skrypt_id = ? and srodowisko = ?");
             preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
             preparedStatement.setInt(1, skrypt_id);
+            preparedStatement.setString(2, srodowisko);
             System.out.println(qu);
             rs = preparedStatement.executeQuery();
 
@@ -78,7 +79,7 @@ public class SkryptyStanWgraniaDao
         {
             Logger.getLogger(SkryptyStanWgraniaDao.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return 0;
     }
     
 }

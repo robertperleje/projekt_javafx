@@ -170,6 +170,31 @@ public class SkryptyDao
         return null;
     }
     
+    public Blob pobierzPlikBinary(Integer id) throws SQLException
+    {
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        try
+        {
+            String qu = ("SELECT plik FROM skrypty WHERE id = ?");
+            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
+            preparedStatement.setInt(1, id);
+            System.out.println(qu);
+            rs = preparedStatement.executeQuery();
+
+            while (rs.next())
+            {
+                Blob blob = rs.getBlob(1);
+                return blob;
+            }
+            preparedStatement.close();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     
     
 }

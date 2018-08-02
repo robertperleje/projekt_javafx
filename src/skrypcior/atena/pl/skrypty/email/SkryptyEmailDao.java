@@ -45,7 +45,7 @@ public class SkryptyEmailDao
                     preparedStatement = (PreparedStatement) DbConnect.createConnection().prepareStatement(qu);
                     preparedStatement.setBoolean(1, true);
                     break;
-                case "dw":
+                case "Wysłany":
                     //
                     break;
                 default:

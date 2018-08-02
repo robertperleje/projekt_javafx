@@ -11,6 +11,7 @@ import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -18,6 +19,7 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +32,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -49,8 +53,10 @@ import javafx.util.converter.DefaultStringConverter;
 import javax.mail.MessagingException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import skrypcior.atena.pl.database2.DbConnect;
+import skrypcior.atena.pl.ftp.FTPFunctions;
 import skrypcior.atena.pl.menu.FXMLMenuController;
 import skrypcior.atena.pl.skrypty.email.CreateSkryptEmail;
+import skrypcior.atena.pl.skrypty.stanwgrania.SkryptyStanWgraniaDao;
 import skrypcior.atena.pl.skrypty.wgranie.FXMLSkryptyWgranieController;
 import skrypcior.atena.pl.skrypty.wgranie.SkryptyWgranie;
 import skrypcior.atena.pl.tools.RestrictiveTextField;
@@ -160,6 +166,8 @@ public class FXMLDocumentController implements Initializable
     private MenuItem menuItemNaMain;
 
     FXMLMenuController menuController = new FXMLMenuController();
+    
+    String modul = "Skrypty";
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
@@ -226,17 +234,42 @@ public class FXMLDocumentController implements Initializable
 
                 try
                 {
-                    //zmieniamy status na bazie
+                    
                     SkryptyDao dao = new SkryptyDao();
-                    dao.SkryptUpdate(event.getNewValue(), event.getRowValue().getId());
-
-                    //wysyłamy maila zgodnie z nowym statusem
-                    CreateSkryptEmail.createSkryptEmail(event.getNewValue(), event.getRowValue().getId());
+                    
+                    switch (event.getNewValue())
+                    {
+                        case "Przygotowany":
+                            //zmieniamy status na bazie
+                            dao.SkryptUpdate(event.getNewValue(), event.getRowValue().getId());
+                            //wysyłamy maila zgodnie z nowym statusem
+                            CreateSkryptEmail.createSkryptEmail(event.getNewValue(), event.getRowValue().getId());
+                            break;
+                        
+                        case "Wysłany":
+                            FTPFunctions.uploadFtp(event.getRowValue().getId(),modul);
+                            //zmieniamy status na bazie
+                            dao.SkryptUpdate(event.getNewValue(), event.getRowValue().getId());
+                            //wysyłamy maila zgodnie z nowym statusem
+                            CreateSkryptEmail.createSkryptEmail(event.getNewValue(), event.getRowValue().getId());
+                            
+                            break;
+                        
+                        default:
+                            break;
+                    }
+                    
 
                 } catch (MessagingException ex)
                 {
                     Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex)
+                {
+                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (FileNotFoundException ex)
+                {
+                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex)
                 {
                     Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -369,7 +402,7 @@ public class FXMLDocumentController implements Initializable
 
         //Operator chwilowo jeden póxniej z tego kto się zalogojue
         String skryptOperator = "ROBERT1";
-
+        
         String qu = "INSERT INTO SKRYPTY (nazwa, srodowiskoid, schemat,czaswykonywania,zatrzymac_serwer,opis ,datautw, operator, datawysl, statusid, hurtprzelad, bazytestur, odwersji, folder, uwagi, jira, opodp, plik) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try
         {
@@ -561,10 +594,23 @@ public class FXMLDocumentController implements Initializable
             return;
         }
         //czy byl juz uruchomiony
-        
+        SkryptyStanWgraniaDao stanWgrania = new SkryptyStanWgraniaDao();
+        int wgrany = stanWgrania.selectCzyUruchomiony(selectedForRecord.getId(), "MAIN_ATENA");
 
-        wykonanieSkryptu(selectedForRecord.getId(), "MAIN_ATENA");
-
+        if (wgrany != 0)
+        {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Status wgrania skryptu");
+            alert.setHeaderText("Skrypt był już uruchomiony na tym środowisku. Ponowne wykonanie może zwrócić błąd. Czy uruchmić ponownie... ?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK)
+            {
+                wykonanieSkryptu(selectedForRecord.getId(), "MAIN_ATENA");
+            } else
+            {
+                return;
+            }
+        }
     }
 
     @FXML
@@ -576,8 +622,23 @@ public class FXMLDocumentController implements Initializable
             showInfoAlertBox.showInformationAlertBox("Nie wybrano żadnego rekordu");
             return;
         }
+        SkryptyStanWgraniaDao stanWgrania = new SkryptyStanWgraniaDao();
+        int wgrany = stanWgrania.selectCzyUruchomiony(selectedForRecord.getId(), "PREP_ATENA");
 
-        wykonanieSkryptu(selectedForRecord.getId(), "PREP_ATENA");
+        if (wgrany != 0)
+        {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Status wgrania skryptu");
+            alert.setHeaderText("Skrypt był już uruchomiony na tym środowisku. Ponowne wykonanie może zwrócić błąd. Czy uruchmić ponownie... ?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK)
+            {
+                wykonanieSkryptu(selectedForRecord.getId(), "PREP_ATENA");
+            } else
+            {
+                return;
+            }
+        }
     }
 
     private void wykonanieSkryptu(Integer id, String srodowisko) throws SQLException, UnsupportedEncodingException
@@ -612,8 +673,8 @@ public class FXMLDocumentController implements Initializable
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            display.setText(wynik,id.toString(),srodowisko);
-            
+            display.setText(wynik, id.toString(), srodowisko);
+
             Parent p = Loader.getRoot();
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -625,7 +686,7 @@ public class FXMLDocumentController implements Initializable
 
         wd.exec(Boolean.FALSE, inputParam ->
         {
-           for (int i = 0; i < 40; i++)
+            for (int i = 0; i < 40; i++)
             {
                 try
                 {

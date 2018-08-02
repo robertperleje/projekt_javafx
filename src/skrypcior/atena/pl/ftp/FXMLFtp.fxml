@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="581.0" prefWidth="719.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="skrypcior.atena.pl.ftp.FXMLFtpController">
+    <stylesheets>
+        <URL value="@fxmlftp.css" />
+    </stylesheets>
+   <children>
+      <BorderPane layoutX="161.0" layoutY="83.0" prefHeight="668.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+            <VBox prefHeight="643.0" prefWidth="498.0" BorderPane.alignment="CENTER">
+               <children>
+                  <JFXTextField fx:id="textfield_host" promptText="Nazwa hosta">
+                     <VBox.margin>
+                        <Insets left="15.0" right="15.0" top="15.0" />
+                     </VBox.margin>
+                  </JFXTextField>
+                  <Label fx:id="label_host">
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <JFXTextField fx:id="testfield_port" promptText="Port">
+                     <VBox.margin>
+                        <Insets left="15.0" right="15.0" />
+                     </VBox.margin>
+                  </JFXTextField>
+                  <Label fx:id="label_port">
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <JFXTextField fx:id="textfield_login" promptText="Użytkownik">
+                     <VBox.margin>
+                        <Insets left="15.0" right="15.0" />
+                     </VBox.margin>
+                  </JFXTextField>
+                  <Label fx:id="label_login">
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <JFXPasswordField fx:id="textfield_password" promptText="Hasło">
+                     <VBox.margin>
+                        <Insets left="15.0" right="15.0" />
+                     </VBox.margin>
+                  </JFXPasswordField>
+                  <Label fx:id="login_password">
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <JFXComboBox fx:id="combobox_modul" promptText="Moduł">
+                     <VBox.margin>
+                        <Insets left="15.0" right="15.0" />
+                     </VBox.margin>
+                  </JFXComboBox>
+                  <Label fx:id="label_modul">
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <JFXTextField fx:id="textfield_filepath" layoutX="25.0" layoutY="109.0" promptText="Ścieżka">
+                     <VBox.margin>
+                        <Insets left="15.0" right="15.0" />
+                     </VBox.margin>
+                  </JFXTextField>
+                  <Label fx:id="label_filepath">
+                     <VBox.margin>
+                        <Insets bottom="15.0" left="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TableView fx:id="table_ftp" prefHeight="258.0" prefWidth="468.0">
+                    <columns>
+                      <TableColumn fx:id="col_id" prefWidth="75.0" text="Id" />
+                        <TableColumn fx:id="col_host" prefWidth="75.0" text="Host" />
+                        <TableColumn fx:id="col_port" prefWidth="75.0" text="Port" />
+                      <TableColumn fx:id="col_login" prefWidth="75.0" text="Login" />
+                        <TableColumn fx:id="col_modul" prefWidth="75.0" text="Moduł" />
+                        <TableColumn fx:id="col_filepatch" prefWidth="75.0" text="Ścieżka" />
+                        <TableColumn fx:id="col_datautw" prefWidth="75.0" text="Data Utw" />
+                        <TableColumn fx:id="col_operator" prefWidth="75.0" text="Operator" />
+                    </columns>
+                     <VBox.margin>
+                        <Insets left="15.0" right="15.0" top="5.0" />
+                     </VBox.margin>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+               </children>
+            </VBox>
+         </center>
+         <right>
+            <VBox prefHeight="412.0" prefWidth="102.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button fx:id="btn_zapisz" contentDisplay="TOP" mnemonicParsing="false" onAction="#dodajWiersz" prefHeight="84.0" prefWidth="101.0" text="Zapisz">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="31.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../srodowiska/icons8-data-recovery-26.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btn_usun" contentDisplay="TOP" mnemonicParsing="false" onAction="#usunWiersz" prefHeight="83.0" prefWidth="101.0" text="Usuń">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="39.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../srodowiska/icons8-delete-column-26.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btn_anuluj" cancelButton="true" contentDisplay="TOP" mnemonicParsing="false" onAction="#zamknijOkno" prefHeight="83.0" prefWidth="101.0" text="Anuluj">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="39.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../srodowiska/icons8-delete-26.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </VBox>
+         </right>
+      </BorderPane>
+   </children>
+</AnchorPane>

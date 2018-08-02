@@ -230,13 +230,15 @@
                     <items>
                         <Menu mnemonicParsing="false" text="Zmień Status">
                           <items>
-                            <MenuItem mnemonicParsing="false" text="Action 1" />
-                            <MenuItem mnemonicParsing="false" text="Usuń" />
+                              <MenuItem mnemonicParsing="false" onAction="#znianaStatusPrzygotowany" text="W przygotowaniu" />
+                              <MenuItem mnemonicParsing="false" onAction="#znianaStatusWyslany" text="Wysłany" />
+                              <MenuItem mnemonicParsing="false" text="Wdrożony" />
+                              <MenuItem mnemonicParsing="false" text="Błąd" />
                           </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Wgraj">
                            <items>
-                              <MenuItem fx:id="menuItemNaMain" mnemonicParsing="false" onAction="#wywolajDlaMain" text="MAIN" />
+                              <MenuItem mnemonicParsing="false" onAction="#wywolajDlaMain" text="MAIN" />
                               <MenuItem mnemonicParsing="false" onAction="#wywolajDlaPrep" text="PREP" />
                            </items>
                         </Menu>

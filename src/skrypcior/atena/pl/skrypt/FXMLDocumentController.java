@@ -11,7 +11,6 @@ import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -26,7 +25,6 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -36,20 +34,17 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.converter.DefaultStringConverter;
 import javax.mail.MessagingException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import skrypcior.atena.pl.database2.DbConnect;
@@ -59,6 +54,7 @@ import skrypcior.atena.pl.skrypty.email.CreateSkryptEmail;
 import skrypcior.atena.pl.skrypty.stanwgrania.SkryptyStanWgraniaDao;
 import skrypcior.atena.pl.skrypty.wgranie.FXMLSkryptyWgranieController;
 import skrypcior.atena.pl.skrypty.wgranie.SkryptyWgranie;
+import skrypcior.atena.pl.tools.OknoWyboru;
 import skrypcior.atena.pl.tools.RestrictiveTextField;
 import skrypcior.atena.pl.tools.WorkIndicatorDialog;
 import skrypcior.atena.pl.tools.dataToString;
@@ -71,12 +67,11 @@ import skrypcior.atena.pl.tools.showInfoAlertBox;
 public class FXMLDocumentController implements Initializable
 {
 
-    private WorkIndicatorDialog wd = null;
-
     Connection conn = DbConnect.createConnection();
-
-    ObservableList<Skrypt> list = FXCollections.observableArrayList();
-
+    
+    private WorkIndicatorDialog wd = null;
+    private String selection;
+    
     @FXML
     private JFXComboBox cmb_lp;
     ObservableList<String> lpList = FXCollections.observableArrayList("01", "02", "03");
@@ -92,7 +87,9 @@ public class FXMLDocumentController implements Initializable
     ObservableList<String> odpList = FXCollections.observableArrayList();
     ObservableList<String> bazyList = FXCollections.observableArrayList("Nie, brak danych", "Tak");
     ObservableList<String> czaswykList = FXCollections.observableArrayList();
-
+    ObservableList<String> listaStatus = FXCollections.observableArrayList();
+    ObservableList<Skrypt> list = FXCollections.observableArrayList();
+    
     @FXML
     private JFXTextField jira;
     @FXML
@@ -133,9 +130,6 @@ public class FXMLDocumentController implements Initializable
     private TableColumn<Skrypt, String> col_uwagi;
     @FXML
     private TextArea text_uwaga;
-
-    private ObservableList<String> listaStatus = FXCollections.observableArrayList();
-
     @FXML
     private Label label_lp;
     @FXML
@@ -162,13 +156,13 @@ public class FXMLDocumentController implements Initializable
     private Label label_czaswykonywania;
     @FXML
     private Label label_Opis;
-    @FXML
-    private MenuItem menuItemNaMain;
+
+    SkryptyDao dao = new SkryptyDao();
+    OknoWyboru oknoWyboru = new OknoWyboru();
 
     FXMLMenuController menuController = new FXMLMenuController();
-    
-    String modul = "Skrypty";
 
+    
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
@@ -209,6 +203,7 @@ public class FXMLDocumentController implements Initializable
         table_skrypty.setEditable(true);
         //edycja 
 
+        /*
         col_status.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), listaStatus));
         col_status.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Skrypt, String>>()
         {
@@ -235,7 +230,7 @@ public class FXMLDocumentController implements Initializable
                 try
                 {
                     
-                    SkryptyDao dao = new SkryptyDao();
+                    
                     
                     switch (event.getNewValue())
                     {
@@ -280,7 +275,7 @@ public class FXMLDocumentController implements Initializable
             }
 
         });
-
+         */
         //Dodanie koloru do wiersza
         table_skrypty.setRowFactory(row -> new TableRow<Skrypt>()
         {
@@ -402,7 +397,7 @@ public class FXMLDocumentController implements Initializable
 
         //Operator chwilowo jeden póxniej z tego kto się zalogojue
         String skryptOperator = "ROBERT1";
-        
+
         String qu = "INSERT INTO SKRYPTY (nazwa, srodowiskoid, schemat,czaswykonywania,zatrzymac_serwer,opis ,datautw, operator, datawysl, statusid, hurtprzelad, bazytestur, odwersji, folder, uwagi, jira, opodp, plik) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try
         {
@@ -700,6 +695,39 @@ public class FXMLDocumentController implements Initializable
             return new Integer(1);
         });
 
+    }
+
+    @FXML
+    private void znianaStatusPrzygotowany(ActionEvent event) throws MessagingException, SQLException
+    {
+        String nowyStatus = "Przygotowany";
+        Skrypt rows = (Skrypt) table_skrypty.getSelectionModel().getSelectedItem();
+        Boolean zmiana = oknoWyboru.oknoWyboruTakNie("Zmiana statusu", "Czy napewno chcesz zmienić status skryptu?");
+        if (zmiana)
+        {
+            //zmieniamy status na bazie
+            dao.SkryptUpdate(nowyStatus, rows.getId());
+            //wysyłamy maila zgodnie z nowym statusem
+            CreateSkryptEmail.createSkryptEmail(nowyStatus, rows.getId());
+        }
+        zaladuj();
+    }
+
+    @FXML
+    private void znianaStatusWyslany(ActionEvent event) throws SQLException, IOException, MessagingException
+    {
+        String nowyStatus = "Wysłany";
+        String modul = "Skrypty";
+        Skrypt rows = (Skrypt) table_skrypty.getSelectionModel().getSelectedItem();
+        Boolean zmiana = oknoWyboru.oknoWyboruTakNie("Zmiana statusu", "Czy napewno chcesz zmienić status skryptu?");
+        if (zmiana)
+        {
+            FTPFunctions.uploadFtp(rows.getId(), modul);
+            //zmieniamy status na bazie
+            dao.SkryptUpdate(nowyStatus, rows.getId());
+            //wysyłamy maila zgodnie z nowym statusem
+            CreateSkryptEmail.createSkryptEmail(nowyStatus, rows.getId());
+        }
     }
 
 }

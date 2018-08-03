@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -81,12 +82,13 @@ public class FXMLSkryptyWgranieController implements Initializable
         //id uzytkownika odpowiedzialnego
         String idDevOdp = skryptyDao.pobierzWartoscKolumny(id, "opodp");
         //jego email
-        String konto_email = kontaDao.pobierzWartoscKolumnyKonta(Integer.parseInt(idDevOdp), "email");
-
+        List konto_email = kontaDao.selectEmail(Integer.parseInt(idDevOdp));
+        String adress_emailDo = String.join(";", konto_email);
+        String adress_emailDw = null;
         try
         {
             //wyslanie maila
-            SendEmail.sendMail(konto_email, nazwaSkryptu, tresc);
+            SendEmail.sendMail(adress_emailDo, adress_emailDw, nazwaSkryptu, tresc);
             showInfoAlertBox.showInformationAlertBox("Mail wysłany");
         } catch (MessagingException ex)
         {

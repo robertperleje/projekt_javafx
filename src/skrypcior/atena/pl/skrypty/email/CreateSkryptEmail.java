@@ -2,6 +2,7 @@ package skrypcior.atena.pl.skrypty.email;
 
 
 import java.sql.SQLException;
+import java.util.List;
 import javax.mail.MessagingException;
 import skrypcior.atena.pl.skrypt.BodyMailSkrypt;
 
@@ -18,21 +19,20 @@ public class CreateSkryptEmail
     {
         SkryptyEmailDao dao = new SkryptyEmailDao();
         SubjectEmail subject = new SubjectEmail();
-        String email = null;
+        List email_do = null;
+        List email_dw = null;
         //Tu wywołamy w przypadku zmiany rózne przypadki
         switch (status)
         {
-            case "Utworzony":
-                //może kiedyś 
-                break;
             case "Przygotowany":
 
-                //pobieramy liste mailowa
-                email = dao.selectMail("Przygotowany");
+                //pobieramy liste mailowa - nazwa_kolumny
+                //email_do = dao.selectRowsPrzyg(true,"Skrypt");
                 break;
             case "Wysłany":
                 //pobieramy liste mailowa
-                email = dao.selectMail("Wysłany");
+                email_do = dao.selectRowsDo("Skrypt");
+                email_dw = dao.selectRowsDw("Skrypt");
                 break;
             case "Wdrożony":
                 //
@@ -44,11 +44,12 @@ public class CreateSkryptEmail
                 break;
         }
                 //pobieramy tytul maila
-        
+        String adress_emailDo = String.join(";", email_do);
+        String adress_emailDw = String.join(";", email_dw);
         String tytul = subject.subjectMail("skrypt", idrekord);
         //pobieramybody
         String body = BodyMailSkrypt.bodyMailSkrypt(idrekord);
-        SendEmail.sendMail(email, tytul, body);
+        SendEmail.sendMail(adress_emailDo, adress_emailDw, tytul, body);
         return null;
     }
 }

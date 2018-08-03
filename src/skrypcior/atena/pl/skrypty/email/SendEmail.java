@@ -9,6 +9,7 @@ import java.awt.PageAttributes;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -31,7 +32,7 @@ public class SendEmail
     static Properties mailServerProperties;
     static Session getMailSession;
     static MimeMessage generateMailMessage;
-    public static void sendMail(String adres, String subject, String tresc) throws AddressException, MessagingException
+    public static void sendMail(String adresDo, String adresDw, String subject, String tresc) throws AddressException, MessagingException
     {
 
         		
@@ -51,7 +52,7 @@ public class SendEmail
 		getMailSession = Session.getDefaultInstance(mailServerProperties, null);
 		generateMailMessage = new MimeMessage(getMailSession);
 		generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress("test@localhost.com"));
-		//generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("test2@crunchify.com"));
+		//generateMailMessage.addRecipient(Message.RecipientType.CCb, new InternetAddress("test2@crunchify.com"));
 		generateMailMessage.setSubject(subject);
 		String emailBody = tresc;
 		generateMailMessage.setContent(emailBody, "text/html; charset=ISO-8859-2");

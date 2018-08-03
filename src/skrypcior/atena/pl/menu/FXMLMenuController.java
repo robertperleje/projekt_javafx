@@ -71,8 +71,8 @@ public class FXMLMenuController implements Initializable
     @FXML
     private void loadAddSkrypt(ActionEvent event)
     {
-        loadWindows("/skrypcior/atena/pl/skrypt/FXMLDocument.fxml", "Obsługa Skryptów");
-        //setCenter("/skrypcior/atena/pl/skrypt/FXMLDocument.fxml");
+        //loadWindows("/skrypcior/atena/pl/skrypt/FXMLDocument.fxml", "Obsługa Skryptów");
+        setCenter("/skrypcior/atena/pl/skrypt/FXMLDocument.fxml");
     }
 
     

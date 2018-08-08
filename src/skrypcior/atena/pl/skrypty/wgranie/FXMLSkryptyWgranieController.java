@@ -28,8 +28,8 @@ import skrypcior.atena.pl.konta.KontaDao;
 import skrypcior.atena.pl.skrypt.SkryptyDao;
 import skrypcior.atena.pl.skrypty.email.SendEmail;
 import skrypcior.atena.pl.skrypty.stanwgrania.SkryptyStanWgraniaDao;
+import skrypcior.atena.pl.tools.OknoWyboru;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
-
 
 /**
  * FXML Controller class
@@ -38,6 +38,8 @@ import skrypcior.atena.pl.tools.showInfoAlertBox;
  */
 public class FXMLSkryptyWgranieController implements Initializable
 {
+
+    OknoWyboru oknoWyboru = new OknoWyboru();
 
     @FXML
     private TextArea text_wynik;
@@ -106,7 +108,7 @@ public class FXMLSkryptyWgranieController implements Initializable
         String srodowisko = label_srodowisko.getText();
         //zapisz do bazy
         SkryptyStanWgraniaDao stanWgraniaDao = new SkryptyStanWgraniaDao();
-        stanWgraniaDao.insertWynik(id, srodowisko ,"Błąd", tresc);
+        stanWgraniaDao.insertRows(id, srodowisko, "Błąd", tresc);
         wyslijMail(event);
     }
 
@@ -119,17 +121,14 @@ public class FXMLSkryptyWgranieController implements Initializable
         if (tresc.indexOf("ORA-") != -1)
         {
             //czy napewno zmieniamy status
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Status wykonania skryptu");
-            alert.setHeaderText("Wystąpił błąd. Czy napewno chcesz zapisać jako poprawnie wykonany... ?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK)
+            Boolean zmiana = oknoWyboru.oknoWyboruTakNie("Status wykonania skryptu", "Wystąpił błąd. Czy napewno chcesz zapisać jako poprawnie wykonany... ?");
+            if (zmiana)
             {
                 //pobieram srodowisko
                 String srodowisko = label_srodowisko.getText();
                 //zapisz do bazy
                 SkryptyStanWgraniaDao stanWgraniaDao = new SkryptyStanWgraniaDao();
-                stanWgraniaDao.insertWynik(id, srodowisko ,"OK", tresc.substring(0, 4000));
+                stanWgraniaDao.insertRows(id, srodowisko, "OK", tresc.substring(0, 4000));
             } else
             {
                 return;

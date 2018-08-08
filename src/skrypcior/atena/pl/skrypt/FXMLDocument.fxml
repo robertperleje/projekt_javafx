@@ -232,7 +232,23 @@
                           <items>
                               <MenuItem mnemonicParsing="false" onAction="#znianaStatusPrzygotowany" text="W przygotowaniu" />
                               <MenuItem mnemonicParsing="false" onAction="#znianaStatusWyslany" text="Wysłany" />
-                              <MenuItem mnemonicParsing="false" text="Wdrożony" />
+                              <Menu mnemonicParsing="false" text="Wdrożony">
+                                <items>
+                                    <MenuItem mnemonicParsing="false" onAction="#potwierdzenieWdrozenia">
+                                       <graphic>
+                                          <DatePicker fx:id="datePickerFaza3" promptText="FAZA3" />
+                                       </graphic>
+                                    </MenuItem>
+                                    <MenuItem mnemonicParsing="false" onAction="#potwierdzenieWdrozenia">
+                                       <graphic>
+                                          <DatePicker fx:id="datePickerPrep" promptText="PREP" />
+                                       </graphic></MenuItem>
+                                    <MenuItem mnemonicParsing="false" onAction="#potwierdzenieWdrozenia">
+                                       <graphic>
+                                          <DatePicker fx:id="datePickerProd" promptText="PROD" />
+                                       </graphic></MenuItem>
+                                </items>
+                              </Menu>
                               <MenuItem mnemonicParsing="false" text="Błąd" />
                           </items>
                         </Menu>

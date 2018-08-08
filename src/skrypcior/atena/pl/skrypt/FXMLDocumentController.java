@@ -15,10 +15,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,9 +31,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -52,6 +52,7 @@ import skrypcior.atena.pl.ftp.FTPFunctions;
 import skrypcior.atena.pl.menu.FXMLMenuController;
 import skrypcior.atena.pl.skrypty.email.CreateSkryptEmail;
 import skrypcior.atena.pl.skrypty.stanwgrania.SkryptyStanWgraniaDao;
+import skrypcior.atena.pl.skrypty.status.SkryptyStatusDao;
 import skrypcior.atena.pl.skrypty.wgranie.FXMLSkryptyWgranieController;
 import skrypcior.atena.pl.skrypty.wgranie.SkryptyWgranie;
 import skrypcior.atena.pl.tools.OknoWyboru;
@@ -68,10 +69,10 @@ public class FXMLDocumentController implements Initializable
 {
 
     Connection conn = DbConnect.createConnection();
-    
+
     private WorkIndicatorDialog wd = null;
     private String selection;
-    
+
     @FXML
     private JFXComboBox cmb_lp;
     ObservableList<String> lpList = FXCollections.observableArrayList("01", "02", "03");
@@ -89,7 +90,7 @@ public class FXMLDocumentController implements Initializable
     ObservableList<String> czaswykList = FXCollections.observableArrayList();
     ObservableList<String> listaStatus = FXCollections.observableArrayList();
     ObservableList<Skrypt> list = FXCollections.observableArrayList();
-    
+
     @FXML
     private JFXTextField jira;
     @FXML
@@ -129,40 +130,23 @@ public class FXMLDocumentController implements Initializable
     @FXML
     private TableColumn<Skrypt, String> col_uwagi;
     @FXML
-    private TextArea text_uwaga;
+    private TextArea text_uwaga, text_opis;
     @FXML
-    private Label label_lp;
+    private Label label_lp, label_czy_zatrzymac, label_odpowiedzialny, label_od_wersji, label_schemat;
     @FXML
-    private Label label_czy_zatrzymac;
+    private Label label_srodowisko, label_przeladowanie, label_jira, label_sciezka, label_wgracbazy, label_czaswykonywania, label_Opis;
+    
     @FXML
-    private Label label_odpowiedzialny;
-    @FXML
-    private Label label_od_wersji;
-    @FXML
-    private Label label_schemat;
-    @FXML
-    private Label label_srodowisko;
-    @FXML
-    private Label label_przeladowanie;
-    @FXML
-    private Label label_jira;
-    @FXML
-    private Label label_sciezka;
-    @FXML
-    private Label label_wgracbazy;
-    @FXML
-    private TextArea text_opis;
-    @FXML
-    private Label label_czaswykonywania;
-    @FXML
-    private Label label_Opis;
-
-    SkryptyDao dao = new SkryptyDao();
-    OknoWyboru oknoWyboru = new OknoWyboru();
-
-    FXMLMenuController menuController = new FXMLMenuController();
+    private DatePicker datePickerFaza3, datePickerPrep, datePickerProd;
 
     
+    
+    SkryptyStatusDao skryptyStatusDao = new SkryptyStatusDao();
+    SkryptyStanWgraniaDao skryptyStanWgraniaDao = new SkryptyStanWgraniaDao();
+    OknoWyboru oknoWyboru = new OknoWyboru();
+    
+    FXMLMenuController menuController = new FXMLMenuController();
+
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
@@ -323,6 +307,7 @@ public class FXMLDocumentController implements Initializable
         try
         {
             list.clear();
+            table_skrypty.refresh();
             ResultSet rs = conn.createStatement().executeQuery("SELECT sk.id, sk.nazwa, srd.nazwa, sk.datautw, sk.operator, sk.datawysl, sks.nazwa, sk.hurtprzelad, sk.bazytestur, sk.odwersji, sk.folder, sk.jira, k.login, sk.uwagi "
                     + " FROM skrypty sk, skrypty_status sks, srodowisko srd, konta k "
                     + " WHERE sk.Statusid = sks.id and sk.srodowiskoid = srd.id and sk.opodp = k.id order by sk.id asc");
@@ -549,19 +534,6 @@ public class FXMLDocumentController implements Initializable
         }
     }
 
-    /*@FXML
-    public void zmienStatus(CellEditEvent edittedCell)
-    {
-        Skrypt skrypt = (Skrypt) table_skrypty.getSelectionModel().getSelectedItems();
-        skrypt.setStatus(edittedCell.getNewValue().toString());
-        SkryptUpdate((String) edittedCell.getNewValue(), skrypt.getId());
-        showInfoAlertBox.showInformationAlertBox("Wchodzi?");
-        
-        
-        
-    }
-    SkryptUpdate(,event.getRowValue().getUwagi(), event.getRowValue().getNazwa());
-     */
     private void czasWyk()
     {
         try
@@ -589,16 +561,13 @@ public class FXMLDocumentController implements Initializable
             return;
         }
         //czy byl juz uruchomiony
-        SkryptyStanWgraniaDao stanWgrania = new SkryptyStanWgraniaDao();
-        int wgrany = stanWgrania.selectCzyUruchomiony(selectedForRecord.getId(), "MAIN_ATENA");
+
+        int wgrany = skryptyStanWgraniaDao.selectCzyUruchomiony(selectedForRecord.getId(), "MAIN_ATENA");
 
         if (wgrany != 0)
         {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Status wgrania skryptu");
-            alert.setHeaderText("Skrypt był już uruchomiony na tym środowisku. Ponowne wykonanie może zwrócić błąd. Czy uruchmić ponownie... ?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK)
+            Boolean zmiana = oknoWyboru.oknoWyboruTakNie("Status wgrania skryptu", "Skrypt był już uruchomiony na tym środowisku. Ponowne wykonanie może zwrócić błąd. Czy uruchmić ponownie... ?");
+            if (zmiana)
             {
                 wykonanieSkryptu(selectedForRecord.getId(), "MAIN_ATENA");
             } else
@@ -617,16 +586,12 @@ public class FXMLDocumentController implements Initializable
             showInfoAlertBox.showInformationAlertBox("Nie wybrano żadnego rekordu");
             return;
         }
-        SkryptyStanWgraniaDao stanWgrania = new SkryptyStanWgraniaDao();
-        int wgrany = stanWgrania.selectCzyUruchomiony(selectedForRecord.getId(), "PREP_ATENA");
 
+        int wgrany = skryptyStanWgraniaDao.selectCzyUruchomiony(selectedForRecord.getId(), "PREP_ATENA");
         if (wgrany != 0)
         {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Status wgrania skryptu");
-            alert.setHeaderText("Skrypt był już uruchomiony na tym środowisku. Ponowne wykonanie może zwrócić błąd. Czy uruchmić ponownie... ?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK)
+            Boolean zmiana = oknoWyboru.oknoWyboruTakNie("Status wgrania skryptu", "Skrypt był już uruchomiony na tym środowisku. Ponowne wykonanie może zwrócić błąd. Czy uruchmić ponownie... ?");
+            if (zmiana)
             {
                 wykonanieSkryptu(selectedForRecord.getId(), "PREP_ATENA");
             } else
@@ -706,7 +671,7 @@ public class FXMLDocumentController implements Initializable
         if (zmiana)
         {
             //zmieniamy status na bazie
-            dao.SkryptUpdate(nowyStatus, rows.getId());
+            skryptyStatusDao.SkryptUpdate(nowyStatus, rows.getId());
             //wysyłamy maila zgodnie z nowym statusem
             CreateSkryptEmail.createSkryptEmail(nowyStatus, rows.getId());
         }
@@ -724,10 +689,57 @@ public class FXMLDocumentController implements Initializable
         {
             FTPFunctions.uploadFtp(rows.getId(), modul);
             //zmieniamy status na bazie
-            dao.SkryptUpdate(nowyStatus, rows.getId());
+            skryptyStatusDao.SkryptUpdate(nowyStatus, rows.getId());
             //wysyłamy maila zgodnie z nowym statusem
             CreateSkryptEmail.createSkryptEmail(nowyStatus, rows.getId());
         }
     }
+    
+    @FXML
+    private void potwierdzenieWdrozenia(ActionEvent event) throws MessagingException, SQLException
+    {
+        String nowyStatus = "Wdrożony";
+        String srod = null;
+        String data_wdr = null;
+        Skrypt rows = (Skrypt) table_skrypty.getSelectionModel().getSelectedItem();
+        
+        if (datePickerFaza3.getValue() != null){
+            srod = datePickerFaza3.promptTextProperty().getValue();
+            data_wdr = datePickerFaza3.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
+        if (datePickerPrep.getValue() != null){
+            srod = datePickerPrep.promptTextProperty().getValue();
+            data_wdr = datePickerPrep.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
+        if (datePickerProd.getValue() != null){
+            srod = datePickerProd.promptTextProperty().getValue();
+            data_wdr = datePickerProd.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
+
+        int wgrany = skryptyStanWgraniaDao.selectCzyUruchomiony(rows.getId(), srod);
+        if (wgrany != 0)
+        {
+            Boolean zmiana = oknoWyboru.oknoWyboruTakNie("Zmiana statusu", "Skrypt był wdrożony na tym środowisku. Czy chcesz ponownie zaznaczyć skrypt jako wykonany?");
+            if (zmiana)
+            {
+                skryptyStatusDao.SkryptUpdate(nowyStatus, rows.getId());
+                skryptyStanWgraniaDao.insertRows(rows.getId(), srod, "OK", "OK");
+                skryptyStanWgraniaDao.updateRowsDate(rows.getId(), srod, data_wdr);
+                zaladuj();
+            } else
+            {
+                return;
+            }
+        } else
+        {
+            skryptyStatusDao.SkryptUpdate(nowyStatus, rows.getId());
+            skryptyStanWgraniaDao.insertRows(rows.getId(), srod, "OK", "OK");
+            skryptyStanWgraniaDao.updateRowsDate(rows.getId(), srod, data_wdr);
+            zaladuj();
+        }
+
+    }
+
+
 
 }

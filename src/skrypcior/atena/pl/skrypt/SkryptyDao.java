@@ -73,28 +73,7 @@ public class SkryptyDao
         return null;
     }
     
-    public void SkryptUpdate(String newStatus, Integer idSkrypt ) throws MessagingException
-    {
-        
-        PreparedStatement preparedStatement = null;
-        ResultSet rs = null;
-
-        String qu = "UPDATE SKRYPTY SET statusid = (SELECT id FROM SKRYPTY_STATUS WHERE NAZWA = ? ) where id = ?";
-        try
-        {
-            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
-            preparedStatement.setString(1, newStatus);
-            preparedStatement.setInt(2, idSkrypt);
-            System.out.println(qu);
-            preparedStatement.executeUpdate();
-            preparedStatement.close();
-
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-       }
+    
     
     public String pobierzWartoscKolumny(Integer id, String nazwakol) throws SQLException
     {

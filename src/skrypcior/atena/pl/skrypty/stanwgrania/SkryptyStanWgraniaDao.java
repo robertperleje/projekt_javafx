@@ -6,9 +6,11 @@
 package skrypcior.atena.pl.skrypty.stanwgrania;
 
 import com.mysql.jdbc.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,14 +26,14 @@ public class SkryptyStanWgraniaDao
 
     Connection conn = DbConnect.createConnection();
 
-    public void insertWynik(Integer id, String srodowisko, String status, String wynik) throws SQLException
+    public void insertRows(Integer id, String srodowisko, String status, String wynik) throws SQLException
     {
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
 
         String skryptOperator = "ROBERT1";
 
-        String qu = "INSERT INTO skrypty_stan_wgrania (skrypt_id, srodowisko, status, wynik, data, operator ) VALUES (?,?,?,?,?,?)";
+        String qu = "INSERT INTO skrypty_stan_wgrania (skrypt_id, srodowisko, status, data_wdr, wynik, data, operator ) VALUES (?,?,?,?,?,?,?)";
 
         try
         {
@@ -40,9 +42,10 @@ public class SkryptyStanWgraniaDao
             preparedStatement.setInt(1, id);
             preparedStatement.setString(2, srodowisko);
             preparedStatement.setString(3, status);
-            preparedStatement.setString(4, wynik);
-            preparedStatement.setTimestamp(5, java.sql.Timestamp.valueOf(LocalDateTime.now()));
-            preparedStatement.setString(6, skryptOperator);
+            preparedStatement.setNull(4, java.sql.Types.NULL);
+            preparedStatement.setString(5, wynik);
+            preparedStatement.setTimestamp(6, java.sql.Timestamp.valueOf(LocalDateTime.now()));
+            preparedStatement.setString(7, skryptOperator);
 
             System.out.println(qu);
 
@@ -53,7 +56,7 @@ public class SkryptyStanWgraniaDao
         {
             preparedStatement.execute();
             preparedStatement.close();
-            showInfoAlertBox.showInformationAlertBox("Wynik z wykonania skryptu zapisano");
+            showInfoAlertBox.showInformationAlertBox("Wynik zapisano");
         }
     }
     
@@ -82,4 +85,33 @@ public class SkryptyStanWgraniaDao
         return 0;
     }
     
+     public void updateRowsDate(Integer id, String srodowisko, String data_wdr) throws SQLException
+    {
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+
+        String skryptOperator = "ROBERT1";
+
+        String qu = "UPDATE skrypty_stan_wgrania SET data_wdr =  ? WHERE skrypt_id = ? AND srodowisko = ?";
+
+        try
+        {
+            preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
+
+            preparedStatement.setString(1, data_wdr);
+            preparedStatement.setInt(2, id);
+            preparedStatement.setString(3, srodowisko);
+
+            System.out.println(qu);
+
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(SkryptyStanWgraniaDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally
+        {
+            preparedStatement.execute();
+            preparedStatement.close();
+        }
+    }
+
 }

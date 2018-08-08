@@ -23,24 +23,23 @@ import skrypcior.atena.pl.skrypty.email.FXMLSkryptyEmailController;
  */
 public class SkryptyEmailDao
 {
-    
+
     /**
      * Pobiera listę mailową w oparciu do kogo ma trafic mail
      *
      * @param przeznaczenie
      * @return
      */
-    
-     List<String> listaadressMail = new ArrayList<>();
-    
-    public String selectRowsPrzyg(Boolean przygotowany, String grupa)
+    List<String> listaadressMail = new ArrayList<>();
+
+    public List<String> selectRowsPrzyg(Boolean przygotowany, String grupa)
     {
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
         try
         {
 
-            String qu = ("SELECT * FROM skrypty_email WHERE przygotowany = ? and grupa = ?" );
+            String qu = ("SELECT * FROM skrypty_email WHERE przygotowany = ? and grupa = ?");
             preparedStatement = (PreparedStatement) DbConnect.createConnection().prepareStatement(qu);
             preparedStatement.setBoolean(1, przygotowany);
             preparedStatement.setString(2, grupa);
@@ -50,16 +49,18 @@ public class SkryptyEmailDao
 
             while (rs.next())
             {
-                return rs.getString(2);
+                listaadressMail.add(rs.getString(2));
             }
             preparedStatement.close();
+            return listaadressMail;
+
         } catch (SQLException ex)
         {
             Logger.getLogger(FXMLSkryptyEmailController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
-    
+
     public List<String> selectRowsDo(String grupa)
     {
         PreparedStatement preparedStatement = null;
@@ -67,7 +68,7 @@ public class SkryptyEmailDao
         try
         {
 
-            String qu = ("SELECT * FROM skrypty_email WHERE czy_glowny = true AND przygotowany = false AND grupa = ?" );
+            String qu = ("SELECT * FROM skrypty_email WHERE czy_glowny = true AND przygotowany = false AND grupa = ?");
             preparedStatement = (PreparedStatement) DbConnect.createConnection().prepareStatement(qu);
             preparedStatement.setString(1, grupa);
 
@@ -78,11 +79,11 @@ public class SkryptyEmailDao
             {
                 //return rs.getString(2);
                 listaadressMail.add(rs.getString(2));
-                
+
             }
             preparedStatement.close();
             return listaadressMail;
-            
+
         } catch (SQLException ex)
         {
             Logger.getLogger(FXMLSkryptyEmailController.class.getName()).log(Level.SEVERE, null, ex);
@@ -97,7 +98,7 @@ public class SkryptyEmailDao
         try
         {
 
-            String qu = ("SELECT * FROM skrypty_email WHERE czy_glowny = false AND przygotowany = false AND  grupa = ?" );
+            String qu = ("SELECT * FROM skrypty_email WHERE czy_glowny = false AND przygotowany = false AND  grupa = ?");
             preparedStatement = (PreparedStatement) DbConnect.createConnection().prepareStatement(qu);
             preparedStatement.setString(1, grupa);
 
@@ -108,11 +109,11 @@ public class SkryptyEmailDao
             {
                 //return rs.getString(2);
                 listaadressMail.add(rs.getString(2));
-                
+
             }
             preparedStatement.close();
             return listaadressMail;
-            
+
         } catch (SQLException ex)
         {
             Logger.getLogger(FXMLSkryptyEmailController.class.getName()).log(Level.SEVERE, null, ex);
@@ -120,4 +121,3 @@ public class SkryptyEmailDao
         return null;
     }
 }
-

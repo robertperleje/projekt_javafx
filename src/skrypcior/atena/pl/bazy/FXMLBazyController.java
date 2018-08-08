@@ -31,6 +31,7 @@ import javafx.stage.Stage;
 import skrypcior.atena.pl.database2.DbConnect;
 import skrypcior.atena.pl.skrypty.schemat.SkryptySchematDao;
 import skrypcior.atena.pl.srodowiska.SrodowiskaDao;
+import skrypcior.atena.pl.tools.Encryption_Decryption;
 import skrypcior.atena.pl.tools.MD5;
 import skrypcior.atena.pl.tools.RestrictiveTextField;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
@@ -43,9 +44,8 @@ import skrypcior.atena.pl.tools.showInfoAlertBox;
 public class FXMLBazyController implements Initializable
 {
 
-    
     Connection conn = DbConnect.createConnection();
-    
+
     @FXML
     private Button btn_zapisz;
     @FXML
@@ -60,7 +60,7 @@ public class FXMLBazyController implements Initializable
     @FXML
     private ComboBox<String> combobox_schemat;
     ObservableList<String> schematList = FXCollections.observableArrayList();
-   
+
     @FXML
     private Label label_schemat;
     @FXML
@@ -91,22 +91,22 @@ public class FXMLBazyController implements Initializable
     private TableColumn<Bazy, String> col_data;
     @FXML
     private TableColumn<Bazy, String> col_operator;
-    
+
     ObservableList<Bazy> listBaz = FXCollections.observableArrayList();
 
     SrodowiskaDao srodowiskaDao = new SrodowiskaDao();
-    SkryptySchematDao schematDao = new SkryptySchematDao();    
+    SkryptySchematDao schematDao = new SkryptySchematDao();
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        
+
         wypelnijComboBoxSrodowisko();
         wczytajComboBoxSchemat();
         przypcol();
         zaladujTabele();
-    }    
-    
+    }
+
     private void przypcol()
     {
         col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -129,7 +129,7 @@ public class FXMLBazyController implements Initializable
                     + "WHERE b.srodowiskoid = s.id and b.schematid = sch.id");
             while (rs.next())
             {
-                listBaz.add(new Bazy(rs.getInt(1),  rs.getString(2), rs.getString(3), rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7)));
+                listBaz.add(new Bazy(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)));
                 System.out.println(rs.getInt(1));
                 System.out.println(rs.getString(2));
                 System.out.println(rs.getString(3));
@@ -172,35 +172,35 @@ public class FXMLBazyController implements Initializable
     }
 
     @FXML
-    private void dodajWiersz(ActionEvent event) throws SQLException
+    private void dodajWiersz(ActionEvent event) throws SQLException, Exception
     {
         PreparedStatement preparedStatement = null;
-        ResultSet rs=null;
-        
+        ResultSet rs = null;
+
         String srodowiskoNazwa = (String) combobox_srodowisko.getSelectionModel().getSelectedItem();
         String schematNazwa = (String) combobox_schemat.getSelectionModel().getSelectedItem();
         String url = textfield_url.getText();
         String uzytkownik = textfield_uzytkownik.getText();
-        String haslo =  textfield_haslo.getText();
-        
+        String haslo = Encryption_Decryption.encrypt(textfield_haslo.getText());
+
         //boolean nazwaLenght = RestrictiveTextField.textLenght(tf_nazwa.getText(), lb_nazwa, "Maksymalna ilość znaków 25", "25");       
-       
-        if(srodowiskoNazwa.isEmpty() || schematNazwa.isEmpty() ){
+        if (srodowiskoNazwa.isEmpty() || schematNazwa.isEmpty())
+        {
             showInfoAlertBox.showInformationAlertBox("Wypełnij wszystkie pola");
             return;
         }
-        
+
 //if (!nazwaLenght ){
         //   return;
-       //}
-       
-       String skryptOperator = "ROBERT1";
-       
-       String qu = "INSERT INTO baza (srodowiskoid, schematid, url, uzytkownik, haslo, data_utw, operator ) VALUES (?,?,?,?,?,?,?)";
+        //}
+        String skryptOperator = "ROBERT1";
 
-        try {
+        String qu = "INSERT INTO baza (srodowiskoid, schematid, url, uzytkownik, haslo, data_utw, operator ) VALUES (?,?,?,?,?,?,?)";
+
+        try
+        {
             preparedStatement = (PreparedStatement) conn.prepareStatement(qu);
-            
+
             preparedStatement.setInt(1, srodowiskaDao.pobierzIdSrod(srodowiskoNazwa));
             preparedStatement.setInt(2, schematDao.pobierzIdSchemat(schematNazwa));
             preparedStatement.setString(3, url);
@@ -208,18 +208,19 @@ public class FXMLBazyController implements Initializable
             preparedStatement.setString(5, haslo);
             preparedStatement.setTimestamp(6, java.sql.Timestamp.valueOf(LocalDateTime.now()));
             preparedStatement.setString(7, skryptOperator);
-            
+
             System.out.println(qu);
-            
-        } catch (SQLException ex) {
+
+        } catch (SQLException ex)
+        {
             Logger.getLogger(FXMLBazyController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally
+        {
+            preparedStatement.execute();
+            preparedStatement.close();
+            showInfoAlertBox.showInformationAlertBox("Słowniki - konfiguracja bazy została dopisana");
         }
-        finally{
-        preparedStatement.execute();
-        preparedStatement.close();
-        showInfoAlertBox.showInformationAlertBox("Słowniki - konfiguracja bazy została dopisana");
-        }
-        
+
         zaladujTabele();
         wypelnijComboBoxSrodowisko();
         wczytajComboBoxSchemat();
@@ -227,7 +228,7 @@ public class FXMLBazyController implements Initializable
         textfield_uzytkownik.setText("");
         textfield_haslo.setText("");
     }
-   
+
     private void wypelnijComboBoxSrodowisko()
     {
         try
@@ -243,7 +244,7 @@ public class FXMLBazyController implements Initializable
         }
         combobox_srodowisko.getItems().setAll(srodowiskoList);
     }
-    
+
     private void wczytajComboBoxSchemat()
     {
         try

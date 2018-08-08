@@ -254,8 +254,9 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Wgraj">
                            <items>
-                              <MenuItem mnemonicParsing="false" onAction="#wywolajDlaMain" text="MAIN" />
-                              <MenuItem mnemonicParsing="false" onAction="#wywolajDlaPrep" text="PREP" />
+                              <MenuItem fx:id="MenuItemMainAtena" mnemonicParsing="false" onAction="#uruchomSkryptNaSrod" text="MAIN_ATENA" />
+                              <MenuItem fx:id="MenuItemPrepAtena" mnemonicParsing="false" onAction="#uruchomSkryptNaSrod" text="PREP_ATENA" />
+                              <MenuItem fx:id="MenuItemRelAtena" mnemonicParsing="false" onAction="#uruchomSkryptNaSrod" text="REL_ATENA" />
                            </items>
                         </Menu>
                     </items>

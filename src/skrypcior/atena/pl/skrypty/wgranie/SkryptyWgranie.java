@@ -16,6 +16,7 @@ import oracle.dbtools.raptor.newscriptrunner.ScriptExecutor;
 import oracle.dbtools.raptor.newscriptrunner.ScriptRunnerContext;
 import skrypcior.atena.pl.bazy.BazyDao;
 import skrypcior.atena.pl.skrypt.SkryptyDao;
+import skrypcior.atena.pl.tools.Encryption_Decryption;
 
 
 /**
@@ -25,7 +26,7 @@ import skrypcior.atena.pl.skrypt.SkryptyDao;
 public class SkryptyWgranie
 {
 
-    public static String uruchomSkrypt(Integer id, String srodowisko) throws SQLException, UnsupportedEncodingException
+    public static String uruchomSkrypt(Integer id, String srodowisko) throws SQLException, UnsupportedEncodingException, Exception
     {
         //Pobieramy schemat czyli login z jakiego ma iść skrypt
         String login =  PobierzSrodSchemat.pobierzSchemat(id);
@@ -36,7 +37,7 @@ public class SkryptyWgranie
         
         //Pobieram url i haslo
         String url = bazyDao.pobierzWartoscKolumny(id_bazy, "url");
-        String haslo = bazyDao.pobierzWartoscKolumny(id_bazy, "haslo");
+        String haslo = Encryption_Decryption.decrypt(bazyDao.pobierzWartoscKolumny(id_bazy, "haslo"));
         
         Connection conn = DriverManager.getConnection(url, login, haslo);
         conn.setAutoCommit(false);

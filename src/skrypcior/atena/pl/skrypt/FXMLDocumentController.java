@@ -34,6 +34,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -135,16 +136,16 @@ public class FXMLDocumentController implements Initializable
     private Label label_lp, label_czy_zatrzymac, label_odpowiedzialny, label_od_wersji, label_schemat;
     @FXML
     private Label label_srodowisko, label_przeladowanie, label_jira, label_sciezka, label_wgracbazy, label_czaswykonywania, label_Opis;
-    
+
     @FXML
     private DatePicker datePickerFaza3, datePickerPrep, datePickerProd;
+    @FXML
+    private MenuItem MenuItemMainAtena, MenuItemPrepAtena, MenuItemRelAtena;
 
-    
-    
     SkryptyStatusDao skryptyStatusDao = new SkryptyStatusDao();
     SkryptyStanWgraniaDao skryptyStanWgraniaDao = new SkryptyStanWgraniaDao();
     OknoWyboru oknoWyboru = new OknoWyboru();
-    
+
     FXMLMenuController menuController = new FXMLMenuController();
 
     @Override
@@ -550,57 +551,6 @@ public class FXMLDocumentController implements Initializable
         cmb_czaswykonywania.getItems().setAll(czaswykList);
     }
 
-    @FXML
-    private void wywolajDlaMain(ActionEvent event) throws SQLException, UnsupportedEncodingException
-    {
-
-        Skrypt selectedForRecord = table_skrypty.getSelectionModel().getSelectedItem();
-        if (selectedForRecord == null)
-        {
-            showInfoAlertBox.showInformationAlertBox("Nie wybrano żadnego rekordu");
-            return;
-        }
-        //czy byl juz uruchomiony
-
-        int wgrany = skryptyStanWgraniaDao.selectCzyUruchomiony(selectedForRecord.getId(), "MAIN_ATENA");
-
-        if (wgrany != 0)
-        {
-            Boolean zmiana = oknoWyboru.oknoWyboruTakNie("Status wgrania skryptu", "Skrypt był już uruchomiony na tym środowisku. Ponowne wykonanie może zwrócić błąd. Czy uruchmić ponownie... ?");
-            if (zmiana)
-            {
-                wykonanieSkryptu(selectedForRecord.getId(), "MAIN_ATENA");
-            } else
-            {
-                return;
-            }
-        }
-    }
-
-    @FXML
-    private void wywolajDlaPrep(ActionEvent event) throws SQLException, UnsupportedEncodingException
-    {
-        Skrypt selectedForRecord = table_skrypty.getSelectionModel().getSelectedItem();
-        if (selectedForRecord == null)
-        {
-            showInfoAlertBox.showInformationAlertBox("Nie wybrano żadnego rekordu");
-            return;
-        }
-
-        int wgrany = skryptyStanWgraniaDao.selectCzyUruchomiony(selectedForRecord.getId(), "PREP_ATENA");
-        if (wgrany != 0)
-        {
-            Boolean zmiana = oknoWyboru.oknoWyboruTakNie("Status wgrania skryptu", "Skrypt był już uruchomiony na tym środowisku. Ponowne wykonanie może zwrócić błąd. Czy uruchmić ponownie... ?");
-            if (zmiana)
-            {
-                wykonanieSkryptu(selectedForRecord.getId(), "PREP_ATENA");
-            } else
-            {
-                return;
-            }
-        }
-    }
-
     private void wykonanieSkryptu(Integer id, String srodowisko) throws SQLException, UnsupportedEncodingException
     {
 
@@ -694,7 +644,7 @@ public class FXMLDocumentController implements Initializable
             CreateSkryptEmail.createSkryptEmail(nowyStatus, rows.getId());
         }
     }
-    
+
     @FXML
     private void potwierdzenieWdrozenia(ActionEvent event) throws MessagingException, SQLException
     {
@@ -702,16 +652,19 @@ public class FXMLDocumentController implements Initializable
         String srod = null;
         String data_wdr = null;
         Skrypt rows = (Skrypt) table_skrypty.getSelectionModel().getSelectedItem();
-        
-        if (datePickerFaza3.getValue() != null){
+
+        if (datePickerFaza3.getValue() != null)
+        {
             srod = datePickerFaza3.promptTextProperty().getValue();
             data_wdr = datePickerFaza3.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         }
-        if (datePickerPrep.getValue() != null){
+        if (datePickerPrep.getValue() != null)
+        {
             srod = datePickerPrep.promptTextProperty().getValue();
             data_wdr = datePickerPrep.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         }
-        if (datePickerProd.getValue() != null){
+        if (datePickerProd.getValue() != null)
+        {
             srod = datePickerProd.promptTextProperty().getValue();
             data_wdr = datePickerProd.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         }
@@ -740,6 +693,47 @@ public class FXMLDocumentController implements Initializable
 
     }
 
+    @FXML
+    private void uruchomSkryptNaSrod(ActionEvent event) throws SQLException, UnsupportedEncodingException
+    {
+        Skrypt selectedForRecord = table_skrypty.getSelectionModel().getSelectedItem();
+        String srod = null;
 
+        if (selectedForRecord == null)
+        {
+            showInfoAlertBox.showInformationAlertBox("Nie wybrano żadnego rekordu");
+            return;
+        }
+        //czy byl juz uruchomiony
+        if (MenuItemMainAtena.getText() != null)
+        {
+            srod = MenuItemMainAtena.getText();
+        }
+        if (MenuItemPrepAtena.getText() != null)
+        {
+            srod = MenuItemPrepAtena.getText();
+        }
+        if (MenuItemRelAtena.getText() != null)
+        {
+            srod = MenuItemRelAtena.getText();
+        }
+
+        int wgrany = skryptyStanWgraniaDao.selectCzyUruchomiony(selectedForRecord.getId(), srod);
+
+        if (wgrany != 0)
+        {
+            Boolean zmiana = oknoWyboru.oknoWyboruTakNie("Status wgrania skryptu", "Skrypt był już uruchomiony na tym środowisku. Ponowne wykonanie może zwrócić błąd. Czy uruchmić ponownie... ?");
+            if (zmiana)
+            {
+                wykonanieSkryptu(selectedForRecord.getId(), srod);
+            } else
+            {
+                return;
+            }
+        } else
+        {
+            wykonanieSkryptu(selectedForRecord.getId(), srod);
+        }
+    }
 
 }

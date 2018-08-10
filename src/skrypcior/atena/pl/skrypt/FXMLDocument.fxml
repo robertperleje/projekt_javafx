@@ -232,7 +232,7 @@
                           <items>
                               <MenuItem mnemonicParsing="false" onAction="#znianaStatusPrzygotowany" text="W przygotowaniu" />
                               <MenuItem mnemonicParsing="false" onAction="#znianaStatusWyslany" text="Wysłany" />
-                              <Menu mnemonicParsing="false" text="Wdrożony">
+                              <Menu fx:id="menuWdrozony" mnemonicParsing="false" text="Wdrożony">
                                 <items>
                                     <MenuItem mnemonicParsing="false" onAction="#potwierdzenieWdrozenia">
                                        <graphic>

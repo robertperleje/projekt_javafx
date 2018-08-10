@@ -34,6 +34,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -147,6 +148,8 @@ public class FXMLDocumentController implements Initializable
     OknoWyboru oknoWyboru = new OknoWyboru();
 
     FXMLMenuController menuController = new FXMLMenuController();
+    @FXML
+    private Menu menuWdrozony;
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
@@ -581,6 +584,9 @@ public class FXMLDocumentController implements Initializable
             } catch (UnsupportedEncodingException ex)
             {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex)
+            {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             display.setText(wynik, id.toString(), srodowisko);
@@ -629,7 +635,7 @@ public class FXMLDocumentController implements Initializable
     }
 
     @FXML
-    private void znianaStatusWyslany(ActionEvent event) throws SQLException, IOException, MessagingException
+    private void znianaStatusWyslany(ActionEvent event) throws SQLException, IOException, MessagingException, Exception
     {
         String nowyStatus = "Wysłany";
         String modul = "Skrypty";
@@ -652,7 +658,9 @@ public class FXMLDocumentController implements Initializable
         String srod = null;
         String data_wdr = null;
         Skrypt rows = (Skrypt) table_skrypty.getSelectionModel().getSelectedItem();
-
+        
+        //menuWdrozony.
+        
         if (datePickerFaza3.getValue() != null)
         {
             srod = datePickerFaza3.promptTextProperty().getValue();
@@ -698,6 +706,8 @@ public class FXMLDocumentController implements Initializable
     {
         Skrypt selectedForRecord = table_skrypty.getSelectionModel().getSelectedItem();
         String srod = null;
+        
+        
 
         if (selectedForRecord == null)
         {

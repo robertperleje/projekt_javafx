@@ -27,6 +27,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import skrypcior.atena.pl.database2.DbConnect;
+import skrypcior.atena.pl.tools.Encryption_Decryption;
 import skrypcior.atena.pl.tools.RestrictiveTextField;
 import skrypcior.atena.pl.tools.showInfoAlertBox;
 
@@ -114,7 +115,7 @@ public class FXMLFtpController implements Initializable
     }
 
     @FXML
-    private void dodajWiersz(ActionEvent event) throws SQLException
+    private void dodajWiersz(ActionEvent event) throws SQLException, Exception
     {
         String host = textfield_host.getText();
         Integer port = Integer.parseInt(testfield_port.getText());
@@ -134,11 +135,14 @@ public class FXMLFtpController implements Initializable
             showInfoAlertBox.showInformationAlertBox("Wypełnij wszystkie pola");
             return;
         }
-
+        
+        
         if (!loginLenght || !passLenght /*|| !filepathLenght  */)
         {
             return;
         }
+        pass = Encryption_Decryption.encrypt(pass);
+        
         ftpDao.insertRows(host, port, login, pass, modul, filepath);
 
         clearTextField();

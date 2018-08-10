@@ -10,6 +10,9 @@ import com.mysql.jdbc.PreparedStatement;
 import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
@@ -174,6 +177,34 @@ public class SkryptyDao
         return null;
     }
     
-    
+    public List<String> selectRowsSkrypty()
+    {
+        List<String> listaadressMail = new ArrayList<>();
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        try
+        {
+
+            String qu = ("SELECT sk.id, sk.nazwa, srd.nazwa, sk.datautw, sk.operator, sk.datawysl, sks.nazwa, sk.hurtprzelad, sk.bazytestur, sk.odwersji, sk.folder, sk.jira, k.login, sk.uwagi "
+                    + " FROM skrypty sk, skrypty_status sks, srodowisko srd, konta k "
+                    + " WHERE sk.Statusid = sks.id and sk.srodowiskoid = srd.id and sk.opodp = k.id order by sk.id asc");
+            preparedStatement = (PreparedStatement) DbConnect.createConnection().prepareStatement(qu);
+            //System.out.println(qu);
+            rs = preparedStatement.executeQuery();
+
+            while (rs.next())
+            {
+                System.out.println(rs.getInt(1));
+                listaadressMail.add(rs.getInt(1), rs.getString(2));
+            }
+            preparedStatement.close();
+            return listaadressMail;
+
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(SkryptyDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
     
 }

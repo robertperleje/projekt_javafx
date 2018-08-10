@@ -3,7 +3,10 @@ package skrypcior.atena.pl.skrypty.email;
 import java.sql.SQLException;
 import java.util.List;
 import javax.mail.MessagingException;
-import skrypcior.atena.pl.skrypt.BodyMailSkrypt;
+import skrypcior.atena.pl.skrypt.SkryptyDao;
+import skrypcior.atena.pl.skrypty.tabela.podsumowanie.SkryptyPodsumowanieTable;
+
+
 
 /**
  *
@@ -11,7 +14,7 @@ import skrypcior.atena.pl.skrypt.BodyMailSkrypt;
  */
 public class CreateSkryptEmail
 {
-
+   
     public static String createSkryptEmail(String status, Integer idrekord) throws SQLException, MessagingException
     {
         SkryptyEmailDao dao = new SkryptyEmailDao();
@@ -51,6 +54,10 @@ public class CreateSkryptEmail
         String tytul = subject.subjectMail("skrypt", idrekord);
         //pobieramybody
         String body = BodyMailSkrypt.bodyMailSkrypt(idrekord);
+        
+        //
+        SkryptyPodsumowanieTable podsumowanieTabela = new SkryptyPodsumowanieTable();
+        body = body + "<p>&nbsp;</p>" + podsumowanieTabela.createTableHtml();
         SendEmail.sendMail(adress_emailDo, adress_emailDw, tytul, body);
         return null;
     }

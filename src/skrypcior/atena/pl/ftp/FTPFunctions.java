@@ -9,13 +9,14 @@ import java.sql.SQLException;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import skrypcior.atena.pl.skrypt.SkryptyDao;
+import skrypcior.atena.pl.tools.Encryption_Decryption;
 
 
 public class FTPFunctions
 {
     
     
-    public static void uploadFtp(Integer id, String modul) throws SQLException, FileNotFoundException, IOException
+    public static void uploadFtp(Integer id, String modul) throws SQLException, FileNotFoundException, IOException, Exception
     {
         
         SkryptyDao skryptyDao = new SkryptyDao();
@@ -24,7 +25,7 @@ public class FTPFunctions
         String host = ftpDao.selectFtp(modul, "host");
         String port = ftpDao.selectFtp(modul, "port");
         String user = ftpDao.selectFtp(modul, "login");
-        String pass = ftpDao.selectFtp(modul, "password");
+        String pass = Encryption_Decryption.decrypt(ftpDao.selectFtp(modul, "password"));
         
         //Folder
         String folder = skryptyDao.pobierzWartoscKolumny(id, "folder");

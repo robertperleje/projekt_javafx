@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package skrypcior.atena.pl.skrypt;
+package skrypcior.atena.pl.skrypty.email;
 
 import java.sql.SQLException;
 import javax.swing.text.html.HTML;
+import skrypcior.atena.pl.skrypt.SkryptyDao;
 
 /**
  *
